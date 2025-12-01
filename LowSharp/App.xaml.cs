@@ -10,4 +10,3 @@ namespace LowSharp;
 public partial class App : Application
 {
 }
-

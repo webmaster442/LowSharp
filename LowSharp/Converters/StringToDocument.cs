@@ -10,15 +10,15 @@ public sealed class StringToDocument : MarkupExtension, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is string str 
-            ? new TextDocument(str) 
+        return value is string str
+            ? new TextDocument(str)
             : Binding.DoNothing;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is IDocument document 
-            ? document.Text 
+        return value is IDocument document
+            ? document.Text
             : Binding.DoNothing;
     }
 

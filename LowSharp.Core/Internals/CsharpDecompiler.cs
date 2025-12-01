@@ -54,7 +54,7 @@ internal sealed class CsharpDecompiler : IDecompiler
         _assemblyResolver = new UniversalAssemblyResolver("", false, null);
     }
 
-    private class ExtendedCSharpOutputVisitor(TextWriter textWriter, CSharpFormattingOptions formattingPolicy) 
+    private class ExtendedCSharpOutputVisitor(TextWriter textWriter, CSharpFormattingOptions formattingPolicy)
         : CSharpOutputVisitor(textWriter, formattingPolicy)
     {
         public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)

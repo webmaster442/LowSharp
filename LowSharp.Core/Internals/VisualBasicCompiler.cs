@@ -31,7 +31,7 @@ internal sealed class VisualBasicCompiler
         try
         {
             var syntaxTree = VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default.WithLanguageVersion(languageVersion.ToLanguageVersion()));
-            
+
             VisualBasicCompilation compilation = VisualBasicCompilation.Create("inMemory")
                 .WithOptions(_compilerOptions.WithOptimizationLevel(outputOptimizationLevel.ToOptimizationLevel()))
                 .AddReferences(_references)

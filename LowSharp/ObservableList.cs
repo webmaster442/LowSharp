@@ -16,8 +16,8 @@ internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollection
         _items = new List<T>();
     }
 
-    public T this[int index] 
-    { 
+    public T this[int index]
+    {
         get => _items[index];
         set => _items[index] = value;
     }

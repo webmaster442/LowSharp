@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
+    <ApplicationIcon>..\Icon\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,10 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LowSharp.Core\LowSharp.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Examples\" />
   </ItemGroup>
 
 </Project>

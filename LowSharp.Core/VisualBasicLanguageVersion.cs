@@ -15,4 +15,4 @@ public enum VisualBasicLanguageVersion
     VisualBasic17_13 = 1713,
     Latest = int.MaxValue,
     Default = 0
-}   
+}
