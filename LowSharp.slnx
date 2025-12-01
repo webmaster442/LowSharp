@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Misc/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="LowSharp.Core/LowSharp.Core.csproj" />
+  <Project Path="LowSharp.Tests/LowSharp.Tests.csproj" />
+  <Project Path="LowSharp/LowSharp.csproj" />
+</Solution>

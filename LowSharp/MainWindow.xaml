@@ -1,0 +1,168 @@
+﻿<Window
+    x:Class="LowSharp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:converters="clr-namespace:LowSharp.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:LowSharp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="LowSharp"
+    Width="1280"
+    Height="720"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisConv" />
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="300" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition MinWidth="300" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Orientation="Horizontal">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Command="{Binding OpenCodeCommand}" Header="Open File..." />
+                    <Separator />
+                    <MenuItem Command="{Binding ExitCommand}" Header="Exit" />
+                </MenuItem>
+                <MenuItem Header="View">
+                    <MenuItem
+                        x:Name="LineNumberss"
+                        Header="Show line numbers"
+                        IsCheckable="True"
+                        IsChecked="True" />
+                    <Separator />
+                    <MenuItem
+                        x:Name="WordWrap"
+                        Header="Word wrap"
+                        IsCheckable="True" />
+                </MenuItem>
+            </Menu>
+            <TextBlock Margin="5,0" Text="Language:" />
+            <ComboBox ItemsSource="{Binding Languages}" SelectedIndex="{Binding SelectedLanguageIndex}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={converters:InputLanguageToText}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Margin="5,0" Text="Configuration:" />
+            <ComboBox ItemsSource="{Binding OptimizationLevels}" SelectedIndex="{Binding SelectedOptimizationLevelIndex}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <TextBlock Margin="5,0" Text="Output:" />
+            <ComboBox ItemsSource="{Binding OutputTypes}" SelectedIndex="{Binding SelectedOutputTypeIndex}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={converters:OutputTypeToText}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button
+                x:Name="LowerTheCode"
+                Margin="5"
+                Click="LowerTheCode_Click"
+                Content="Lower"
+                IsEnabled="{Binding IsInProgress, Converter={converters:NegateBooleanConverter}}"
+                Style="{DynamicResource AccentButtonStyle}" />
+        </StackPanel>
+
+        <avalonEdit:TextEditor
+            x:Name="Input"
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="Transparent"
+            FontFamily="Cascadia Code"
+            FontSize="{Binding ComputedFontSize}"
+            ShowLineNumbers="{Binding ElementName=LineNumberss, Path=IsChecked}"
+            SyntaxHighlighting="{Binding SelectedLanguageIndex, Converter={converters:InputLanguageToIHighlightingDefinition}}"
+            WordWrap="{Binding ElementName=WordWrap, Path=IsChecked}" />
+
+        <GridSplitter
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="Gray" />
+
+        <TabControl
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="2"
+            SelectedIndex="{Binding OutputTabIndex}"
+            TabStripPlacement="Bottom">
+            <TabItem Header="Lowered Code">
+                <avalonEdit:TextEditor
+                    x:Name="Output"
+                    Background="Transparent"
+                    Document="{Binding LoweredCode, Converter={converters:StringToDocument}}"
+                    FontFamily="Cascadia Code"
+                    FontSize="{Binding ComputedFontSize}"
+                    ShowLineNumbers="{Binding ElementName=LineNumberss, Path=IsChecked}"
+                    SyntaxHighlighting="C#"
+                    WordWrap="{Binding ElementName=WordWrap, Path=IsChecked}" />
+            </TabItem>
+            <TabItem Header="Logs">
+                <ListBox ItemsSource="{Binding Diagnostics}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Foreground="{Binding Severity, Converter={converters:MessageSeverityToColor}}"
+                                    Text="{Binding Severity}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Foreground="{Binding Severity, Converter={converters:MessageSeverityToColor}}"
+                                    Text="{Binding Message}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+        <ProgressBar
+            Grid.Row="2"
+            Grid.Column="2"
+            Width="200"
+            Height="20"
+            Margin="5,0"
+            HorizontalAlignment="Right"
+            IsIndeterminate="True"
+            Visibility="{Binding IsInProgress, Converter={StaticResource BoolVisConv}}" />
+        <StackPanel
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Orientation="Horizontal">
+            <ComboBox ItemsSource="{Binding ZoomLevels}" SelectedIndex="{Binding SelectedZoomIndex}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={converters:ZoomLevelToText}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Margin="5,0" Text="Runtime:" />
+            <TextBlock Text="{converters:DotnetInfo}" />
+        </StackPanel>
+    </Grid>
+</Window>

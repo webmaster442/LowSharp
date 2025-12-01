@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<examples>
+  <e n="record class" t="Csharp">
+    <![CDATA[record class ExampleRecord(string Name, int Value);]]>
+  </e>
+</examples>
