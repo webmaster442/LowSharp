@@ -6,7 +6,7 @@ using ICSharpCode.Decompiler.Metadata;
 
 using Microsoft.IO;
 
-namespace LowSharp.Core.Internals;
+namespace LowSharp.Core.Internals.Decompilers;
 
 internal sealed class ILDecompiler : IDecompiler
 {

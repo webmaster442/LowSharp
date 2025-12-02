@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using LowSharp.Core.Internals;
 using LowSharp.Core.Internals.Compilers;
+using LowSharp.Core.Internals.Decompilers;
 
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.IO;

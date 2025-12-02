@@ -1,6 +1,6 @@
 ﻿using Microsoft.IO;
 
-namespace LowSharp.Core.Internals;
+namespace LowSharp.Core.Internals.Decompilers;
 
 internal interface IDecompiler
 {

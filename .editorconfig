@@ -3,6 +3,7 @@ root = true
 # All files
 [*]
 indent_style = space
+dotnet_diagnostic.CA1816.severity = error
 
 # Xml files
 [*.xml]
@@ -186,6 +187,9 @@ csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
 csharp_prefer_system_threading_lock = true:suggestion
 csharp_style_prefer_simple_property_accessors = true:suggestion
+csharp_style_prefer_implicitly_typed_lambda_expression = true:suggestion
+csharp_style_prefer_unbound_generic_type_in_nameof = true:suggestion
+dotnet_diagnostic.CA1816.severity = error
 
 #### Naming styles ####
 [*.{cs,vb}]
@@ -380,4 +384,6 @@ dotnet_naming_style.s_camelcase.capitalization = camel_case
 tab_width = 4
 indent_size = 4
 end_of_line = crlf
+dotnet_diagnostic.CA2213.severity = error
+dotnet_diagnostic.CA2215.severity = error
 
