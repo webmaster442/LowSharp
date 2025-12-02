@@ -4,6 +4,8 @@
     <![CDATA[record class ExampleRecord(string Name, int Value);]]>
   </e>
   <e n="Primary constructor" t="Csharp">
-    <![CDATA[class PrimaryCtor(string name, int value);]]>
+    <![CDATA[
+class PrimaryCtor(string name, int value);
+]]>
   </e>
 </examples>
