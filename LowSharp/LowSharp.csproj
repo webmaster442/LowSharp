@@ -27,4 +27,8 @@
     <ProjectReference Include="..\LowSharp.Core\LowSharp.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Syntax\" />
+  </ItemGroup>
+
 </Project>
