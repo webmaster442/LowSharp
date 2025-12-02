@@ -36,10 +36,7 @@ internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollection
 
     public void AddRange(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            _items.Add(item);
-        }
+        _items.AddRange(items);
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<T>(items)));
     }
 

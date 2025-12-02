@@ -82,8 +82,13 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 
     [RelayCommand]
     public void Exit()
+        => Environment.Exit(0);
+
+    [RelayCommand]
+    public void ComponentVersions()
     {
-        Environment.Exit(0);
+        var versions = _lowerer.GetComponentVersions();
+        _dialogs.Information("Component versions", versions.Select(v => $"{v.Name}: {v.Version}"));
     }
 
     public async Task LowerCode()

@@ -10,6 +10,7 @@
     Title="LowSharp"
     Width="1280"
     Height="720"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolVisConv" />
@@ -33,6 +34,8 @@
             <Menu>
                 <MenuItem Header="File">
                     <MenuItem Command="{Binding OpenCodeCommand}" Header="Open File..." />
+                    <Separator />
+                    <MenuItem Command="{Binding ComponentVersionsCommand}" Header="Component versions..." />
                     <Separator />
                     <MenuItem Command="{Binding ExitCommand}" Header="Exit" />
                 </MenuItem>
@@ -161,8 +164,6 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <TextBlock Margin="5,0" Text="Runtime:" />
-            <TextBlock Text="{converters:DotnetInfo}" />
         </StackPanel>
     </Grid>
 </Window>

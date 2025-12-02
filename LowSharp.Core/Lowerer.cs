@@ -30,6 +30,9 @@ public sealed class Lowerer
         return Task.Run(() => ToLowerCode(request, cancellationToken), cancellationToken);
     }
 
+    public IEnumerable<ComponentVersion> GetComponentVersions()
+        => VersionCollector.GetComponentVersions();
+
     private (bool result, IEnumerable<LoweringDiagnostic> diagnostics) Compile(LowerRequest request,
                                                                                RecyclableMemoryStream assemblyStream,
                                                                                RecyclableMemoryStream pdbStream,

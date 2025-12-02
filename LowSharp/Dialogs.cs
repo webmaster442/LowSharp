@@ -1,11 +1,20 @@
-﻿using LowSharp.Core;
+﻿
+using System.Windows;
+
+using LowSharp.Core;
 
 using Microsoft.Win32;
 
 namespace LowSharp;
 
-public class Dialogs : IDialogs
+internal sealed class Dialogs : IDialogs
 {
+    public void Information(string title, params IEnumerable<string> lines)
+    {
+        var content = string.Join(Environment.NewLine, lines);
+        MessageBox.Show(content, title, MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
     public bool TryOpenCode(out (string filename, InputLanguage language) result)
     {
         OpenFileDialog openFileDialog = new()
