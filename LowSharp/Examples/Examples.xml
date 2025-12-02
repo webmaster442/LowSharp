@@ -18,4 +18,25 @@ class PrimaryCtor(string name, int value)
 	}
 }]]>
   </e>
+  <e n="Sample F# lib" t="fsharp">
+    <![CDATA[namespace MyLib
+
+/// A simple utility module
+module MathUtils =
+    
+    /// Adds two integers.
+    let add a b = a + b
+
+    /// Multiplies two integers.
+    let multiply a b = a * b
+
+
+/// A simple class with methods
+type Greeter(name: string) =
+    member _.Name = name
+
+    member this.Greet() =
+        $"Hello, {this.Name}!"
+  ]]>
+  </e>
 </examples>

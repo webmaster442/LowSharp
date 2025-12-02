@@ -14,6 +14,7 @@ public sealed class InputLanguageToText : MarkupExtension, IValueConverter
             {
                 Core.InputLanguage.Csharp => "C#",
                 Core.InputLanguage.VisualBasic => "Visual Basic.NET",
+                Core.InputLanguage.FSharp => "F#",
                 _ => Binding.DoNothing,
             };
         }

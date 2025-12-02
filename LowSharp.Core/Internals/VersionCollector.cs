@@ -8,6 +8,7 @@ internal static class VersionCollector
         yield return new ComponentVersion(nameof(LowSharp.Core), GetVersion(typeof(VersionCollector)));
         yield return new ComponentVersion(nameof(Microsoft.CodeAnalysis.CSharp), GetVersion(typeof(Microsoft.CodeAnalysis.CSharp.CSharpCompilation)));
         yield return new ComponentVersion(nameof(Microsoft.CodeAnalysis.VisualBasic), GetVersion(typeof(Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation)));
+        yield return new ComponentVersion(nameof(Microsoft.FSharp), GetVersion(typeof(Microsoft.FSharp.Core.ClassAttribute)));
     }
 
     public static Version GetVersion(Type t)

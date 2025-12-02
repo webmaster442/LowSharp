@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using FSharp.Compiler.Diagnostics;
+
+using Microsoft.CodeAnalysis;
 
 namespace LowSharp.Core.Internals;
 
@@ -65,12 +67,35 @@ internal static class Mappers
         };
     }
 
-    public static LoweringDiagnostic ToCompilerMessage(this Diagnostic diagnostic)
+    public static MessageSeverity ToMessageSeverity(this FSharpDiagnosticSeverity severity)
+    {
+        if (severity.IsInfo)
+            return MessageSeverity.Info;
+
+        if (severity.IsWarning)
+            return MessageSeverity.Warning;
+
+        if (severity.IsError)
+            return MessageSeverity.Error;
+
+        throw new ArgumentOutOfRangeException(nameof(severity), severity, null);
+    }
+
+    public static LoweringDiagnostic ToLoweringDiagnostic(this Diagnostic diagnostic)
     {
         return new LoweringDiagnostic
         {
             Message = diagnostic.GetMessage(),
             Severity = ToMessageSeverity(diagnostic.Severity)
+        };
+    }
+
+    public static LoweringDiagnostic ToLoweringDiagnostic(this FSharpDiagnostic diagnostic)
+    {
+        return new LoweringDiagnostic
+        {
+            Message = diagnostic.Message,
+            Severity = diagnostic.Severity.ToMessageSeverity()
         };
     }
 

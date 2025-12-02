@@ -1,20 +1,19 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using LowSharp.Core.Internals;
+
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.IO;
 
-namespace LowSharp.Core.Internals;
+namespace LowSharp.Core.Internals.Compilers;
 
-internal sealed class VisualBasicCompiler
+internal sealed class VisualBasicCompiler : RoslynCompilerBase
 {
     private readonly VisualBasicCompilationOptions _compilerOptions;
-    private readonly IEnumerable<PortableExecutableReference> _references;
-    private readonly EmitOptions _emitOptions;
 
     public VisualBasicCompiler(IEnumerable<PortableExecutableReference> references, EmitOptions emitOptions)
+        : base(references, emitOptions)
     {
-        _references = references;
-        _emitOptions = emitOptions;
         _compilerOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             .WithOptionStrict(OptionStrict.On)
             .WithOptionInfer(true)
@@ -41,7 +40,7 @@ internal sealed class VisualBasicCompiler
 
             var messages = result.Diagnostics
                 .Where(d => d.Severity != DiagnosticSeverity.Hidden)
-                .Select(Mappers.ToCompilerMessage);
+                .Select(Mappers.ToLoweringDiagnostic);
 
             assemblyStream.Seek(0, SeekOrigin.Begin);
             pdbStream.Seek(0, SeekOrigin.Begin);

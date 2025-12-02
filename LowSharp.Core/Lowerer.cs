@@ -1,6 +1,9 @@
 ﻿
 
+using System.Threading.Tasks;
+
 using LowSharp.Core.Internals;
+using LowSharp.Core.Internals.Compilers;
 
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.IO;
@@ -12,6 +15,7 @@ public sealed class Lowerer
     private readonly RecyclableMemoryStreamManager _memoryStreamManager;
     private readonly CsharpCompiler _csCompiler;
     private readonly VisualBasicCompiler _vbCompiler;
+    private readonly FsharpCompiler _fsCompiler;
     private readonly ReferenceProvider _referenceProvider;
 
     public Lowerer()
@@ -23,20 +27,16 @@ public sealed class Lowerer
 
         _csCompiler = new CsharpCompiler(_referenceProvider.References, emitOptions);
         _vbCompiler = new VisualBasicCompiler(_referenceProvider.References, emitOptions);
-    }
-
-    public Task<LowerResponse> ToLowerCodeAsync(LowerRequest request, CancellationToken cancellationToken)
-    {
-        return Task.Run(() => ToLowerCode(request, cancellationToken), cancellationToken);
+        _fsCompiler = new FsharpCompiler();
     }
 
     public IEnumerable<ComponentVersion> GetComponentVersions()
         => VersionCollector.GetComponentVersions();
 
-    private (bool result, IEnumerable<LoweringDiagnostic> diagnostics) Compile(LowerRequest request,
-                                                                               RecyclableMemoryStream assemblyStream,
-                                                                               RecyclableMemoryStream pdbStream,
-                                                                               CancellationToken cancellationToken)
+    private async Task<(bool result, IEnumerable<LoweringDiagnostic> diagnostics)> Compile(LowerRequest request,
+                                                                                           RecyclableMemoryStream assemblyStream,
+                                                                                           RecyclableMemoryStream pdbStream,
+                                                                                           CancellationToken cancellationToken)
     {
 
 
@@ -55,6 +55,13 @@ public sealed class Lowerer
                                                                         assemblyStream,
                                                                         pdbStream,
                                                                         cancellationToken),
+
+            InputLanguage.FSharp=> await _fsCompiler.Compile(request.Code,
+                                                             request.OutputOptimizationLevel,
+                                                             assemblyStream,
+                                                             pdbStream,
+                                                             cancellationToken),
+
             _ => ((bool result, IEnumerable<LoweringDiagnostic> diagnostics))(false, new List<LoweringDiagnostic>
                 {
                     new() {
@@ -75,20 +82,14 @@ public sealed class Lowerer
         };
     }
 
-    private LowerResponse ToLowerCode(LowerRequest request, CancellationToken cancellationToken)
+    public async Task<LowerResponse> ToLowerCodeAsync(LowerRequest request, CancellationToken cancellationToken)
     {
-        using var pdbStream = _memoryStreamManager.GetStream();
-        using var assemblyStream = _memoryStreamManager.GetStream();
+        await using var pdbStream = _memoryStreamManager.GetStream();
+        await using var assemblyStream = _memoryStreamManager.GetStream();
 
         var response = new LowerResponse();
 
-        (bool result, IEnumerable<LoweringDiagnostic> diagnostics) = Compile(request,
-                                                                             assemblyStream,
-                                                                             pdbStream,
-                                                                             cancellationToken);
-
-
-
+        (bool result, IEnumerable<LoweringDiagnostic> diagnostics) = await Compile(request, assemblyStream, pdbStream, cancellationToken);
 
         response.AppendDiagnostics(diagnostics);
 

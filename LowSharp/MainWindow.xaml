@@ -14,6 +14,12 @@
     mc:Ignorable="d">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolVisConv" />
+
+        <Style x:Key="ExamleSubMenu" TargetType="MenuItem">
+            <Setter Property="Header" Value="{Binding Name}" />
+            <Setter Property="Command" Value="{Binding DataContext.LoadExampleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+            <Setter Property="CommandParameter" Value="{Binding}" />
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -40,15 +46,14 @@
                     <MenuItem Command="{Binding ExitCommand}" Header="Exit" />
                 </MenuItem>
                 <MenuItem Header="Examples">
-                    <MenuItem Header="C#" ItemsSource="{Binding Examples.Csharp}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Name}" />
-                                <Setter Property="Command" Value="{Binding DataContext.LoadExampleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
-                                <Setter Property="CommandParameter" Value="{Binding}" />
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
+                    <MenuItem
+                        Header="C#"
+                        ItemContainerStyle="{StaticResource ExamleSubMenu}"
+                        ItemsSource="{Binding Examples.Csharp}" />
+                    <MenuItem
+                        Header="F#"
+                        ItemContainerStyle="{StaticResource ExamleSubMenu}"
+                        ItemsSource="{Binding Examples.Fsharp}" />
                 </MenuItem>
                 <MenuItem Header="View">
                     <MenuItem

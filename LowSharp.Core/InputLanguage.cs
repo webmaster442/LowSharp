@@ -3,5 +3,6 @@
 public enum InputLanguage
 {
     Csharp,
-    VisualBasic
+    VisualBasic,
+    FSharp,
 }

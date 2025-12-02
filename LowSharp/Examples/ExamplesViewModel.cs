@@ -11,6 +11,8 @@ internal sealed class ExamplesViewModel : ObservableObject
 
     public ObservableCollection<Example> Csharp { get; }
 
+    public ObservableCollection<Example> Fsharp { get; }
+
     public ExamplesViewModel()
     {
         XmlSerializer serializer = new XmlSerializer(typeof(ExamplesRoot), new XmlRootAttribute("examples"));
@@ -19,5 +21,6 @@ internal sealed class ExamplesViewModel : ObservableObject
             _root = (ExamplesRoot)serializer.Deserialize(stream)!;
         }
         Csharp = new ObservableCollection<Example>(_root.Examples.Where(e => e.Type == "csharp"));
+        Fsharp = new ObservableCollection<Example>(_root.Examples.Where(e => e.Type == "fsharp"));
     }
 }

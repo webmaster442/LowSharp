@@ -1,9 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using LowSharp.Core.Internals;
+
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.IO;
 
-namespace LowSharp.Core.Internals;
+namespace LowSharp.Core.Internals.Compilers;
 
 internal sealed class CsharpCompiler
 {
@@ -41,7 +43,7 @@ internal sealed class CsharpCompiler
 
             var messages = result.Diagnostics
                 .Where(d => d.Severity != DiagnosticSeverity.Hidden)
-                .Select(Mappers.ToCompilerMessage);
+                .Select(Mappers.ToLoweringDiagnostic);
 
             assemblyStream.Seek(0, SeekOrigin.Begin);
             pdbStream.Seek(0, SeekOrigin.Begin);
