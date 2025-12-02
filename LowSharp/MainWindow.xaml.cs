@@ -20,4 +20,15 @@ public partial class MainWindow : Window
         WeakReferenceMessenger.Default.Register<Messages.GetInputCodeRequest>(this, (recipient, message) => message.Reply(Input.Document.Text));
         WeakReferenceMessenger.Default.Register<Messages.SetInputCodeRequest>(this, (recipient, message) => Input.Document.Text = message.Code);
     }
+
+    public override void EndInit()
+    {
+        base.EndInit();
+        if (SystemParameters.WorkArea.Width > 1920
+            || SystemParameters.WorkArea.Height > 1080)
+        {
+            Width = Math.Min(Width * 1.3, SystemParameters.WorkArea.Width);
+            Height = Math.Min(Height * 1.3, SystemParameters.WorkArea.Height);
+        }
+    }
 }

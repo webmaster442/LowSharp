@@ -14,7 +14,6 @@
     mc:Ignorable="d">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolVisConv" />
-
         <Style x:Key="ExamleSubMenu" TargetType="MenuItem">
             <Setter Property="Header" Value="{Binding Name}" />
             <Setter Property="Command" Value="{Binding DataContext.LoadExampleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />

@@ -5,10 +5,10 @@ internal static class VersionCollector
     public static IEnumerable<ComponentVersion> GetComponentVersions()
     {
         yield return new ComponentVersion(".NET", Environment.Version);
-        yield return new ComponentVersion(nameof(LowSharp.Core), GetVersion(typeof(VersionCollector)));
-        yield return new ComponentVersion(nameof(Microsoft.CodeAnalysis.CSharp), GetVersion(typeof(Microsoft.CodeAnalysis.CSharp.CSharpCompilation)));
-        yield return new ComponentVersion(nameof(Microsoft.CodeAnalysis.VisualBasic), GetVersion(typeof(Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation)));
-        yield return new ComponentVersion(nameof(Microsoft.FSharp), GetVersion(typeof(Microsoft.FSharp.Core.ClassAttribute)));
+        yield return new ComponentVersion("LowSharp", GetVersion(typeof(VersionCollector)));
+        yield return new ComponentVersion("Microsoft.CodeAnalysis.CSharp", GetVersion(typeof(Microsoft.CodeAnalysis.CSharp.CSharpCompilation)));
+        yield return new ComponentVersion("Microsoft.CodeAnalysis.VisualBasic", GetVersion(typeof(Microsoft.CodeAnalysis.VisualBasic.VisualBasicCompilation)));
+        yield return new ComponentVersion("FSharp.Compiler.Service", GetVersion(typeof(FSharp.Compiler.Cancellable)));
     }
 
     public static Version GetVersion(Type t)
