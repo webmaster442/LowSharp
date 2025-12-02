@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 
+using CommunityToolkit.Mvvm.Messaging;
+
 namespace LowSharp;
 
 /// <summary>
@@ -14,15 +16,8 @@ public partial class MainWindow : Window
 #pragma warning disable WPF0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         Application.Current.ThemeMode = ThemeMode.Light;
 #pragma warning restore WPF0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-    }
 
-    private async void LowerTheCode_Click(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is not MainWindowViewModel vm)
-            return;
-
-        vm.InputCode = Input.Document.Text;
-
-        await vm.LowerCode();
+        WeakReferenceMessenger.Default.Register<Messages.GetInputCodeRequest>(this, (recipient, message) => message.Reply(Input.Document.Text));
+        WeakReferenceMessenger.Default.Register<Messages.SetInputCodeRequest>(this, (recipient, message) => Input.Document.Text = message.Code);
     }
 }

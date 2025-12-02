@@ -39,6 +39,17 @@
                     <Separator />
                     <MenuItem Command="{Binding ExitCommand}" Header="Exit" />
                 </MenuItem>
+                <MenuItem Header="Examples">
+                    <MenuItem Header="C#" ItemsSource="{Binding Examples.Csharp}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Name}" />
+                                <Setter Property="Command" Value="{Binding DataContext.LoadExampleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                </MenuItem>
                 <MenuItem Header="View">
                     <MenuItem
                         x:Name="LineNumberss"
@@ -77,9 +88,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <Button
-                x:Name="LowerTheCode"
                 Margin="5"
-                Click="LowerTheCode_Click"
+                Command="{Binding LowerCodeCommand}"
                 Content="Lower"
                 IsEnabled="{Binding IsInProgress, Converter={converters:NegateBooleanConverter}}"
                 Style="{DynamicResource AccentButtonStyle}" />
@@ -121,7 +131,7 @@
                     WordWrap="{Binding ElementName=WordWrap, Path=IsChecked}" />
             </TabItem>
             <TabItem Header="Logs">
-                <ListBox ItemsSource="{Binding Diagnostics}">
+                <ListBox Background="Transparent" ItemsSource="{Binding Diagnostics}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>

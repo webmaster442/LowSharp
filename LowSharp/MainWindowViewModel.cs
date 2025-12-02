@@ -2,8 +2,10 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using LowSharp.Core;
+using LowSharp.Examples;
 
 namespace LowSharp;
 
@@ -24,6 +26,8 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 
     public ObservableList<LoweringDiagnostic> Diagnostics { get; }
 
+    public ExamplesViewModel Examples { get; }
+
     [ObservableProperty]
     public partial int SelectedZoomIndex { get; set; }
 
@@ -43,9 +47,6 @@ internal sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    public partial string InputCode { get; set; }
-
-    [ObservableProperty]
     public partial string LoweredCode { get; set; }
 
     [ObservableProperty]
@@ -58,16 +59,16 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel(IDialogs dialogs)
     {
+        _lowerer = new Lowerer();
+        _dialogs = dialogs;
         ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
         OptimizationLevels = new ObservableCollection<OutputOptimizationLevel>([OutputOptimizationLevel.Debug, OutputOptimizationLevel.Release]);
         Languages = new ObservableCollection<InputLanguage>([InputLanguage.Csharp, InputLanguage.VisualBasic]);
         OutputTypes = new ObservableCollection<OutputType>([OutputType.Csharp, OutputType.IL]);
         SelectedZoomIndex = ZoomLevels.IndexOf(1.0);
-        _lowerer = new Lowerer();
         Diagnostics = new ObservableList<LoweringDiagnostic>();
-        InputCode = string.Empty;
         LoweredCode = string.Empty;
-        _dialogs = dialogs;
+        Examples = new ExamplesViewModel();
     }
 
     [RelayCommand]
@@ -75,7 +76,8 @@ internal sealed partial class MainWindowViewModel : ObservableObject
     {
         if (_dialogs.TryOpenCode(out var result))
         {
-            InputCode = System.IO.File.ReadAllText(result.filename);
+            var code = System.IO.File.ReadAllText(result.filename);
+            WeakReferenceMessenger.Default.Send(new Messages.SetInputCodeRequest(code));
             SelectedLanguageIndex = Languages.IndexOf(result.language);
         }
     }
@@ -91,12 +93,19 @@ internal sealed partial class MainWindowViewModel : ObservableObject
         _dialogs.Information("Component versions", versions.Select(v => $"{v.Name}: {v.Version}"));
     }
 
+    [RelayCommand]
+    public void LoadExample(Example example)
+    {
+        WeakReferenceMessenger.Default.Send(new Messages.SetInputCodeRequest(example.Value));
+    }
+
+    [RelayCommand]
     public async Task LowerCode()
     {
         IsInProgress = true;
         var result = await _lowerer.ToLowerCodeAsync(new LowerRequest
         {
-            Code = InputCode,
+            Code = WeakReferenceMessenger.Default.Send<Messages.GetInputCodeRequest>(),
             InputLanguage = Languages[SelectedLanguageIndex],
             OutputOptimizationLevel = OptimizationLevels[SelectedOptimizationLevelIndex],
             OutputType = OutputTypes[SelectedOutputTypeIndex],
