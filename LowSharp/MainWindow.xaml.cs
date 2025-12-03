@@ -24,6 +24,11 @@ public partial class MainWindow : Window
     public override void EndInit()
     {
         base.EndInit();
+        ResizeMainWindowBasedOnResolution();
+    }
+
+    private void ResizeMainWindowBasedOnResolution()
+    {
         if (SystemParameters.WorkArea.Width > 1920
             || SystemParameters.WorkArea.Height > 1080)
         {

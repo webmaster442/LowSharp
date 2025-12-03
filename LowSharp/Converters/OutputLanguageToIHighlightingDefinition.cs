@@ -6,7 +6,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace LowSharp.Converters;
 
-public sealed class InputLanguageToIHighlightingDefinition : MarkupExtension, IValueConverter
+public sealed class OutputLanguageToIHighlightingDefinition : MarkupExtension, IValueConverter
 {
     private static IReadOnlyDictionary<string, IHighlightingDefinition>? s_highlighters;
 
@@ -15,6 +15,7 @@ public sealed class InputLanguageToIHighlightingDefinition : MarkupExtension, IV
         s_highlighters = highlighters;
     }
 
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is int index)
@@ -22,8 +23,7 @@ public sealed class InputLanguageToIHighlightingDefinition : MarkupExtension, IV
             return index switch
             {
                 0 => s_highlighters!["CsharpNext"],
-                1 => HighlightingManager.Instance.GetDefinition("VB"),
-                2 => s_highlighters!["F#"],
+                1 => s_highlighters!["ILAsm"],
                 _ => Binding.DoNothing,
             };
         }

@@ -8,12 +8,12 @@ public sealed class OutputTypeToText : MarkupExtension, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is Core.OutputType type)
+        if (value is Core.OutputLanguage type)
         {
             return type switch
             {
-                Core.OutputType.Csharp => "C#",
-                Core.OutputType.IL => "Intermediate Language (IL)",
+                Core.OutputLanguage.Csharp => "C#",
+                Core.OutputLanguage.IL => "Intermediate Language (IL)",
                 _ => Binding.DoNothing,
             };
         }

@@ -1,6 +1,6 @@
 ﻿namespace LowSharp.Core;
 
-public enum OutputType
+public enum OutputLanguage
 {
     IL,
     Csharp,

@@ -7,6 +7,6 @@ public sealed class LowerRequest
     public CsharpLanguageVersion CsharpLanguageVersion { get; init; } = CsharpLanguageVersion.Preview;
     public VisualBasicLanguageVersion VisualBasicLanguageVersion { get; init; } = VisualBasicLanguageVersion.Latest;
     public OutputOptimizationLevel OutputOptimizationLevel { get; init; } = OutputOptimizationLevel.Debug;
-    public OutputType OutputType { get; init; } = OutputType.Csharp;
+    public OutputLanguage OutputType { get; init; } = OutputLanguage.Csharp;
 
 }

@@ -73,12 +73,12 @@ public sealed class Lowerer
         };
     }
 
-    private static IDecompiler CreateDecompiler(OutputType outputType)
+    private static IDecompiler CreateDecompiler(OutputLanguage outputType)
     {
         return outputType switch
         {
-            OutputType.Csharp => new CsharpDecompiler(),
-            OutputType.IL => new ILDecompiler(),
+            OutputLanguage.Csharp => new CsharpDecompiler(),
+            OutputLanguage.IL => new ILDecompiler(),
             _ => throw new NotSupportedException("Unsupported output type."),
         };
     }

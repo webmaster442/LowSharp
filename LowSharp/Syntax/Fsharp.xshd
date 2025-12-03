@@ -18,9 +18,9 @@
   use this extension to show colors in vs code:
   https://marketplace.visualstudio.com/items?itemName=kamikillerto.vscode-colorize
   -->
-  <Color name="Comment"             foreground="#777777" fontWeight="300" fontStyle="italic" stylisticSet1="true"/>
-  <Color name="DocComment"          foreground="#009900" fontWeight="400" fontStyle="italic" stylisticSet1="true"/>
-  <Color name="BracketComment"      foreground="#555555" fontWeight="800" fontStyle="italic" stylisticSet1="true"/>
+  <Color name="Comment"             foreground="#777777" fontWeight="300" fontStyle="italic"/>
+  <Color name="DocComment"          foreground="#009900" fontWeight="400" fontStyle="italic"/>
+  <Color name="BracketComment"      foreground="#555555" fontWeight="800" fontStyle="italic"/>
   <Color name="TODO"                foreground="#EE0000" fontWeight="800"/>
   <Color name="HACK"                foreground="#A0A000" fontWeight="800"/>
 
@@ -43,10 +43,10 @@
 
   <Color name="Punctuation"         foreground="#8855FF" />
   <Color name="Attributes"          foreground="#AA88AA" />
-  <Color name="Keywords"            foreground="#0000DD"  fontWeight="normal" fontStyle="italic"  stylisticSet1="true"/>
-  <Color name="KeywordsBang"        foreground="#2200DD"  fontWeight="bold"   fontStyle="italic"  stylisticSet1="true"/>
-  <Color name="Keywords2"           foreground="#BB0044"  fontWeight="bold"   fontStyle="italic"  stylisticSet1="true"/>
-  <Color name="Keywords2Bang"       foreground="#BB0044"  fontWeight="bold"   fontStyle="italic"  stylisticSet1="true"/>
+  <Color name="Keywords"            foreground="#0000DD"  fontWeight="normal" fontStyle="italic" />
+  <Color name="KeywordsBang"        foreground="#2200DD"  fontWeight="bold"   fontStyle="italic" />
+  <Color name="Keywords2"           foreground="#BB0044"  fontWeight="bold"   fontStyle="italic" />
+  <Color name="Keywords2Bang"       foreground="#BB0044"  fontWeight="bold"   fontStyle="italic" />
   <Color name="ReservedKeywords"    foreground="#7777FF" /> <!-- fontWeight="bold" -->
   <Color name="MethodCall"          foreground="#0000AA" /> <!-- fontWeight="bold" fontStyle="italic"-->
   <Color name="NumberLiteral"       foreground="#CD10A0" />

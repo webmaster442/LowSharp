@@ -131,7 +131,7 @@
                     FontFamily="Cascadia Code"
                     FontSize="{Binding ComputedFontSize}"
                     ShowLineNumbers="{Binding ElementName=LineNumberss, Path=IsChecked}"
-                    SyntaxHighlighting="C#"
+                    SyntaxHighlighting="{Binding SelectedOutputTypeIndex, Converter={converters:OutputLanguageToIHighlightingDefinition}}"
                     WordWrap="{Binding ElementName=WordWrap, Path=IsChecked}" />
             </TabItem>
             <TabItem Header="Logs">

@@ -15,10 +15,10 @@ internal sealed class ILDecompiler : IDecompiler
         return !type.NamespaceDefinition.IsNil && type.IsCompilerGenerated(metadata);
     }
 
-    private void DecompileTypes(PEFile assemblyFile,
-                                PlainTextOutput output,
-                                ReflectionDisassembler disassembler,
-                                MetadataReader metadata)
+    private static void DecompileTypes(PEFile assemblyFile,
+                                       PlainTextOutput output,
+                                       ReflectionDisassembler disassembler,
+                                       MetadataReader metadata)
     {
         const int maxNonUserTypeHandles = 100;
         var nonUserTypeHandlesLease = default(MemoryLease<TypeDefinitionHandle>);
