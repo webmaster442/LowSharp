@@ -20,7 +20,12 @@
             <Setter Property="CommandParameter" Value="{Binding}" />
         </Style>
     </Window.Resources>
-    <Grid>
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenCodeCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding ExportCommand}"/>
+        <KeyBinding Key="F5" Command="{Binding LowerCodeCommand}"/>
+    </Window.InputBindings>
+    <Grid IsEnabled="{Binding IsInProgress, Converter={converters:NegateBooleanConverter}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="300" />
             <ColumnDefinition Width="5" />
@@ -38,11 +43,12 @@
             Orientation="Horizontal">
             <Menu>
                 <MenuItem Header="File">
-                    <MenuItem Command="{Binding OpenCodeCommand}" Header="Open File..." />
+                    <MenuItem Command="{Binding OpenCodeCommand}" InputGestureText="CTRL+O" Header="Open File..." />
+                    <MenuItem Command="{Binding ExportCommand}" InputGestureText="CTRL+S" Header="Export..." />
                     <Separator />
                     <MenuItem Command="{Binding ComponentVersionsCommand}" Header="Component versions..." />
                     <Separator />
-                    <MenuItem Command="{Binding ExitCommand}" Header="Exit" />
+                    <MenuItem Command="{Binding ExitCommand}" InputGestureText="ALT+F4" Header="Exit" />
                 </MenuItem>
                 <MenuItem Header="Examples">
                     <MenuItem
@@ -94,8 +100,7 @@
             <Button
                 Margin="5"
                 Command="{Binding LowerCodeCommand}"
-                Content="Lower"
-                IsEnabled="{Binding IsInProgress, Converter={converters:NegateBooleanConverter}}"
+                Content="Lower (F5)"
                 Style="{DynamicResource AccentButtonStyle}" />
         </StackPanel>
 

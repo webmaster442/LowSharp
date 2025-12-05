@@ -83,6 +83,48 @@ public sealed class Lowerer
         };
     }
 
+    public async Task<string?> CreateExport(LowerRequest request, CancellationToken cancellationToken)
+    {
+        await using var pdbStream = _memoryStreamManager.GetStream();
+        await using var assemblyStream = _memoryStreamManager.GetStream();
+
+        await using var pdbStream2 = _memoryStreamManager.GetStream();
+        await using var assemblyStream2 = _memoryStreamManager.GetStream();
+
+
+        var response = new LowerResponse();
+
+        (bool result, IEnumerable<LoweringDiagnostic> diagnostics) = await Compile(request, assemblyStream, pdbStream, cancellationToken);
+
+        if (!result)
+        {
+            return null;
+        }
+
+        await pdbStream.CopyToAsync(pdbStream2, cancellationToken);
+        await assemblyStream.CopyToAsync(assemblyStream2, cancellationToken);
+
+        pdbStream.Seek(0, SeekOrigin.Begin);
+        pdbStream2.Seek(0, SeekOrigin.Begin);
+        assemblyStream.Seek(0, SeekOrigin.Begin);
+        assemblyStream2.Seek(0, SeekOrigin.Begin);
+
+        IDecompiler csharpDecompiler = new CsharpDecompiler();
+        IDecompiler iLDecompiler = new ILDecompiler();
+
+        if (!csharpDecompiler.TryDecompile(assemblyStream, pdbStream, out string csharpCode))
+        {
+            return null;
+        }
+
+        if (!iLDecompiler.TryDecompile(assemblyStream2, pdbStream2, out string ilCode))
+        {
+            return null;
+        }
+
+        return HtmlExporter.Create(request.Code, request.InputLanguage, csharpCode, ilCode);
+    }
+
     public async Task<LowerResponse> ToLowerCodeAsync(LowerRequest request, CancellationToken cancellationToken)
     {
         await using var pdbStream = _memoryStreamManager.GetStream();

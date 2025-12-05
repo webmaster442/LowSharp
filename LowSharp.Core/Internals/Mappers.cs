@@ -1,4 +1,8 @@
-﻿using FSharp.Compiler.Diagnostics;
+﻿using System.Globalization;
+
+using ColorCode;
+
+using FSharp.Compiler.Diagnostics;
 
 using Microsoft.CodeAnalysis;
 
@@ -85,7 +89,7 @@ internal static class Mappers
     {
         return new LoweringDiagnostic
         {
-            Message = diagnostic.GetMessage(),
+            Message = $"{diagnostic.Location.SourceSpan.Start}: {diagnostic.GetMessage(CultureInfo.InvariantCulture)}",
             Severity = ToMessageSeverity(diagnostic.Severity)
         };
     }
@@ -106,6 +110,17 @@ internal static class Mappers
             OutputOptimizationLevel.Debug => OptimizationLevel.Debug,
             OutputOptimizationLevel.Release => OptimizationLevel.Release,
             _ => throw new ArgumentOutOfRangeException(nameof(outputOptimizationLevel), outputOptimizationLevel, null),
+        };
+    }
+
+    public static ILanguage ToColorCodeLanguage(this InputLanguage language)
+    {
+        return language switch
+        {
+            InputLanguage.Csharp => Languages.CSharp,
+            InputLanguage.VisualBasic => Languages.VbDotNet,
+            InputLanguage.FSharp => Languages.FSharp,
+            _ => throw new ArgumentOutOfRangeException(nameof(language), language, null),
         };
     }
 }

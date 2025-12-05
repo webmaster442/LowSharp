@@ -9,6 +9,25 @@ namespace LowSharp;
 
 internal sealed class Dialogs : IDialogs
 {
+    public void Error(string title, params IEnumerable<string> lines)
+    {
+        var content = string.Join(Environment.NewLine, lines);
+        MessageBox.Show(content, title, MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    public string? ExportDialog()
+    {
+        SaveFileDialog saveFileDialog = new()
+        {
+            Filter = "HTML Files (*.html)|*.html",
+            Title = "Export results",
+        };
+
+        return saveFileDialog.ShowDialog() == true 
+            ? saveFileDialog.FileName 
+            : null;
+    }
+
     public void Information(string title, params IEnumerable<string> lines)
     {
         var content = string.Join(Environment.NewLine, lines);

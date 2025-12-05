@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -116,5 +117,29 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 
         LoweredCode = result.LoweredCode;
         Diagnostics.ReplaceAll(result.Diagnostics);
+    }
+
+    [RelayCommand]
+    public async Task Export()
+    {
+        IsInProgress = true;
+
+        var exportPath = _dialogs.ExportDialog();
+        if (!string.IsNullOrEmpty(exportPath))
+        {
+            string? html = await _lowerer.CreateExport(new LowerRequest
+            {
+                Code = WeakReferenceMessenger.Default.Send<Messages.GetInputCodeRequest>(),
+                InputLanguage = Languages[SelectedLanguageIndex],
+                OutputOptimizationLevel = OptimizationLevels[SelectedOptimizationLevelIndex],
+                OutputType = OutputTypes[SelectedOutputTypeIndex],
+            }, CancellationToken.None);
+
+            if (html is null)
+                _dialogs.Error("Export failed", "An error occurred while creating the export.");
+
+            await File.WriteAllTextAsync(exportPath, html);
+        }
+        IsInProgress = false;
     }
 }
