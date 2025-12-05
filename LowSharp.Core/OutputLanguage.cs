@@ -2,6 +2,6 @@
 
 public enum OutputLanguage
 {
-    IL,
-    Csharp,
+    IL = 0,
+    Csharp = 1,
 }

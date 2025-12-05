@@ -2,6 +2,6 @@
 
 public enum OutputOptimizationLevel
 {
-    Debug,
-    Release
+    Debug = 0,
+    Release = 1,
 }

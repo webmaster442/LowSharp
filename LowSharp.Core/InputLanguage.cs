@@ -2,7 +2,7 @@
 
 public enum InputLanguage
 {
-    Csharp,
-    VisualBasic,
-    FSharp,
+    Csharp = 0,
+    VisualBasic = 1,
+    FSharp = 2,
 }
