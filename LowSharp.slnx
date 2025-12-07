@@ -5,6 +5,7 @@
     <File Path=".gitignore" />
     <File Path="todo.md" />
   </Folder>
+  <Project Path="LowSharp.Cli/LowSharp.Cli.csproj" />
   <Project Path="LowSharp.Core/LowSharp.Core.csproj" />
   <Project Path="LowSharp.Tests/LowSharp.Tests.csproj" />
   <Project Path="LowSharp/LowSharp.csproj" />
