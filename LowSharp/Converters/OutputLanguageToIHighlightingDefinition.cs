@@ -24,6 +24,7 @@ public sealed class OutputLanguageToIHighlightingDefinition : MarkupExtension, I
             {
                 0 => s_highlighters!["CsharpNext"],
                 1 => s_highlighters!["ILAsm"],
+                2 => s_highlighters!["CsharpNext"],
                 _ => Binding.DoNothing,
             };
         }

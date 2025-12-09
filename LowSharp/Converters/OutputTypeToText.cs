@@ -14,6 +14,7 @@ public sealed class OutputTypeToText : MarkupExtension, IValueConverter
             {
                 Core.OutputLanguage.Csharp => "C#",
                 Core.OutputLanguage.IL => "Intermediate Language (IL)",
+                Core.OutputLanguage.JitAsm => "Jit Assembly",
                 _ => Binding.DoNothing,
             };
         }

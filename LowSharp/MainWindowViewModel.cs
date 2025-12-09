@@ -65,7 +65,7 @@ internal sealed partial class MainWindowViewModel : ObservableObject
         ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
         OptimizationLevels = new ObservableCollection<OutputOptimizationLevel>([OutputOptimizationLevel.Debug, OutputOptimizationLevel.Release]);
         Languages = new ObservableCollection<InputLanguage>([InputLanguage.Csharp, InputLanguage.VisualBasic, InputLanguage.FSharp]);
-        OutputTypes = new ObservableCollection<OutputLanguage>([OutputLanguage.Csharp, OutputLanguage.IL]);
+        OutputTypes = new ObservableCollection<OutputLanguage>([OutputLanguage.Csharp, OutputLanguage.IL, OutputLanguage.JitAsm]);
         SelectedZoomIndex = ZoomLevels.IndexOf(1.0);
         Diagnostics = new ObservableList<LoweringDiagnostic>();
         LoweredCode = string.Empty;

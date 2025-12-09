@@ -79,6 +79,7 @@ public sealed class Lowerer
         {
             OutputLanguage.Csharp => new CsharpDecompiler(),
             OutputLanguage.IL => new ILDecompiler(),
+            OutputLanguage.JitAsm => new JitDecompiler(),
             _ => throw new NotSupportedException("Unsupported output type."),
         };
     }
