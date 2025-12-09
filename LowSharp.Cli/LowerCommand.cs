@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 
-using LowSharp.Cli.Highlighter;
+using ColorCode;
+
 using LowSharp.Core;
 
 using Spectre.Console;
@@ -84,9 +85,17 @@ internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
 
         if (string.IsNullOrEmpty(settings.OutputFile))
         {
-            KeywordHighlighter highlighter = KeywordHighlighter.Create(outLanguage);
-            string highlightedCode = highlighter.HighlightKeyWords(result.LoweredCode, Color.Orange3);
-            AnsiConsole.MarkupLine(highlightedCode);
+            ILanguage? language = GetLanguage(outLanguage);
+            if (language != null)
+            {
+                ConsoleFormatter formatter = new();
+                string highlightedCode = formatter.GetHtmlString(result.LoweredCode, language);
+                AnsiConsole.MarkupLine(highlightedCode);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[green]{result.LoweredCode.EscapeMarkup()}[/]");
+            }
         }
         else
         {
@@ -113,6 +122,17 @@ internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
             };
             table.AddRow(severityMarkup, diag.Message);
         }
+    }
+
+    private static ILanguage? GetLanguage(OutputLanguage outLanguage)
+    {
+        return outLanguage switch
+        {
+            OutputLanguage.Csharp => ColorCode.Languages.CSharp,
+            OutputLanguage.IL => null,
+            OutputLanguage.JitAsm => null,
+            _ => throw new InvalidOperationException("Unsupported output language."),
+        };
     }
 
     private static InputLanguage GetInputLangugeFromExtension(string inputFile)

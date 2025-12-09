@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LowSharp.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "test.cs -f csharp"
+    }
+  }
+}
