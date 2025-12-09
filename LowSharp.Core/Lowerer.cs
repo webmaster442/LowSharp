@@ -1,8 +1,4 @@
-﻿
-
-using System.Threading.Tasks;
-
-using LowSharp.Core.Internals;
+﻿using LowSharp.Core.Internals;
 using LowSharp.Core.Internals.Compilers;
 using LowSharp.Core.Internals.Decompilers;
 
@@ -11,7 +7,7 @@ using Microsoft.IO;
 
 namespace LowSharp.Core;
 
-public sealed class Lowerer
+public sealed class Lowerer : ILowerer
 {
     private readonly RecyclableMemoryStreamManager _memoryStreamManager;
     private readonly CsharpCompiler _csCompiler;
@@ -31,8 +27,8 @@ public sealed class Lowerer
         _fsCompiler = new FsharpCompiler();
     }
 
-    public IEnumerable<ComponentVersion> GetComponentVersions()
-        => VersionCollector.GetComponentVersions();
+    public IOrderedEnumerable<ComponentVersion> GetComponentVersions()
+        => VersionCollector.GetComponentVersions().OrderBy(x => x.Name);
 
     private async Task<(bool result, IEnumerable<LoweringDiagnostic> diagnostics)> Compile(LowerRequest request,
                                                                                            RecyclableMemoryStream assemblyStream,
