@@ -14,7 +14,7 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 {
     private const int BaseFontSize = 16;
 
-    private readonly Lowerer _lowerer;
+    private readonly CachedLowerer _lowerer;
     private readonly IDialogs _dialogs;
 
     public ObservableCollection<double> ZoomLevels { get; }
@@ -60,7 +60,7 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel(IDialogs dialogs)
     {
-        _lowerer = new Lowerer();
+        _lowerer = new CachedLowerer(new Lowerer());
         _dialogs = dialogs;
         ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
         OptimizationLevels = new ObservableCollection<OutputOptimizationLevel>([OutputOptimizationLevel.Debug, OutputOptimizationLevel.Release]);

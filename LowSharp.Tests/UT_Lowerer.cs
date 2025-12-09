@@ -5,7 +5,7 @@ namespace LowSharp.Tests;
 [TestFixture]
 public class UT_Lowerer
 {
-    private Lowerer? _sut;
+    private Lowerer _sut;
 
     [SetUp]
     public void Setup()

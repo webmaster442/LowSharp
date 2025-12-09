@@ -63,9 +63,9 @@ internal sealed class JitDecompiler : IDecompiler
 
             return true;
         }
-        catch
+        catch (Exception ex)
         {
-            result = string.Empty;
+            result = ex.Message;
             return false;
         }
     }

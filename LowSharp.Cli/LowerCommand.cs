@@ -16,7 +16,7 @@ internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
         [CommandArgument(0, "<input-file>")]
         public string InputFile { get; set; } = string.Empty;
 
-        [Description("Output format. Supported formats: csharp, il")]
+        [Description("Output format. Supported formats: csharp, il, jitasm")]
         [CommandOption("-f|--format")]
         public string OutputFormat { get; set; } = "csharp";
 
@@ -39,7 +39,7 @@ internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
 
             if (!Enum.TryParse<OutputLanguage>(OutputFormat, ignoreCase: true, out var _))
             {
-                return ValidationResult.Error("Output format must be either 'csharp' or 'il'");
+                return ValidationResult.Error("Output format must be either 'csharp' or 'il' or 'jitasm'");
             }
 
             return ValidationResult.Success();
