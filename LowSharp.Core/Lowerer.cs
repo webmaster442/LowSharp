@@ -57,7 +57,7 @@ public sealed class Lowerer
                                                                         pdbStream,
                                                                         cancellationToken),
 
-            InputLanguage.FSharp=> await _fsCompiler.Compile(request.Code,
+            InputLanguage.FSharp => await _fsCompiler.Compile(request.Code,
                                                              request.OutputOptimizationLevel,
                                                              assemblyStream,
                                                              pdbStream,

@@ -23,8 +23,8 @@ internal sealed class Dialogs : IDialogs
             Title = "Export results",
         };
 
-        return saveFileDialog.ShowDialog() == true 
-            ? saveFileDialog.FileName 
+        return saveFileDialog.ShowDialog() == true
+            ? saveFileDialog.FileName
             : null;
     }
 
