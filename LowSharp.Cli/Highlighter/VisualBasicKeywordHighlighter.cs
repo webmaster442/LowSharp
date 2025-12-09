@@ -1,6 +1,6 @@
 ﻿namespace LowSharp.Cli.Highlighter;
 
-internal sealed class VisualBasicHighlighter : KeywordHighlighter
+internal sealed class VisualBasicKeywordHighlighter : KeywordHighlighter
 {
     protected override IEqualityComparer<string> Comparision => throw new NotImplementedException();
 

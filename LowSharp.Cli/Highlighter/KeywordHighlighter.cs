@@ -1,11 +1,23 @@
 ﻿using System.Text;
 
+using LowSharp.Core;
+
 using Spectre.Console;
 
 namespace LowSharp.Cli.Highlighter;
 
 internal abstract class KeywordHighlighter
 {
+    public static KeywordHighlighter Create(OutputLanguage language)
+    {
+        return language switch
+        {
+            OutputLanguage.Csharp => new CSharpKeywordHighlighter(),
+            OutputLanguage.IL => new VisualBasicKeywordHighlighter(),
+            _ => throw new NotSupportedException($"Output language '{language}' is not supported for keyword highlighting."),
+        };
+    }
+
     private readonly HashSet<string> _keywords;
 
     protected KeywordHighlighter()
@@ -34,7 +46,7 @@ internal abstract class KeywordHighlighter
                 }
                 else
                 {
-                    builder.Append(word);
+                    builder.Append(word.EscapeMarkup());
                 }
                 builder.Append(' ');
             }

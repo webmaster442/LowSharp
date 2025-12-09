@@ -1,6 +1,6 @@
 ﻿namespace LowSharp.Cli.Highlighter;
 
-internal sealed class CSharpHighlighter : KeywordHighlighter
+internal sealed class CSharpKeywordHighlighter : KeywordHighlighter
 {
     protected override IEqualityComparer<string> Comparision => StringComparer.Ordinal;
 
@@ -22,7 +22,7 @@ internal sealed class CSharpHighlighter : KeywordHighlighter
             "extension", "field", "file",  "from", "get", "global", "group", "init", "into",
             "join", "let", "managed",  "nameof", "nint",  "not", "notnull", "nuint", "on",
             "or", "orderby", "partial",  "record", "remove", "required","scoped", "select",
-            "set", "unmanaged", "value", "var", "when",  "where" ,  "with", "yield"
+            "set", "unmanaged", "value", "var", "when",  "where" ,  "with", "yield", "string"
         ];
     }
 }
