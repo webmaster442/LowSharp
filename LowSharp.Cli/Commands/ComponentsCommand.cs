@@ -3,7 +3,7 @@
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace LowSharp.Cli;
+namespace LowSharp.Cli.Commands;
 
 internal sealed class ComponentsCommand : Command
 {

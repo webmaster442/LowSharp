@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package LowSharp.Grpc.Api;
+
+enum InputLanguage {
+    Csharp = 0;
+    VisualBasic = 1;
+    FSharp = 2;
+}
+
+enum Optimization {
+    Debug = 0;
+    Release = 1;
+}
+
+enum OutputCodeType {
+    Il = 0;
+    LoweredCsharp = 1;
+    JitAsm = 2;
+}
+
+enum DiagnosticSeverity {
+    Info = 0;
+    Warning = 1;
+    Error = 2;
+}
+
+message Diagnostics {
+    string Message = 1;
+    DiagnosticSeverity Severity = 2;
+}
+
+message LoweringRequest {
+    string Code = 1;
+    InputLanguage Language = 2;
+    Optimization OptimizationLevel = 3;
+    OutputCodeType OutputType = 4;
+}
+
+message LoweringResponse {
+    string ResultCode = 1;
+    repeated Diagnostics Diagnostics = 2;
+}
+
+service MyService {
+    rpc ServiceEntry(LoweringRequest) returns (LoweringResponse);
+}

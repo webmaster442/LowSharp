@@ -1,4 +1,4 @@
-﻿using LowSharp.Cli;
+﻿using LowSharp.Cli.Commands;
 
 using Spectre.Console.Cli;
 
