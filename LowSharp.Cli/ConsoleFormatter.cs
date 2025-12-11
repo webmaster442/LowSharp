@@ -1,15 +1,9 @@
-﻿
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
+﻿using System.Text;
 
 using ColorCode;
 using ColorCode.Common;
-using ColorCode.HTML.Common;
 using ColorCode.Parsing;
 using ColorCode.Styling;
-
-using FSharp.Compiler.SyntaxTrivia;
 
 using Spectre.Console;
 
