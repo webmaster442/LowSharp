@@ -6,25 +6,26 @@
     <Nullable>enable</Nullable>
     <Version>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</Version>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ColorCode.Core" Version="2.0.15" />
-    <PackageReference Include="ColorCode.HTML" Version="2.0.15" />
-    <PackageReference Include="FSharp.Compiler.Service" Version="43.10.101" />
-    <PackageReference Include="FSharp.Core" Version="10.0.101" />
-    <PackageReference Include="Iced" Version="1.21.0" />
-    <PackageReference Include="ICSharpCode.Decompiler" Version="9.1.0.7988" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+    <PackageReference Include="ColorCode.Core" />
+    <PackageReference Include="ColorCode.HTML" />
+    <PackageReference Include="FSharp.Compiler.Service" />
+    <PackageReference Include="FSharp.Core" />
+    <PackageReference Include="Iced" />
+    <PackageReference Include="ICSharpCode.Decompiler" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.512801" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageReference Include="System.Runtime.Caching" Version="10.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common"/>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic"/>
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
+    <PackageReference Include="System.Runtime.Caching" />
   </ItemGroup>
 
 </Project>
