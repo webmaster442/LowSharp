@@ -41,7 +41,7 @@ internal static class JitBuddy
             //HResult result = runtime.DacLibrary.SOSDacInterface.GetCodeHeaderData(clrmdMethodHandle.NativeCode, out CodeHeaderData codeHeaderData);
 
             //ClrMethod? clrmd = runtime.GetMethodByHandle(clrmdMethodHandle.NativeCode);
-            
+
 
             var codePtr = clrmdMethodHandle.HotColdInfo.HotStart;
             var codeSize = clrmdMethodHandle.HotColdInfo.HotSize;

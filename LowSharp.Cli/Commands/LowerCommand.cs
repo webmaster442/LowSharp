@@ -5,7 +5,7 @@ using LowSharp.Core;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace LowSharp.Cli;
+namespace LowSharp.Cli.Commands;
 
 internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
 {
