@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ColorCode.Core" Version="2.0.15" />
     <PackageReference Include="Spectre.Console" Version="0.54.0" />
     <PackageReference Include="Spectre.Console.Analyzer" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>

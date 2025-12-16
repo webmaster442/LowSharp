@@ -20,6 +20,9 @@ internal sealed class CsharpCompiler
         _compilerOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             .WithPlatform(Platform.AnyCpu)
             .WithAllowUnsafe(true)
+            .WithNullableContextOptions(NullableContextOptions.Enable)
+            .WithUsings("System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Threading", "System.Threading.Tasks")
+            .WithConcurrentBuild(true)
             .WithDeterministic(true);
     }
 
