@@ -4,6 +4,8 @@
 
 A standalone app for viewing the lowered, compiler-generated C# code from C#, VB.NET, and F# source code.
 
+![screenshot](Icons/lowsharp.webp)
+  
 ## Features
 
 - Supports C#, VB.NET, and F# source code.

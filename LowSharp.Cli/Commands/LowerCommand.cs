@@ -66,6 +66,7 @@ internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
                 result = await lowerer.ToLowerCodeAsync(new LowerRequest
                 {
                     Code = inputCode,
+                    OutputType = outLanguage,
                     InputLanguage = GetInputLangugeFromExtension(settings.InputFile),
                 }, cancellationToken);
 
@@ -83,8 +84,7 @@ internal sealed class LowerCommand : AsyncCommand<LowerCommand.Settings>
 
         if (string.IsNullOrEmpty(settings.OutputFile))
         {
-            AnsiConsole.MarkupLine($"[green]{result.LoweredCode.EscapeMarkup()}[/]");
-
+            AnsiConsole.WriteLine(result.LoweredCode);
         }
         else
         {
