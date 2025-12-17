@@ -1,4 +1,0 @@
-- [x] Add Exporter class to core that exports input code and output C# as a html export
-- [x] Spectre.console frontend
-- [x] Better logging and diagnostics
-- [x] Keyboard bindings for commands

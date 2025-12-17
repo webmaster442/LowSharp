@@ -4,7 +4,7 @@
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
     <File Path="Directory.Packages.props" />
-    <File Path="todo.md" />
+    <File Path="readme.md" />
   </Folder>
   <Project Path="LowSharp.Cli/LowSharp.Cli.csproj" />
   <Project Path="LowSharp.Core/LowSharp.Core.csproj" />
