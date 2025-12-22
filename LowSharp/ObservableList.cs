@@ -6,10 +6,12 @@ namespace LowSharp;
 internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollectionChanged
 {
     private readonly List<T> _items;
+    private bool _notificationsBlocked;
 
     public ObservableList()
     {
         _items = new List<T>();
+        _notificationsBlocked = false;
     }
 
     public T this[int index]
@@ -27,26 +29,30 @@ internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollection
     public void Add(T item)
     {
         _items.Add(item);
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+        if (!_notificationsBlocked)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
     }
 
     public void AddRange(IEnumerable<T> items)
     {
         _items.AddRange(items);
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<T>(items)));
+        if (!_notificationsBlocked)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<T>(items)));
     }
 
     public void ReplaceAll(IEnumerable<T> items)
     {
         _items.Clear();
         _items.AddRange(items);
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        if (!_notificationsBlocked)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
     public void Clear()
     {
         _items.Clear();
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        if (!_notificationsBlocked)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 
     public bool Contains(T item)
@@ -55,15 +61,14 @@ internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollection
     public void CopyTo(T[] array, int arrayIndex)
         => _items.CopyTo(array, arrayIndex);
 
-
-
     public int IndexOf(T item)
         => _items.IndexOf(item);
 
     public void Insert(int index, T item)
     {
         _items.Insert(index, item);
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+        if (!_notificationsBlocked)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
     }
 
     public bool Remove(T item)
@@ -72,7 +77,8 @@ internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollection
         if (index >= 0)
         {
             _items.RemoveAt(index);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
+            if (!_notificationsBlocked)
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
             return true;
         }
         return false;
@@ -82,11 +88,21 @@ internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollection
     {
         T item = _items[index];
         _items.RemoveAt(index);
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
+        if (!_notificationsBlocked)
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
     }
     public IEnumerator<T> GetEnumerator()
         => _items.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator()
         => _items.GetEnumerator();
+
+    public void BlockNotifications()
+        => _notificationsBlocked = true;
+
+    public void UnblockAndFireNotifications()
+    {
+        _notificationsBlocked = false;
+        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    }
 }

@@ -97,7 +97,7 @@ internal sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     public void LoadExample(Example example)
     {
-        WeakReferenceMessenger.Default.Send(new Messages.SetInputCodeRequest(example.Value));
+        WeakReferenceMessenger.Default.Send(new Messages.SetInputCodeRequest(example.Content));
     }
 
     [RelayCommand]

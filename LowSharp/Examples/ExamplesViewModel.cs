@@ -1,26 +1,31 @@
-﻿using System.Collections.ObjectModel;
-using System.Xml.Serialization;
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LowSharp.Examples;
-
 internal sealed class ExamplesViewModel : ObservableObject
 {
-    private readonly ExamplesRoot _root;
+    public ObservableList<Example> Csharp { get; }
 
-    public ObservableCollection<Example> Csharp { get; }
-
-    public ObservableCollection<Example> Fsharp { get; }
+    public ObservableList<Example> Fsharp { get; }
 
     public ExamplesViewModel()
     {
-        XmlSerializer serializer = new XmlSerializer(typeof(ExamplesRoot), new XmlRootAttribute("examples"));
-        using (var stream = typeof(ExamplesViewModel).Assembly.GetManifestResourceStream("LowSharp.Examples.Examples.xml")!)
+        Csharp = new ObservableList<Example>();
+        Fsharp = new ObservableList<Example>();
+        using var exampleReader = new ExampleReader();
+        Csharp.BlockNotifications();
+        Fsharp.BlockNotifications();
+        exampleReader.ReadExamples(example =>
         {
-            _root = (ExamplesRoot)serializer.Deserialize(stream)!;
-        }
-        Csharp = new ObservableCollection<Example>(_root.Examples.Where(e => e.Type == "csharp"));
-        Fsharp = new ObservableCollection<Example>(_root.Examples.Where(e => e.Type == "fsharp"));
+            if (string.Equals(example.Language, nameof(Csharp), StringComparison.OrdinalIgnoreCase))
+            {
+                Csharp.Add(example);
+            }
+            else if (string.Equals(example.Language, nameof(Fsharp), StringComparison.OrdinalIgnoreCase))
+            {
+                Fsharp.Add(example);
+            }
+        });
+        Csharp.UnblockAndFireNotifications();
+        Fsharp.UnblockAndFireNotifications();
     }
 }

@@ -13,22 +13,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Examples\Examples.xml" />
+    <None Remove="Examples\Examples.txt" />
     <None Remove="Syntax\CsharpNext.xshd" />
     <None Remove="Syntax\Fsharp.xshd" />
     <None Remove="Syntax\ILAsm.xshd" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Examples\Examples.xml" />
+    <EmbeddedResource Include="Examples\Examples.txt" />
     <EmbeddedResource Include="Syntax\CsharpNext.xshd" />
     <EmbeddedResource Include="Syntax\Fsharp.xshd" />
     <EmbeddedResource Include="Syntax\ILAsm.xshd" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AvalonEdit"/>
-    <PackageReference Include="CommunityToolkit.Mvvm"/>
+    <PackageReference Include="AvalonEdit" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
   </ItemGroup>
 
   <ItemGroup>
