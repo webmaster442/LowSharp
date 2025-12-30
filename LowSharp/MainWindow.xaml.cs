@@ -2,6 +2,8 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 
+using Grpc.Net.Client;
+
 namespace LowSharp;
 
 /// <summary>
@@ -12,7 +14,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainWindowViewModel(new Dialogs());
+        var channel = GrpcChannel.ForAddress("https://localhost:7042");
+        var client = new Server.ApiV1.Lowerer.LowererClient(channel);
+
+        DataContext = new MainWindowViewModel(new Dialogs(), client);
 #pragma warning disable WPF0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         Application.Current.ThemeMode = ThemeMode.Light;
 #pragma warning restore WPF0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.

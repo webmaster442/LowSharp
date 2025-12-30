@@ -8,7 +8,6 @@
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
     <ApplicationIcon>../Icons/icon.ico</ApplicationIcon>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
@@ -27,12 +26,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AvalonEdit" />
-    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.33.2" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.76.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LowSharp.Core\LowSharp.Core.csproj" />
+    <Protobuf Include="..\Protobuff\ApiV1.proto" GrpcServices="Client" Access="Internal">
+      <Link>ApiV1.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

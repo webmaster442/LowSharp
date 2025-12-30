@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+option csharp_namespace = "LowSharp.Lowering.ApiV1";
+
+package LowSharp.Lowering.ApiV1;
+
+service Lowerer {
+    rpc ToLowerCode(LoweringRequest) returns (LoweringResponse);
+    rpc GetComponentVersions(GetComponentVersionsRequest) returns (GetComponentVersionsRespnse);
+}
+
+// ToLowerCode types
+
+enum InputLanguage {
+    Csharp = 0;
+    VisualBasic = 1;
+    FSharp = 2;
+}
+
+enum Optimization {
+    Debug = 0;
+    Release = 1;
+}
+
+enum OutputCodeType {
+    Il = 0;
+    LoweredCsharp = 1;
+    JitAsm = 2;
+}
+
+enum DiagnosticSeverity {
+    Info = 0;
+    Warning = 1;
+    Error = 2;
+}
+
+message Diagnostic {
+    string Message = 1;
+    DiagnosticSeverity Severity = 2;
+}
+
+message LoweringRequest {
+    string Code = 1;
+    InputLanguage Language = 2;
+    Optimization OptimizationLevel = 3;
+    OutputCodeType OutputType = 4;
+}
+
+message LoweringResponse {
+    string ResultCode = 1;
+    repeated Diagnostic Diagnostics = 2;
+}
+
+// GetComponentVersions
+
+message GetComponentVersionsRequest {
+
+}
+
+message ComponentVersion {
+    string Name = 1;
+    string VersionString = 2;
+}
+
+message GetComponentVersionsRespnse
+{
+    string OperatingSystem = 1;
+    string OperatingSystemVersion = 2;
+    string RuntimeVersion = 3;
+    repeated ComponentVersion ComponentVersions = 4;
+}

@@ -3,22 +3,22 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-using LowSharp.Core;
+using LowSharp.Server.ApiV1;
 
 namespace LowSharp.Converters;
 
-public sealed class MessageSeverityToColor : MarkupExtension, IValueConverter
+public sealed class DiagnosticSeveritySeverityToColor : MarkupExtension, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is not MessageSeverity severity)
+        if (value is not DiagnosticSeverity severity)
             return Binding.DoNothing;
 
         return severity switch
         {
-            MessageSeverity.Info => new SolidColorBrush(Colors.Blue),
-            MessageSeverity.Warning => new SolidColorBrush(Colors.Yellow),
-            MessageSeverity.Error => new SolidColorBrush(Colors.Red),
+            DiagnosticSeverity.Info => new SolidColorBrush(Colors.Blue),
+            DiagnosticSeverity.Warning => new SolidColorBrush(Colors.Yellow),
+            DiagnosticSeverity.Error => new SolidColorBrush(Colors.Red),
             _ => Binding.DoNothing,
         };
     }

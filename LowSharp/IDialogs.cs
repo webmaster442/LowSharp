@@ -1,4 +1,4 @@
-﻿using LowSharp.Core;
+﻿using LowSharp.Server.ApiV1;
 
 namespace LowSharp;
 

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "LowSharp.Evaluator.ApiV1";
+
+package LowSharp.Evaluator.ApiV1;
+
+service Evaluator {
+    rpc Initialize(InitializationRequest) returns (InitializationResponse);
+    rpc Evaluate(EvaluationRequest) returns (stream EvaluationResponse);
+    rpc Uninitialize(UninitializationRequest) returns (UninitializationResponse);
+}
+
+// Evaluate types
+message EvaluationRequest {
+    string Id = 1;
+    string UserInput = 2;
+}
+
+message EvaluationResponse {
+    string Result = 2;
+}
+
+message InitializationRequest {
+}
+
+message InitializationResponse {
+    string Id = 1;
+}
+
+message UninitializationRequest {
+    string Id = 1;
+}
+
+message UninitializationResponse {
+}

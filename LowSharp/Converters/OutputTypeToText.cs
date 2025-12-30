@@ -2,19 +2,21 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
+using LowSharp.Server.ApiV1;
+
 namespace LowSharp.Converters;
 
 public sealed class OutputTypeToText : MarkupExtension, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is Core.OutputLanguage type)
+        if (value is OutputCodeType type)
         {
             return type switch
             {
-                Core.OutputLanguage.Csharp => "C#",
-                Core.OutputLanguage.IL => "Intermediate Language (IL)",
-                Core.OutputLanguage.JitAsm => "Jit Assembly",
+                OutputCodeType.LoweredCsharp => "C#",
+                OutputCodeType.Il => "Intermediate Language (IL)",
+                OutputCodeType.JitAsm => "Jit Assembly",
                 _ => Binding.DoNothing,
             };
         }

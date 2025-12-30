@@ -5,8 +5,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using LowSharp.Core;
 using LowSharp.Examples;
+using LowSharp.Server.ApiV1;
+
+using static LowSharp.Server.ApiV1.Lowerer;
 
 namespace LowSharp;
 
@@ -14,18 +16,18 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 {
     private const int BaseFontSize = 16;
 
-    private readonly CachedLowerer _lowerer;
     private readonly IDialogs _dialogs;
+    private readonly LowererClient _client;
 
     public ObservableCollection<double> ZoomLevels { get; }
 
     public ObservableCollection<InputLanguage> Languages { get; }
 
-    public ObservableCollection<OutputOptimizationLevel> OptimizationLevels { get; }
+    public ObservableCollection<Optimization> OptimizationLevels { get; }
 
-    public ObservableCollection<OutputLanguage> OutputTypes { get; }
+    public ObservableCollection<OutputCodeType> OutputTypes { get; }
 
-    public ObservableList<LoweringDiagnostic> Diagnostics { get; }
+    public ObservableList<Diagnostic> Diagnostics { get; }
 
     public ExamplesViewModel Examples { get; }
 
@@ -58,16 +60,16 @@ internal sealed partial class MainWindowViewModel : ObservableObject
 
     public double ComputedFontSize { get; private set; }
 
-    public MainWindowViewModel(IDialogs dialogs)
+    public MainWindowViewModel(IDialogs dialogs, LowererClient client)
     {
-        _lowerer = new CachedLowerer(new Lowerer());
         _dialogs = dialogs;
+        _client = client;
         ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
-        OptimizationLevels = new ObservableCollection<OutputOptimizationLevel>([OutputOptimizationLevel.Debug, OutputOptimizationLevel.Release]);
-        Languages = new ObservableCollection<InputLanguage>([InputLanguage.Csharp, InputLanguage.VisualBasic, InputLanguage.FSharp]);
-        OutputTypes = new ObservableCollection<OutputLanguage>([OutputLanguage.Csharp, OutputLanguage.IL, OutputLanguage.JitAsm]);
+        OptimizationLevels = new ObservableCollection<Optimization>([Optimization.Debug, Optimization.Release]);
+        Languages = new ObservableCollection<InputLanguage>([InputLanguage.Csharp, InputLanguage.VisualBasic, InputLanguage.Fsharp]);
+        OutputTypes = new ObservableCollection<OutputCodeType>([OutputCodeType.LoweredCsharp, OutputCodeType.Il, OutputCodeType.JitAsm]);
         SelectedZoomIndex = ZoomLevels.IndexOf(1.0);
-        Diagnostics = new ObservableList<LoweringDiagnostic>();
+        Diagnostics = new ObservableList<Diagnostic>();
         LoweredCode = string.Empty;
         Examples = new ExamplesViewModel();
     }
@@ -88,10 +90,10 @@ internal sealed partial class MainWindowViewModel : ObservableObject
         => Environment.Exit(0);
 
     [RelayCommand]
-    public void ComponentVersions()
+    public async Task ComponentVersions()
     {
-        var versions = _lowerer.GetComponentVersions();
-        _dialogs.Information("Component versions", versions.Select(v => $"{v.Name}: {v.Version}"));
+        var versions = await _client.GetComponentVersionsAsync(new GetComponentVersionsRequest());
+        _dialogs.Information("Component versions", versions.ComponentVersions.Select(v => $"{v.Name}: {v.VersionString}"));
     }
 
     [RelayCommand]
@@ -104,42 +106,19 @@ internal sealed partial class MainWindowViewModel : ObservableObject
     public async Task LowerCode()
     {
         IsInProgress = true;
-        var result = await _lowerer.ToLowerCodeAsync(new LowerRequest
+
+        var result = await _client.ToLowerCodeAsync(new LoweringRequest
         {
             Code = WeakReferenceMessenger.Default.Send<Messages.GetInputCodeRequest>(),
-            InputLanguage = Languages[SelectedLanguageIndex],
-            OutputOptimizationLevel = OptimizationLevels[SelectedOptimizationLevelIndex],
+            Language = Languages[SelectedLanguageIndex],
+            OptimizationLevel = OptimizationLevels[SelectedOptimizationLevelIndex],
             OutputType = OutputTypes[SelectedOutputTypeIndex],
-        }, CancellationToken.None);
+        });
+
         IsInProgress = false;
 
-        OutputTabIndex = result.HasErrors ? 1 : 0;
-
-        LoweredCode = result.LoweredCode;
+        OutputTabIndex = result.Diagnostics.Count != 0 ? 1 : 0;
+        LoweredCode = result.ResultCode;
         Diagnostics.ReplaceAll(result.Diagnostics);
-    }
-
-    [RelayCommand]
-    public async Task Export()
-    {
-        IsInProgress = true;
-
-        var exportPath = _dialogs.ExportDialog();
-        if (!string.IsNullOrEmpty(exportPath))
-        {
-            string? html = await _lowerer.CreateExport(new LowerRequest
-            {
-                Code = WeakReferenceMessenger.Default.Send<Messages.GetInputCodeRequest>(),
-                InputLanguage = Languages[SelectedLanguageIndex],
-                OutputOptimizationLevel = OptimizationLevels[SelectedOptimizationLevelIndex],
-                OutputType = OutputTypes[SelectedOutputTypeIndex],
-            }, CancellationToken.None);
-
-            if (html is null)
-                _dialogs.Error("Export failed", "An error occurred while creating the export.");
-
-            await File.WriteAllTextAsync(exportPath, html);
-        }
-        IsInProgress = false;
     }
 }

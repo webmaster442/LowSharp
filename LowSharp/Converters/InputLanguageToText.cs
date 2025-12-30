@@ -2,19 +2,21 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
+using LowSharp.Server.ApiV1;
+
 namespace LowSharp.Converters;
 
 public sealed class InputLanguageToText : MarkupExtension, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is Core.InputLanguage lang)
+        if (value is InputLanguage lang)
         {
             return lang switch
             {
-                Core.InputLanguage.Csharp => "C#",
-                Core.InputLanguage.VisualBasic => "Visual Basic.NET",
-                Core.InputLanguage.FSharp => "F#",
+                InputLanguage.Csharp => "C#",
+                InputLanguage.VisualBasic => "Visual Basic.NET",
+                InputLanguage.Fsharp => "F#",
                 _ => Binding.DoNothing,
             };
         }
