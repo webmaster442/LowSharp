@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>03da7e80-79dd-44af-a3a8-1ae23943037d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\bin\$(Configuration)\Server</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
