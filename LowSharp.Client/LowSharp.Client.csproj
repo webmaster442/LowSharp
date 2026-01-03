@@ -12,12 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Lowering\Examples\Examples.txt" />
     <None Remove="Lowering\Syntax\CsharpNext.xshd" />
     <None Remove="Lowering\Syntax\Fsharp.xshd" />
     <None Remove="Lowering\Syntax\ILAsm.xshd" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Lowering\Examples\Examples.txt" />
     <EmbeddedResource Include="Lowering\Syntax\CsharpNext.xshd" />
     <EmbeddedResource Include="Lowering\Syntax\Fsharp.xshd" />
     <EmbeddedResource Include="Lowering\Syntax\ILAsm.xshd" />

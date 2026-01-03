@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Specialized;
 
-namespace LowSharp;
+namespace LowSharp.Client.Common;
 
 internal class ObservableList<T> : IList<T>, IReadOnlyList<T>, INotifyCollectionChanged
 {

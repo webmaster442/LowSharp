@@ -1,4 +1,4 @@
-﻿namespace LowSharp.Examples;
+﻿namespace LowSharp.Client.Lowering.Examples;
 
 internal record class Example
 {

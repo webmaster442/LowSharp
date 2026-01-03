@@ -1,19 +1,21 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace LowSharp.Examples;
+namespace LowSharp.Client.Lowering.Examples;
 
 internal sealed class ExampleReader : IDisposable
 {
     private readonly Stream _stream;
     private bool _disposed;
 
+    private const string ResourceName = "LowSharp.Client.Lowering.Examples.Examples.txt";
+
     public ExampleReader()
     {
-        var stream = typeof(ExamplesViewModel).Assembly.GetManifestResourceStream("LowSharp.Examples.Examples.txt");
+        var stream = typeof(ExamplesViewModel).Assembly.GetManifestResourceStream(ResourceName);
         if (stream == null)
         {
-            throw new InvalidOperationException("Could not find embedded resource 'LowSharp.Examples.Examples.txt'.");
+            throw new InvalidOperationException($"Could not find embedded resource '{ResourceName}'.");
         }
         _stream = stream;
     }

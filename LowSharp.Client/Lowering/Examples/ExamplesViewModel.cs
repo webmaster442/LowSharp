@@ -1,6 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LowSharp.Examples;
+using LowSharp.Client.Common;
+
+namespace LowSharp.Client.Lowering.Examples;
+
 internal sealed class ExamplesViewModel : ObservableObject
 {
     public ObservableList<Example> Csharp { get; }
