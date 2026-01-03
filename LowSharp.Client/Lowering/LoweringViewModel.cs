@@ -9,15 +9,20 @@ using Google.Protobuf.Collections;
 
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
+using LowSharp.Client.Lowering.Examples;
 using LowSharp.Lowering.ApiV1;
+
+using Windows.Globalization;
 
 namespace LowSharp.Client.Lowering;
 
 internal sealed partial class LoweringViewModel :
     ViewModelWithMenus,
-    IRecipient<Messages.IsBusyChangedMessage>
+    IRecipient<Messages.IsBusyChanged>,
+    IRecipient<Messages.SetInputLanguage>
 {
     private readonly IClient _client;
+    private readonly IDialogs _dialogs;
 
     [ObservableProperty]
     public partial bool IsBusy { get; set; }
@@ -25,6 +30,8 @@ internal sealed partial class LoweringViewModel :
     public MenuCheckableViewModel ShowLineNumbers { get; }
 
     public MenuCheckableViewModel WordWrap { get; }
+
+    public ExamplesViewModel Examples { get; }
 
     public ObservableCollection<InputLanguage> InputLanguages { get; }
 
@@ -41,11 +48,14 @@ internal sealed partial class LoweringViewModel :
     [ObservableProperty]
     public partial int SelectedOptimizationIndex { get; set; }
 
-    public LoweringViewModel(IClient client)
+    public LoweringViewModel(IClient client, IDialogs dialogs)
     {
         _client = client;
+        _dialogs = dialogs;
         IsBusy = client.IsBusy;
-        WeakReferenceMessenger.Default.Register<Messages.IsBusyChangedMessage>(this);
+        Examples = new ExamplesViewModel();
+        WeakReferenceMessenger.Default.Register<Messages.IsBusyChanged>(this);
+        WeakReferenceMessenger.Default.Register<Messages.SetInputLanguage>(this);
 
         ShowLineNumbers = new MenuCheckableViewModel
         {
@@ -69,6 +79,8 @@ internal sealed partial class LoweringViewModel :
             }
         });
 
+        Menus.Add(Examples.GenerateMenu());
+
         InputLanguages = Fill<InputLanguage>();
         OutputTypes = Fill<OutputCodeType>();
         Optimizations = Fill<Optimization>();
@@ -76,6 +88,18 @@ internal sealed partial class LoweringViewModel :
         SelectedOutputTypeIndex = 0;
         SelectedOptimizationIndex = 0;
     }
+
+    [RelayCommand]
+    public void OpenCode()
+    {
+        if (_dialogs.TryOpenCode(out var result))
+        {
+            var code = System.IO.File.ReadAllText(result.filename);
+            WeakReferenceMessenger.Default.Send(new Messages.SetInputCode(code));
+            SelectedInputLanguageIndex = InputLanguages.IndexOf(result.language);
+        }
+    }
+
 
     [RelayCommand]
     public async Task Lower()
@@ -113,6 +137,22 @@ internal sealed partial class LoweringViewModel :
     private static ObservableCollection<T> Fill<T>() where T : struct, Enum
         => new(Enum.GetValues<T>());
 
-    void IRecipient<Messages.IsBusyChangedMessage>.Receive(Messages.IsBusyChangedMessage message)
+    void IRecipient<Messages.IsBusyChanged>.Receive(Messages.IsBusyChanged message)
         => IsBusy = message.IsBusy;
+
+    void IRecipient<Messages.SetInputLanguage>.Receive(Messages.SetInputLanguage message)
+    {
+        if (message.Language.Contains("cs", StringComparison.OrdinalIgnoreCase))
+        {
+            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.Csharp);
+        }
+        else if (message.Language.Contains("v", StringComparison.OrdinalIgnoreCase))
+        {
+            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.VisualBasic);
+        }
+        else if (message.Language.Contains("fs", StringComparison.OrdinalIgnoreCase))
+        {
+            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.Fsharp);
+        }
+    }
 }

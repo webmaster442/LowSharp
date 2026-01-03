@@ -18,8 +18,8 @@ internal abstract partial class ViewModelWithMenus : ObservableObject
     /// Close current tab containing the view
     /// </summary>
     public void Close()
-        => WeakReferenceMessenger.Default.Send(new Messages.CloseCurrentTabMessage(this));
+        => WeakReferenceMessenger.Default.Send(new Messages.CloseCurrentTab(this));
 
     public void ReplaceContents(string title, ViewModelWithMenus viewModel)
-        => WeakReferenceMessenger.Default.Send(new Messages.ReplaceTabContentMessage(title, viewModel));
+        => WeakReferenceMessenger.Default.Send(new Messages.ReplaceTabContent(title, viewModel));
 }

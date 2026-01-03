@@ -1,34 +1,61 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using LowSharp.Client.Common;
+using LowSharp.Client.Common.Views;
+using LowSharp.Lowering.ApiV1;
 
 namespace LowSharp.Client.Lowering.Examples;
 
-internal sealed class ExamplesViewModel : ObservableObject
+internal sealed partial class ExamplesViewModel : ViewModelWithMenus
 {
-    public ObservableList<Example> Csharp { get; }
-
-    public ObservableList<Example> Fsharp { get; }
+    private readonly List<Example> _exampleList;
 
     public ExamplesViewModel()
     {
-        Csharp = new ObservableList<Example>();
-        Fsharp = new ObservableList<Example>();
         using var exampleReader = new ExampleReader();
-        Csharp.BlockNotifications();
-        Fsharp.BlockNotifications();
+        _exampleList = new List<Example>();
         exampleReader.ReadExamples(example =>
         {
-            if (string.Equals(example.Language, nameof(Csharp), StringComparison.OrdinalIgnoreCase))
-            {
-                Csharp.Add(example);
-            }
-            else if (string.Equals(example.Language, nameof(Fsharp), StringComparison.OrdinalIgnoreCase))
-            {
-                Fsharp.Add(example);
-            }
+            _exampleList.Add(example);
         });
-        Csharp.UnblockAndFireNotifications();
-        Fsharp.UnblockAndFireNotifications();
+    }
+
+    [RelayCommand]
+    public void LoadExample(Example example)
+    {
+        WeakReferenceMessenger.Default.Send(new Messages.SetInputCode(example.Content));
+        WeakReferenceMessenger.Default.Send(new Messages.SetInputLanguage(example.Language));
+    }
+
+    internal MenuViewModel GenerateMenu()
+    {
+        var exampleMenu = new MenuViewModel { Header = "Examples" };
+        var csharpMenuItem = new MenuViewModel { Header = "C#" };
+        var fSharpMenuItem = new MenuViewModel { Header = "F#" };
+
+        foreach (var example in _exampleList)
+        {
+            var menuItem = new MenuCommandViewModel
+            {
+                Header = example.Name,
+                Command = LoadExampleCommand,
+                CommandParameter = example
+            };
+
+            if (string.Equals(example.Language, "csharp", StringComparison.OrdinalIgnoreCase))
+            {
+                csharpMenuItem.Children.Add(menuItem);
+
+            }
+            else if (string.Equals(example.Language, "fsharp", StringComparison.OrdinalIgnoreCase))
+            {
+                fSharpMenuItem.Children.Add(menuItem);
+            }
+        }
+
+        exampleMenu.Children.Add(csharpMenuItem);
+        exampleMenu.Children.Add(fSharpMenuItem);
+        return exampleMenu;
     }
 }

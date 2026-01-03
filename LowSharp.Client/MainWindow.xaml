@@ -13,6 +13,10 @@
     TitleAlignment="Center"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <Window.Resources>
+        <commonViews:MenuViewModelStyleSelector x:Key="MenuViewModelStyleSelector"/>
+    </Window.Resources>
+
     <Window.InputBindings>
         <KeyBinding
             Key="T"
@@ -23,6 +27,7 @@
             Command="{Binding ExitAppCommand}"
             Modifiers="Alt" />
     </Window.InputBindings>
+    
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <StackPanel Orientation="Horizontal">
@@ -47,6 +52,7 @@
                 <Menu
                     VerticalAlignment="Center"
                     Background="Transparent"
+                    ItemContainerStyleSelector="{StaticResource MenuViewModelStyleSelector}"
                     ItemsSource="{Binding ActualTabItem.Content.Menus}">
                     <Menu.ItemTemplate>
                         <HierarchicalDataTemplate
@@ -73,9 +79,9 @@
             Grid.Row="1"
             Grid.ColumnSpan="2"
             IsEnabled="{Binding Client.IsConnected}"
-            IsSynchronizedWithCurrentItem="True"
             ItemsSource="{Binding Tabs}"
-            SelectedItem="{Binding ActualTabItem}"
+            SelectedItem="{Binding ActualTabItem, Mode=OneWay}"
+            SelectionChanged="TabControl_SelectionChanged"
             Style="{StaticResource MahApps.Styles.TabControl.VisualStudio}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
@@ -197,9 +203,9 @@
                     </MenuItem>
                 </Menu>
                 <TextBlock
+                    Margin="10,0"
                     VerticalAlignment="Center"
-                    Text="Text Size:"
-                    Margin="10,0"/>
+                    Text="Text Size:" />
                 <ComboBox
                     Width="70"
                     ItemsSource="{Binding ZoomLevels}"

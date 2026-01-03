@@ -16,14 +16,14 @@ public partial class LoweringView : UserControl
         InitializeComponent();
 
         WeakReferenceMessenger.Default.Register<RequestMessages.GetInputCodeRequest>(this, OnGetInputCode); // (recipient, message) => m
-        WeakReferenceMessenger.Default.Register<Messages.SetInputCodeRequest>(this, OnSetInputCode);
+        WeakReferenceMessenger.Default.Register<Messages.SetInputCode>(this, OnSetInputCode);
         WeakReferenceMessenger.Default.Register<Messages.SetOutputCodeRequest>(this, OnSetOutputCode);
     }
 
     private void OnSetOutputCode(object recipient, Messages.SetOutputCodeRequest message)
         => Output.Document.Text = message.Code;
 
-    private void OnSetInputCode(object recipient, Messages.SetInputCodeRequest message)
+    private void OnSetInputCode(object recipient, Messages.SetInputCode message)
         => Input.Document.Text = message.Code;
 
     private void OnGetInputCode(object recipient, RequestMessages.GetInputCodeRequest message)

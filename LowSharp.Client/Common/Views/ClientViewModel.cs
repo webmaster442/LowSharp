@@ -13,7 +13,7 @@ using Grpc.Net.Client;
 namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class ClientViewModel :
-    ObservableObject, 
+    ObservableObject,
     IDisposable,
     IClient
 {
@@ -27,7 +27,7 @@ internal sealed partial class ClientViewModel :
     public partial bool IsConnected { get; set; }
 
     partial void OnIsConnectedChanged(bool oldValue, bool newValue)
-        => WeakReferenceMessenger.Default.Send(new Messages.IsConnectedChangedMessage(newValue));
+        => WeakReferenceMessenger.Default.Send(new Messages.IsConnectedChanged(newValue));
 
     [ObservableProperty]
     public partial bool IsRunning { get; set; }
@@ -36,7 +36,7 @@ internal sealed partial class ClientViewModel :
     public partial bool IsBusy { get; set; }
 
     partial void OnIsBusyChanged(bool oldValue, bool newValue)
-        => WeakReferenceMessenger.Default.Send(new Messages.IsBusyChangedMessage(newValue));
+        => WeakReferenceMessenger.Default.Send(new Messages.IsBusyChanged(newValue));
 
     public ClientViewModel(IDialogs dialogs)
     {
@@ -169,22 +169,42 @@ internal sealed partial class ClientViewModel :
     }
 
     public async Task<LowSharp.Lowering.ApiV1.LoweringResponse> LowerCodeAsync(string code,
-                                                                          LowSharp.Lowering.ApiV1.InputLanguage inputLanguage,
-                                                                          LowSharp.Lowering.ApiV1.Optimization optimization,
-                                                                          LowSharp.Lowering.ApiV1.OutputCodeType outputCodeType)
+                                                                               LowSharp.Lowering.ApiV1.InputLanguage inputLanguage,
+                                                                               LowSharp.Lowering.ApiV1.Optimization optimization,
+                                                                               LowSharp.Lowering.ApiV1.OutputCodeType outputCodeType)
     {
-        IsBusy = true;
         var client = new LowSharp.Lowering.ApiV1.Lowerer.LowererClient(_channel);
 
-        var result = await client.ToLowerCodeAsync(new LowSharp.Lowering.ApiV1.LoweringRequest()
+        try
         {
-            Code = code,
-            Language = inputLanguage,
-            OptimizationLevel = optimization,
-            OutputType = outputCodeType
-        });
-        IsBusy = false;
-
-        return result;
+            IsBusy = true;
+            var result = await client.ToLowerCodeAsync(new LowSharp.Lowering.ApiV1.LoweringRequest()
+            {
+                Code = code,
+                Language = inputLanguage,
+                OptimizationLevel = optimization,
+                OutputType = outputCodeType
+            });
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new LowSharp.Lowering.ApiV1.LoweringResponse()
+            {
+                ResultCode = string.Empty,
+                Diagnostics =
+                {
+                    new LowSharp.Lowering.ApiV1.Diagnostic()
+                    {
+                        Severity = LowSharp.Lowering.ApiV1.DiagnosticSeverity.Error,
+                        Message = $"Failed to lower code: {ex.Message}"
+                    }
+                }
+            };
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

@@ -15,24 +15,26 @@ namespace LowSharp.Client;
 internal sealed partial class MainWindowViewModel :
     ObservableObject,
     IDisposable,
-    IRecipient<Messages.ReplaceTabContentMessage>,
-    IRecipient<Messages.CloseCurrentTabMessage>,
-    IRecipient<Messages.IsConnectedChangedMessage>,
-    IRecipient<RequestMessages.RequestClientMessage>
+    IRecipient<Messages.ReplaceTabContent>,
+    IRecipient<Messages.CloseCurrentTab>,
+    IRecipient<Messages.IsConnectedChanged>,
+    IRecipient<Messages.TabIndexChanged>
 {
     private const int BaseFontSize = 16;
+    private readonly IDialogs _dialogs;
 
     public MainWindowViewModel(IDialogs dialogs)
     {
+        _dialogs = dialogs;
         Client = new ClientViewModel(dialogs);
         Tabs = new BindingList<TabViewModel>();
         ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
         ActualZoomLevel = 1.0;
         CreateStartPage();
-        WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContentMessage>(this);
-        WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTabMessage>(this);
-        WeakReferenceMessenger.Default.Register<Messages.IsConnectedChangedMessage>(this);
-        WeakReferenceMessenger.Default.Register<RequestMessages.RequestClientMessage>(this);
+        WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContent>(this);
+        WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTab>(this);
+        WeakReferenceMessenger.Default.Register<Messages.IsConnectedChanged>(this);
+        WeakReferenceMessenger.Default.Register<Messages.TabIndexChanged>(this);
     }
 
     [MemberNotNull(nameof(ActualTabItem))]
@@ -49,7 +51,7 @@ internal sealed partial class MainWindowViewModel :
 
     [MemberNotNull(nameof(ActualTabItem))]
     private void CreateStartPage()
-        => CreateTab("Start page", new StartPageViewModel());
+        => CreateTab("Start page", new StartPageViewModel(Client, _dialogs));
 
     public BindingList<TabViewModel> Tabs { get; }
 
@@ -84,16 +86,15 @@ internal sealed partial class MainWindowViewModel :
     public void ExitApp()
         => Application.Current.Shutdown();
 
-    void IRecipient<Messages.ReplaceTabContentMessage>.Receive(Messages.ReplaceTabContentMessage message)
+    void IRecipient<Messages.ReplaceTabContent>.Receive(Messages.ReplaceTabContent message)
     {
         int index = Tabs.IndexOf(ActualTabItem);
         Tabs[index].TabTitle = message.tabTitle;
         Tabs[index].Content = message.ViewModel;
-        ActualTabItem.TabTitle = message.tabTitle;
-        ActualTabItem.Content = message.ViewModel;
+        ActualTabItem = Tabs[index];
     }
 
-    void IRecipient<Messages.CloseCurrentTabMessage>.Receive(Messages.CloseCurrentTabMessage message)
+    void IRecipient<Messages.CloseCurrentTab>.Receive(Messages.CloseCurrentTab message)
     {
         var tabToRemove = Tabs.FirstOrDefault(t => t.Content == message.ViewModel);
         if (tabToRemove != null)
@@ -111,9 +112,9 @@ internal sealed partial class MainWindowViewModel :
         }
     }
 
-    void IRecipient<Messages.IsConnectedChangedMessage>.Receive(Messages.IsConnectedChangedMessage message)
+    void IRecipient<Messages.IsConnectedChanged>.Receive(Messages.IsConnectedChanged message)
         => NewTabCommand.NotifyCanExecuteChanged();
 
-    void IRecipient<RequestMessages.RequestClientMessage>.Receive(RequestMessages.RequestClientMessage message)
-        => message.Reply(Client);
+    void IRecipient<Messages.TabIndexChanged>.Receive(Messages.TabIndexChanged message)
+        => ActualTabItem = Tabs[message.NewIndex];
 }

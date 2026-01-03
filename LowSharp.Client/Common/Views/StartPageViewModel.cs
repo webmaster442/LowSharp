@@ -7,12 +7,18 @@ namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class StartPageViewModel : ViewModelWithMenus
 {
+    private readonly IClient _client;
+    private readonly IDialogs _dialogs;
+
+    public StartPageViewModel(IClient client, IDialogs dialogs)
+    {
+        _client = client;
+        _dialogs = dialogs;
+    }
+
     [RelayCommand]
     public void StartLowering()
-    {
-        var message = WeakReferenceMessenger.Default.Send<RequestMessages.RequestClientMessage>();
-        ReplaceContents("Lowering", new LoweringViewModel(message.Response));
-    }
+        => ReplaceContents("Lowering", new LoweringViewModel(_client, _dialogs));
 
     [RelayCommand]
     public void StartRepl()
