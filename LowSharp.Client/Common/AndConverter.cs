@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common;
 
 internal class AndConverter: MultiConverterBase<bool, bool>
 {

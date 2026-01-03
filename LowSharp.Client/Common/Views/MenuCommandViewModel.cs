@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace LowSharp.Client.Comon.Views;
+namespace LowSharp.Client.Common.Views;
 
 internal sealed class MenuCommandViewModel : MenuViewModel
 {

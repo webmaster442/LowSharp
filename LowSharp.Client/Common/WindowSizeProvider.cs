@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Markup;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common;
 
 internal sealed class WindowSizeProvider : MarkupExtension
 {

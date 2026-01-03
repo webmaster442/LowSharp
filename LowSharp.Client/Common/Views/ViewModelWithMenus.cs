@@ -3,7 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 
-namespace LowSharp.Client.Comon.Views;
+namespace LowSharp.Client.Common.Views;
 
 internal abstract partial class ViewModelWithMenus : ObservableObject
 {

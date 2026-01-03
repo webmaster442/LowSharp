@@ -2,7 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common.Views;
 
 internal partial class MenuViewModel : ObservableObject
 {
@@ -11,7 +11,7 @@ internal partial class MenuViewModel : ObservableObject
 
     public ObservableCollection<MenuViewModel> Children { get; set; }
 
-    protected MenuViewModel()
+    public MenuViewModel()
     {
         Children = new ObservableCollection<MenuViewModel>();
     }

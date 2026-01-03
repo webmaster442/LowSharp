@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common;
 
 internal sealed class VisibilityConverter : ConverterBase<bool, Visibility>
 {

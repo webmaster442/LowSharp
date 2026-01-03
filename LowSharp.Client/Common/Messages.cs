@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using LowSharp.Client.Comon.Views;
+using LowSharp.Client.Common.Views;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common;
 
 internal static class Messages
 {

@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Grpc.Net.Client;
 
-namespace LowSharp.Client.Comon.Views;
+namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class ClientViewModel :
     ObservableObject, 

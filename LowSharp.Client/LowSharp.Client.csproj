@@ -12,6 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Lowering\Syntax\CsharpNext.xshd" />
+    <None Remove="Lowering\Syntax\Fsharp.xshd" />
+    <None Remove="Lowering\Syntax\ILAsm.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Lowering\Syntax\CsharpNext.xshd" />
+    <EmbeddedResource Include="Lowering\Syntax\Fsharp.xshd" />
+    <EmbeddedResource Include="Lowering\Syntax\ILAsm.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Google.Protobuf" Version="3.33.2" />

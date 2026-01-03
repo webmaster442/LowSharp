@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using LowSharp.Client.Comon;
-using LowSharp.Client.Comon.Views;
+using LowSharp.Client.Common;
+using LowSharp.Client.Common.Views;
 
 namespace LowSharp.Client;
 

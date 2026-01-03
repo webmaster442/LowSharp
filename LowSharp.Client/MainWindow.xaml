@@ -2,14 +2,14 @@
     x:Class="LowSharp.Client.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:comon="clr-namespace:LowSharp.Client.Comon"
+    xmlns:common="clr-namespace:LowSharp.Client.Common"
+    xmlns:commonViews="clr-namespace:LowSharp.Client.Common.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:LowSharp.Client"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="LowSharp"
-    Width="{comon:WindowSizeProvider Type=Width}"
-    Height="{comon:WindowSizeProvider Type=Height}"
+    Width="{common:WindowSizeProvider Type=Width}"
+    Height="{common:WindowSizeProvider Type=Height}"
     TitleAlignment="Center"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -25,24 +25,36 @@
     </Window.InputBindings>
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
-            <Menu
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="0,0,0,0"
-                VerticalAlignment="Center"
-                Background="Transparent">
-                <MenuItem Header="File">
-                    <MenuItem
-                        Command="{Binding NewTabCommand}"
-                        Header="New tab..."
-                        InputGestureText="Ctrl+T" />
-                    <Separator />
-                    <MenuItem
-                        Command="{Binding ExitAppCommand}"
-                        Header="Exit"
-                        InputGestureText="Alt+F4" />
-                </MenuItem>
-            </Menu>
+            <StackPanel Orientation="Horizontal">
+                <Menu
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Center"
+                    Background="Transparent">
+                    <MenuItem Header="File">
+                        <MenuItem
+                            Command="{Binding NewTabCommand}"
+                            Header="New tab..."
+                            InputGestureText="Ctrl+T" />
+                        <Separator />
+                        <MenuItem
+                            Command="{Binding ExitAppCommand}"
+                            Header="Exit"
+                            InputGestureText="Alt+F4" />
+                    </MenuItem>
+                </Menu>
+                <Separator />
+                <Menu ItemsSource="{Binding ActualTabItem.Content.Menus}">
+                    <Menu.ItemTemplate>
+                        <HierarchicalDataTemplate
+                            DataType="{x:Type commonViews:MenuViewModel}"
+                            ItemsSource="{Binding Children}">
+                            <TextBlock Text="{Binding Header}" />
+                        </HierarchicalDataTemplate>
+                    </Menu.ItemTemplate>
+                </Menu>
+            </StackPanel>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <Grid>
@@ -133,7 +145,7 @@
                         <MenuItem
                             Command="{Binding Client.StartCommand}"
                             Header="Start"
-                            IsEnabled="{Binding Client.IsRunning, Converter={comon:NegateConverter}}">
+                            IsEnabled="{Binding Client.IsRunning, Converter={common:NegateConverter}}">
                             <MenuItem.Icon>
                                 <Canvas
                                     Width="24"
@@ -163,9 +175,9 @@
                             Command="{Binding Client.ConnectCommand}"
                             Header="Connect">
                             <MenuItem.IsEnabled>
-                                <MultiBinding Converter="{comon:AndConverter}">
+                                <MultiBinding Converter="{common:AndConverter}">
                                     <Binding
-                                        Converter="{comon:NegateConverter}"
+                                        Converter="{common:NegateConverter}"
                                         Path="Client.IsConnected" />
                                     <Binding Path="Client.IsRunning" />
                                 </MultiBinding>
@@ -187,7 +199,7 @@
                     Height="20"
                     Margin="5,0"
                     IsIndeterminate="True"
-                    Visibility="{Binding Client.IsBusy, Converter={comon:VisibilityConverter}}" />
+                    Visibility="{Binding Client.IsBusy, Converter={common:VisibilityConverter}}" />
             </StackPanel>
         </StatusBar>
     </Grid>

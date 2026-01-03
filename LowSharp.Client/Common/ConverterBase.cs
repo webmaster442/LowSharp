@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common;
 
 internal abstract class ConverterBase<TFrom, TTo> : MarkupExtension, IValueConverter
     where TFrom : notnull where TTo: notnull

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-using LowSharp.Client.Comon;
+using LowSharp.Client.Common;
 
 using MahApps.Metro.Controls;
 

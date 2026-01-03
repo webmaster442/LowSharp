@@ -3,14 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-    xmlns:comon="clr-namespace:LowSharp.Client.Comon"
+    xmlns:common="clr-namespace:LowSharp.Client.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:LowSharp.Client.Lowering"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid IsEnabled="{Binding IsBusy, Converter={comon:NegateConverter}}">
+    <Grid IsEnabled="{Binding IsBusy, Converter={common:NegateConverter}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="300" />
             <ColumnDefinition Width="5" />
@@ -21,9 +21,11 @@
             Grid.Column="0"
             Header="Input code">
             <avalonEdit:TextEditor
-                Foreground="{StaticResource White}"
                 x:Name="Input"
-                FontFamily="Cascadia Code" />
+                FontFamily="Cascadia Code"
+                Foreground="{StaticResource White}"
+                ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+                WordWrap="{Binding WordWrap.IsChecked}" />
         </GroupBox>
         <GridSplitter
             Grid.Column="1"
@@ -35,10 +37,12 @@
             Grid.Column="2"
             Header="Output">
             <avalonEdit:TextEditor
-                IsReadOnly="True"
-                Foreground="{StaticResource White}"
                 x:Name="Output"
-                FontFamily="Cascadia Code" />
+                FontFamily="Cascadia Code"
+                Foreground="{StaticResource White}"
+                IsReadOnly="True"
+                ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+                WordWrap="{Binding WordWrap.IsChecked}" />
         </GroupBox>
     </Grid>
 </UserControl>

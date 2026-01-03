@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LowSharp.Client.Comon.Views;
+namespace LowSharp.Client.Common.Views;
 
 internal partial class TabViewModel : ObservableObject
 {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-using LowSharp.Client.Comon.Views;
+using LowSharp.Client.Common.Views;
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace LowSharp.Client.Comon;
+namespace LowSharp.Client.Common;
 
 internal sealed class Dialogs : IDialogs
 {
