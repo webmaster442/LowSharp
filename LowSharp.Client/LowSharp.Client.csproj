@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Lowering\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Protobuf Include="..\Protobuff\LoweringApiV1.proto" GrpcServices="Client" Access="Internal">
       <Link>LoweringApiV1.proto</Link>
     </Protobuf>

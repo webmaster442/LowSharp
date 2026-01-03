@@ -10,20 +10,20 @@ internal abstract class ConverterBase<TFrom, TTo> : MarkupExtension, IValueConve
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is TFrom fromValue
-            ? ConvertFrom(fromValue, culture)
+            ? ConvertFrom(fromValue, parameter, culture)
             : Binding.DoNothing;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is TTo toValue
-            ? ConvertToBack(toValue, culture)
+            ? ConvertToBack(toValue, parameter, culture)
             : Binding.DoNothing;
     }
 
-    protected abstract TTo ConvertFrom(TFrom value, CultureInfo culture);
+    protected abstract TTo ConvertFrom(TFrom value, object parameter, CultureInfo culture);
 
-    protected abstract TFrom ConvertToBack(TTo value, CultureInfo culture);
+    protected abstract TFrom ConvertToBack(TTo value, object parameter, CultureInfo culture);
 
     public override object ProvideValue(IServiceProvider serviceProvider)
         => this;

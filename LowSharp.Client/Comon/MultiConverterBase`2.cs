@@ -9,8 +9,12 @@ internal abstract class MultiConverterBase<TFrom, TTo> : MarkupExtension, IMulti
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        var converted = values.Cast<TFrom>().ToArray();
-        return ConvertFrom(converted, culture);
+        if (values != null && values.Length > 0)
+        {
+            var converted = values.Cast<TFrom>().ToArray();
+            return ConvertFrom(converted, culture);
+        }
+        return Binding.DoNothing;
     }
 
     protected abstract TTo ConvertFrom(TFrom[] converted, CultureInfo culture);

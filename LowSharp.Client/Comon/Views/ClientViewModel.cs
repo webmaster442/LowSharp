@@ -11,6 +11,7 @@ using Grpc.Net.Client;
 
 namespace LowSharp.Client.Comon.Views;
 
+
 internal sealed partial class ClientViewModel : ObservableObject, IDisposable
 {
     private readonly DispatcherTimer _checkTimer;
