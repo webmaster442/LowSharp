@@ -1,11 +1,15 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:comon="clr-namespace:LowSharp.Client.Comon.Views">
+    xmlns:comon="clr-namespace:LowSharp.Client.Comon.Views"
+    xmlns:lowering="clr-namespace:LowSharp.Client.Lowering">
 
-    <DataTemplate
-        DataType="{x:Type comon:StartPageViewModel}">
+    <DataTemplate DataType="{x:Type comon:StartPageViewModel}">
         <comon:StartPage />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type lowering:LoweringViewModel}">
+        <lowering:LoweringView />
     </DataTemplate>
 
 </ResourceDictionary>

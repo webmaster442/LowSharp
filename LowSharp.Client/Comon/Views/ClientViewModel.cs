@@ -6,13 +6,16 @@ using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Grpc.Net.Client;
 
 namespace LowSharp.Client.Comon.Views;
 
-
-internal sealed partial class ClientViewModel : ObservableObject, IDisposable
+internal sealed partial class ClientViewModel :
+    ObservableObject, 
+    IDisposable,
+    IClient
 {
     private readonly DispatcherTimer _checkTimer;
     private readonly IDialogs _dialogs;
@@ -23,11 +26,17 @@ internal sealed partial class ClientViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     public partial bool IsConnected { get; set; }
 
+    partial void OnIsConnectedChanged(bool oldValue, bool newValue)
+        => WeakReferenceMessenger.Default.Send(new Messages.IsConnectedChangedMessage(newValue));
+
     [ObservableProperty]
     public partial bool IsRunning { get; set; }
 
     [ObservableProperty]
     public partial bool IsBusy { get; set; }
+
+    partial void OnIsBusyChanged(bool oldValue, bool newValue)
+        => WeakReferenceMessenger.Default.Send(new Messages.IsBusyChangedMessage(newValue));
 
     public ClientViewModel(IDialogs dialogs)
     {
@@ -155,5 +164,7 @@ internal sealed partial class ClientViewModel : ObservableObject, IDisposable
         {
             UnsafeUseInsecureChannelCallCredentials = true,
         });
+
+        IsConnected = true;
     }
 }

@@ -1,19 +1,33 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
+using LowSharp.Client.Comon;
 using LowSharp.Client.Comon.Views;
 
 namespace LowSharp.Client;
 
-internal sealed class MainWindowViewModel : ObservableObject, IDisposable
+internal sealed partial class MainWindowViewModel :
+    ObservableObject,
+    IDisposable,
+    IRecipient<Messages.ReplaceTabContentMessage>,
+    IRecipient<Messages.CloseCurrentTabMessage>,
+    IRecipient<Messages.IsConnectedChangedMessage>,
+    IRecipient<Messages.RequestClientMessage>
 {
     public MainWindowViewModel(IDialogs dialogs)
     {
         Client = new ClientViewModel(dialogs);
         Tabs = new BindingList<TabViewModel>();
-        CreateTab("Start page", new StartPageViewModel());
+        CreateStartPage();
+        WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContentMessage>(this);
+        WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTabMessage>(this);
+        WeakReferenceMessenger.Default.Register<Messages.IsConnectedChangedMessage>(this);
+        WeakReferenceMessenger.Default.Register<Messages.RequestClientMessage>(this);
     }
 
     [MemberNotNull(nameof(ActualTabItem))]
@@ -28,6 +42,10 @@ internal sealed class MainWindowViewModel : ObservableObject, IDisposable
         ActualTabItem = newTab;
     }
 
+    [MemberNotNull(nameof(ActualTabItem))]
+    private void CreateStartPage()
+        => CreateTab("Start page", new StartPageViewModel());
+
     public BindingList<TabViewModel> Tabs { get; }
 
     public TabViewModel ActualTabItem { get; set; }
@@ -38,4 +56,48 @@ internal sealed class MainWindowViewModel : ObservableObject, IDisposable
     }
 
     public ClientViewModel Client { get; }
+
+    [RelayCommand(CanExecute = nameof(CanNewTab))]
+    public void NewTab() 
+        => CreateStartPage();
+
+    private bool CanNewTab()
+        => Client.IsConnected;
+
+    [RelayCommand]
+    public void ExitApp()
+        => Application.Current.Shutdown();
+
+    void IRecipient<Messages.ReplaceTabContentMessage>.Receive(Messages.ReplaceTabContentMessage message)
+    {
+        int index = Tabs.IndexOf(ActualTabItem);
+        Tabs[index].TabTitle = message.tabTitle;
+        Tabs[index].Content = message.ViewModel;
+        ActualTabItem.TabTitle = message.tabTitle;
+        ActualTabItem.Content = message.ViewModel;
+    }
+
+    void IRecipient<Messages.CloseCurrentTabMessage>.Receive(Messages.CloseCurrentTabMessage message)
+    {
+        var tabToRemove = Tabs.FirstOrDefault(t => t.Content == message.ViewModel);
+        if (tabToRemove != null)
+        {
+            int index = Tabs.IndexOf(tabToRemove);
+            Tabs.Remove(tabToRemove);
+            if (index >= 0 && index < Tabs.Count - 1)
+            {
+                ActualTabItem = Tabs[index];
+            }
+            else
+            {
+                CreateStartPage();
+            }
+        }
+    }
+
+    void IRecipient<Messages.IsConnectedChangedMessage>.Receive(Messages.IsConnectedChangedMessage message)
+        => NewTabCommand.NotifyCanExecuteChanged();
+
+    void IRecipient<Messages.RequestClientMessage>.Receive(Messages.RequestClientMessage message)
+        => message.Reply(Client);
 }

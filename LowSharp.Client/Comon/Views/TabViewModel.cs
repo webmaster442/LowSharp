@@ -9,4 +9,5 @@ internal partial class TabViewModel : ObservableObject
 
     [ObservableProperty]
     public required partial ViewModelWithMenus Content { get; set; }
+
 }
