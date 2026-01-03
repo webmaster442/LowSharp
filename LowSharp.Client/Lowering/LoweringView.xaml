@@ -4,12 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:common="clr-namespace:LowSharp.Client.Common"
+    xmlns:converters="clr-namespace:LowSharp.Client.Lowering.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:LowSharp.Client.Lowering"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="F5"
+            Command="{Binding LowerCommand}" />
+    </UserControl.InputBindings>
     <Grid IsEnabled="{Binding IsBusy, Converter={common:NegateConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -45,7 +51,15 @@
                 Grid.Column="1"
                 MinWidth="100"
                 Margin="5,0"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                SelectedIndex="{Binding SelectedInputLanguageIndex}"
+                ItemsSource="{Binding InputLanguages}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={converters:InputLanguageToTextConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBlock
                 Grid.Column="2"
@@ -57,7 +71,15 @@
                 Grid.Column="3"
                 MinWidth="100"
                 Margin="5,0"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                SelectedIndex="{Binding SelectedOptimizationIndex}"
+                ItemsSource="{Binding Optimizations}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={converters:OptimizationToTextConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <CheckBox
                 Grid.Column="5"
@@ -81,14 +103,23 @@
                 Grid.Column="8"
                 MinWidth="100"
                 Margin="5,0"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                SelectedIndex="{Binding SelectedOutputTypeIndex}"
+                ItemsSource="{Binding OutputTypes}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={converters:OutputCodeTypeToStringConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <Button
                 Grid.Column="9"
                 Height="30"
                 MinWidth="80"
                 Margin="20,5,5,5"
-                Content="Lower"
+                Command="{Binding LowerCommand}"
+                Content="Lower (F5)"
                 Style="{StaticResource MahApps.Styles.Button.VisualStudio}" />
         </Grid>
         <avalonEdit:TextEditor

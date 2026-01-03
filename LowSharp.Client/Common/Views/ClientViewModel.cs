@@ -167,4 +167,24 @@ internal sealed partial class ClientViewModel :
 
         IsConnected = true;
     }
+
+    public async Task<LowSharp.Lowering.ApiV1.LoweringResponse> LowerCodeAsync(string code,
+                                                                          LowSharp.Lowering.ApiV1.InputLanguage inputLanguage,
+                                                                          LowSharp.Lowering.ApiV1.Optimization optimization,
+                                                                          LowSharp.Lowering.ApiV1.OutputCodeType outputCodeType)
+    {
+        IsBusy = true;
+        var client = new LowSharp.Lowering.ApiV1.Lowerer.LowererClient(_channel);
+
+        var result = await client.ToLowerCodeAsync(new LowSharp.Lowering.ApiV1.LoweringRequest()
+        {
+            Code = code,
+            Language = inputLanguage,
+            OptimizationLevel = optimization,
+            OutputType = outputCodeType
+        });
+        IsBusy = false;
+
+        return result;
+    }
 }

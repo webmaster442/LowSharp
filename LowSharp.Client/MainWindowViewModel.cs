@@ -18,7 +18,7 @@ internal sealed partial class MainWindowViewModel :
     IRecipient<Messages.ReplaceTabContentMessage>,
     IRecipient<Messages.CloseCurrentTabMessage>,
     IRecipient<Messages.IsConnectedChangedMessage>,
-    IRecipient<Messages.RequestClientMessage>
+    IRecipient<RequestMessages.RequestClientMessage>
 {
     private const int BaseFontSize = 16;
 
@@ -32,7 +32,7 @@ internal sealed partial class MainWindowViewModel :
         WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContentMessage>(this);
         WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTabMessage>(this);
         WeakReferenceMessenger.Default.Register<Messages.IsConnectedChangedMessage>(this);
-        WeakReferenceMessenger.Default.Register<Messages.RequestClientMessage>(this);
+        WeakReferenceMessenger.Default.Register<RequestMessages.RequestClientMessage>(this);
     }
 
     [MemberNotNull(nameof(ActualTabItem))]
@@ -114,6 +114,6 @@ internal sealed partial class MainWindowViewModel :
     void IRecipient<Messages.IsConnectedChangedMessage>.Receive(Messages.IsConnectedChangedMessage message)
         => NewTabCommand.NotifyCanExecuteChanged();
 
-    void IRecipient<Messages.RequestClientMessage>.Receive(Messages.RequestClientMessage message)
+    void IRecipient<RequestMessages.RequestClientMessage>.Receive(RequestMessages.RequestClientMessage message)
         => message.Reply(Client);
 }

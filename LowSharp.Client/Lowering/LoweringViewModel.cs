@@ -1,8 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.Text;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+
+using Google.Protobuf.Collections;
 
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
+using LowSharp.Lowering.ApiV1;
 
 namespace LowSharp.Client.Lowering;
 
@@ -18,6 +25,21 @@ internal sealed partial class LoweringViewModel :
     public MenuCheckableViewModel ShowLineNumbers { get; }
 
     public MenuCheckableViewModel WordWrap { get; }
+
+    public ObservableCollection<InputLanguage> InputLanguages { get; }
+
+    [ObservableProperty]
+    public partial int SelectedInputLanguageIndex { get; set; }
+
+    public ObservableCollection<OutputCodeType> OutputTypes { get; }
+
+    [ObservableProperty]
+    public partial int SelectedOutputTypeIndex { get; set; }
+
+    public ObservableCollection<Optimization> Optimizations { get; }
+
+    [ObservableProperty]
+    public partial int SelectedOptimizationIndex { get; set; }
 
     public LoweringViewModel(IClient client)
     {
@@ -46,7 +68,50 @@ internal sealed partial class LoweringViewModel :
                 WordWrap
             }
         });
+
+        InputLanguages = Fill<InputLanguage>();
+        OutputTypes = Fill<OutputCodeType>();
+        Optimizations = Fill<Optimization>();
+        SelectedInputLanguageIndex = 0;
+        SelectedOutputTypeIndex = 0;
+        SelectedOptimizationIndex = 0;
     }
+
+    [RelayCommand]
+    public async Task Lower()
+    {
+        string inputCode = WeakReferenceMessenger.Default.Send<RequestMessages.GetInputCodeRequest>();
+
+        LoweringResponse result = await _client.LowerCodeAsync(inputCode,
+                                                               InputLanguages[SelectedInputLanguageIndex],
+                                                               Optimizations[SelectedOptimizationIndex],
+                                                               OutputTypes[SelectedOutputTypeIndex]);
+
+        if (result.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
+        {
+            WeakReferenceMessenger.Default.Send(new Messages.SetOutputCodeRequest(GetDiagnostics(result.Diagnostics)));
+            return;
+        }
+
+        WeakReferenceMessenger.Default.Send(new Messages.SetOutputCodeRequest(result.ResultCode));
+    }
+
+    private static string GetDiagnostics(RepeatedField<Diagnostic> diagnostics)
+    {
+        var builder = new StringBuilder();
+        foreach (var diagnostic in diagnostics)
+        {
+            builder
+                .AppendLine($"{diagnostic.Severity}:")
+                .AppendLine(diagnostic.Message)
+                .AppendLine();
+        }
+
+        return builder.ToString();
+    }
+
+    private static ObservableCollection<T> Fill<T>() where T : struct, Enum
+        => new(Enum.GetValues<T>());
 
     void IRecipient<Messages.IsBusyChangedMessage>.Receive(Messages.IsBusyChangedMessage message)
         => IsBusy = message.IsBusy;
