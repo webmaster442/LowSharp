@@ -2,7 +2,7 @@
 
 namespace LowSharp.Client.Common;
 
-internal sealed class NegateConverter : ConverterBase<bool, bool>
+internal sealed class NegateConverter : TwoWayConverterBase<bool, bool>
 {
     protected override bool ConvertFrom(bool value, object parameter, CultureInfo culture)
         => !value;

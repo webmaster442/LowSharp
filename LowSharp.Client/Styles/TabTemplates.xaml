@@ -2,7 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:LowSharp.Client.Common.Views"
-    xmlns:lowering="clr-namespace:LowSharp.Client.Lowering">
+    xmlns:lowering="clr-namespace:LowSharp.Client.Lowering"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <system:Double x:Key="EditorFontSize">16</system:Double>
 
     <DataTemplate DataType="{x:Type common:StartPageViewModel}">
         <common:StartPage />

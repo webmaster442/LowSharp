@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace LowSharp.Client.Common;
 
-internal sealed class VisibilityConverter : ConverterBase<bool, Visibility>
+internal sealed class VisibilityConverter : TwoWayConverterBase<bool, Visibility>
 {
     protected override Visibility ConvertFrom(bool value, object parameter, CultureInfo culture)
     {

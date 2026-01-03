@@ -27,19 +27,19 @@ internal sealed partial class LoweringViewModel :
 
         ShowLineNumbers = new MenuCheckableViewModel
         {
-            Title = "Show Line Numbers",
+            Header = "Show Line Numbers",
             IsChecked = true
         };
 
         WordWrap = new MenuCheckableViewModel
         {
-            Title = "Word Wrap",
+            Header = "Word Wrap",
             IsChecked = true
         };
 
         Menus.Add(new MenuViewModel
         {
-            Title = "View",
+            Header = "View",
             Children =
             {
                 ShowLineNumbers,

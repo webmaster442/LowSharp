@@ -11,38 +11,126 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid IsEnabled="{Binding IsBusy, Converter={common:NegateConverter}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="300" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="3" />
             <ColumnDefinition MinWidth="300" />
         </Grid.ColumnDefinitions>
-        <GroupBox
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Margin="5,0"
+                VerticalAlignment="Center"
+                Text="Language:" />
+
+            <ComboBox
+                Grid.Column="1"
+                MinWidth="100"
+                Margin="5,0"
+                VerticalAlignment="Center" />
+
+            <TextBlock
+                Grid.Column="2"
+                Margin="5,0"
+                VerticalAlignment="Center"
+                Text="Configuration:" />
+
+            <ComboBox
+                Grid.Column="3"
+                MinWidth="100"
+                Margin="5,0"
+                VerticalAlignment="Center" />
+
+            <CheckBox
+                Grid.Column="5"
+                Margin="5,0"
+                Content="Show Line numbers"
+                IsChecked="{Binding ShowLineNumbers.IsChecked}" />
+
+            <CheckBox
+                Grid.Column="6"
+                Margin="5,0"
+                Content="Word Wrap"
+                IsChecked="{Binding WordWrap.IsChecked}" />
+
+            <TextBlock
+                Grid.Column="7"
+                Margin="5,0"
+                VerticalAlignment="Center"
+                Text="Output:" />
+
+            <ComboBox
+                Grid.Column="8"
+                MinWidth="100"
+                Margin="5,0"
+                VerticalAlignment="Center" />
+
+            <Button
+                Grid.Column="9"
+                Height="30"
+                MinWidth="80"
+                Margin="20,5,5,5"
+                Content="Lower"
+                Style="{StaticResource MahApps.Styles.Button.VisualStudio}" />
+        </Grid>
+        <avalonEdit:TextEditor
+            x:Name="Input"
             Grid.Row="1"
             Grid.Column="0"
-            Header="Input code">
-            <avalonEdit:TextEditor
-                x:Name="Input"
-                FontFamily="Cascadia Code"
-                Foreground="{StaticResource White}"
-                ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
-                WordWrap="{Binding WordWrap.IsChecked}" />
-        </GroupBox>
+            FontFamily="Cascadia Code"
+            FontSize="{DynamicResource EditorFontSize}"
+            Foreground="{StaticResource White}"
+            ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+            WordWrap="{Binding WordWrap.IsChecked}" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,30,0"
+            HorizontalAlignment="Right"
+            FontSize="18"
+            Style="{StaticResource MahApps.Styles.TextBlock.Watermark}"
+            Text="Input" />
         <GridSplitter
+            Grid.Row="1"
             Grid.Column="1"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="{StaticResource BrightRed}" />
-        <GroupBox
+            Background="{StaticResource BrightBlue}" />
+        <avalonEdit:TextEditor
+            x:Name="Output"
             Grid.Row="1"
             Grid.Column="2"
-            Header="Output">
-            <avalonEdit:TextEditor
-                x:Name="Output"
-                FontFamily="Cascadia Code"
-                Foreground="{StaticResource White}"
-                IsReadOnly="True"
-                ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
-                WordWrap="{Binding WordWrap.IsChecked}" />
-        </GroupBox>
+            FontFamily="Cascadia Code"
+            FontSize="{DynamicResource EditorFontSize}"
+            Foreground="{StaticResource White}"
+            IsReadOnly="True"
+            ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+            WordWrap="{Binding WordWrap.IsChecked}" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="0,0,30,0"
+            HorizontalAlignment="Right"
+            FontSize="18"
+            Style="{StaticResource MahApps.Styles.TextBlock.Watermark}"
+            Text="Output" />
     </Grid>
 </UserControl>

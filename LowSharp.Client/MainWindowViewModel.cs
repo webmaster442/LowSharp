@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
@@ -19,10 +20,14 @@ internal sealed partial class MainWindowViewModel :
     IRecipient<Messages.IsConnectedChangedMessage>,
     IRecipient<Messages.RequestClientMessage>
 {
+    private const int BaseFontSize = 16;
+
     public MainWindowViewModel(IDialogs dialogs)
     {
         Client = new ClientViewModel(dialogs);
         Tabs = new BindingList<TabViewModel>();
+        ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
+        ActualZoomLevel = 1.0;
         CreateStartPage();
         WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContentMessage>(this);
         WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTabMessage>(this);
@@ -49,6 +54,17 @@ internal sealed partial class MainWindowViewModel :
     public BindingList<TabViewModel> Tabs { get; }
 
     public TabViewModel ActualTabItem { get; set; }
+
+    public ObservableCollection<double> ZoomLevels { get; }
+
+    [ObservableProperty]
+    public partial double ActualZoomLevel { get; set; }
+
+    partial void OnActualZoomLevelChanged(double value)
+    {
+        double fontSize = BaseFontSize * value;
+        Application.Current.Resources["EditorFontSize"] = fontSize;
+    }
 
     public void Dispose()
     {

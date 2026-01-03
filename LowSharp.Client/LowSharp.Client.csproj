@@ -41,4 +41,8 @@
     </Protobuf>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Lowering\Converters\" />
+  </ItemGroup>
+
 </Project>

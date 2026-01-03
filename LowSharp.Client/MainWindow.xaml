@@ -44,8 +44,10 @@
                             InputGestureText="Alt+F4" />
                     </MenuItem>
                 </Menu>
-                <Separator />
-                <Menu ItemsSource="{Binding ActualTabItem.Content.Menus}">
+                <Menu
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    ItemsSource="{Binding ActualTabItem.Content.Menus}">
                     <Menu.ItemTemplate>
                         <HierarchicalDataTemplate
                             DataType="{x:Type commonViews:MenuViewModel}"
@@ -194,6 +196,20 @@
                         </MenuItem>
                     </MenuItem>
                 </Menu>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Text="Text Size:"
+                    Margin="10,0"/>
+                <ComboBox
+                    Width="70"
+                    ItemsSource="{Binding ZoomLevels}"
+                    SelectedItem="{Binding ActualZoomLevel}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={common:ZoomLevelToTextConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 <ProgressBar
                     Width="200"
                     Height="20"
