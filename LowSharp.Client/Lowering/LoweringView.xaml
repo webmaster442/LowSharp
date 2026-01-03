@@ -13,6 +13,10 @@
     mc:Ignorable="d">
     <UserControl.InputBindings>
         <KeyBinding
+            Key="O"
+            Command="{Binding OpenCodeCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
             Key="F5"
             Command="{Binding LowerCommand}" />
     </UserControl.InputBindings>
@@ -52,8 +56,8 @@
                 MinWidth="100"
                 Margin="5,0"
                 VerticalAlignment="Center"
-                SelectedIndex="{Binding SelectedInputLanguageIndex}"
-                ItemsSource="{Binding InputLanguages}">
+                ItemsSource="{Binding InputLanguages}"
+                SelectedIndex="{Binding SelectedInputLanguageIndex}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={converters:InputLanguageToTextConverter}}" />
@@ -72,8 +76,8 @@
                 MinWidth="100"
                 Margin="5,0"
                 VerticalAlignment="Center"
-                SelectedIndex="{Binding SelectedOptimizationIndex}"
-                ItemsSource="{Binding Optimizations}">
+                ItemsSource="{Binding Optimizations}"
+                SelectedIndex="{Binding SelectedOptimizationIndex}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={converters:OptimizationToTextConverter}}" />
@@ -104,8 +108,8 @@
                 MinWidth="100"
                 Margin="5,0"
                 VerticalAlignment="Center"
-                SelectedIndex="{Binding SelectedOutputTypeIndex}"
-                ItemsSource="{Binding OutputTypes}">
+                ItemsSource="{Binding OutputTypes}"
+                SelectedIndex="{Binding SelectedOutputTypeIndex}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={converters:OutputCodeTypeToStringConverter}}" />
@@ -130,6 +134,7 @@
             FontSize="{DynamicResource EditorFontSize}"
             Foreground="{StaticResource White}"
             ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+            SyntaxHighlighting="{Binding SelectedInputLanguageIndex, Converter={converters:SelectedInputLanguageIndexToHighlightingConverter}}"
             WordWrap="{Binding WordWrap.IsChecked}" />
         <TextBlock
             Grid.Row="1"
@@ -154,6 +159,7 @@
             Foreground="{StaticResource White}"
             IsReadOnly="True"
             ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+            SyntaxHighlighting="{Binding SelectedOutputTypeIndex, Converter={converters:SelectedOutputTypeIndexToHighlightingConverter}}"
             WordWrap="{Binding WordWrap.IsChecked}" />
         <TextBlock
             Grid.Row="1"

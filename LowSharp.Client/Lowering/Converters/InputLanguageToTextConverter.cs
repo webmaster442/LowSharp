@@ -5,7 +5,8 @@ using LowSharp.Lowering.ApiV1;
 
 namespace LowSharp.Client.Lowering.Converters;
 
-internal sealed class InputLanguageToTextConverter : OneWayConverterBase<InputLanguage, string>
+internal sealed class InputLanguageToTextConverter
+    : OneWayConverterBase<InputLanguage, string>
 {
     protected override string ConvertFrom(InputLanguage value, object parameter, CultureInfo culture)
     {
