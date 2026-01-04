@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.Input;
 
 using LowSharp.Client.Lowering;
+using LowSharp.Client.Repl;
 
 namespace LowSharp.Client.Common.Views;
 
@@ -18,13 +19,19 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     }
 
     [RelayCommand]
-    public void StartLowering()
-        => ReplaceContents("Lowering", new LoweringViewModel(_client, _dialogs));
+    public async Task StartLowering()
+    {
+        var vm = new LoweringViewModel(_client, _dialogs);
+        await vm.InitializeAsync();
+        ReplaceContents("Lowering", vm);
+    }
 
     [RelayCommand]
-    public void StartRepl()
+    public async Task StartRepl()
     {
-
+        var vm = new ReplViewModel(_client);
+        await vm.InitializeAsync();
+        ReplaceContents("REPL", vm);
     }
 
     [RelayCommand]

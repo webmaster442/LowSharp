@@ -5,9 +5,12 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace LowSharp.Client.Common.Views;
 
-internal abstract partial class ViewModelWithMenus : ObservableObject
+internal abstract class ViewModelWithMenus : ObservableObject
 {
     public ObservableCollection<MenuViewModel> Menus { get; }
+
+    public virtual Task InitializeAsync()
+        => Task.CompletedTask;
 
     protected ViewModelWithMenus()
     {

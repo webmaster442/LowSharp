@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "LowSharp.Evaluator.ApiV1";
+option csharp_namespace = "LowSharp.ApiV1.Evaluate";
 
-package LowSharp.Evaluator.ApiV1;
+package LowSharp.ApiV1.Evaluate;
 
 service Evaluator {
     rpc Initialize(InitializationRequest) returns (InitializationResponse);

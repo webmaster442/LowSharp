@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Scripting;
 
 namespace Lowsharp.Server.Interactive;
 
-public class SessionManager : IEnumerable<(Guid sessionId, DateTimeOffset lastaccessUtc)>
+internal sealed class SessionManager : IEnumerable<(Guid sessionId, DateTimeOffset lastaccessUtc)>
 {
     private readonly ConcurrentDictionary<Guid, Session> _sessions;
     private readonly TimeProvider _timeProvider;
