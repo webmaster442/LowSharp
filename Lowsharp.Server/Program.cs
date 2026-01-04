@@ -1,5 +1,6 @@
 using Lowsharp.Server;
 using Lowsharp.Server.Data;
+using Lowsharp.Server.Interactive;
 using Lowsharp.Server.Lowering;
 using Lowsharp.Server.Services;
 
@@ -10,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
-builder.Services.AddTransient<LoweringEngine>();
+builder.Services.AddScoped<LoweringEngine>();
+builder.Services.AddScoped<CsharpEvaluator>();
+builder.Services.AddScoped<SessionManager>();
 builder.Services.AddDbContext<ServerDbContext>(options =>
 {
     options.UseSqlite($"Data Source={GetDatabasePath()}");
@@ -32,6 +35,7 @@ var app = builder.Build();
 
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.LowererService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.HealthCheckService>();
+app.MapGrpcService<Lowsharp.Server.Services.ApiV1.EvaluatorService>();
 
 // Configure the HTTP request pipeline.
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");

@@ -3,12 +3,12 @@ using Microsoft.CodeAnalysis.Scripting;
 
 namespace Lowsharp.Server.Interactive;
 
-internal sealed class Evaluator
+internal sealed class CsharpEvaluator
 {
     private readonly SessionManager _sessionManager;
     private readonly ScriptOptions _options;
 
-    public Evaluator(SessionManager sessionManager)
+    public CsharpEvaluator(SessionManager sessionManager)
     {
         _sessionManager = sessionManager;
         _options = ScriptOptions.Default
