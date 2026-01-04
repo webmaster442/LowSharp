@@ -14,7 +14,7 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
-        <commonViews:MenuViewModelStyleSelector x:Key="MenuViewModelStyleSelector"/>
+        <commonViews:MenuViewModelStyleSelector x:Key="MenuViewModelStyleSelector" />
     </Window.Resources>
 
     <Window.InputBindings>
@@ -27,7 +27,7 @@
             Command="{Binding ExitAppCommand}"
             Modifiers="Alt" />
     </Window.InputBindings>
-    
+
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <StackPanel Orientation="Horizontal">

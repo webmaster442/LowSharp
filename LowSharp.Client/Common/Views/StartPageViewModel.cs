@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using System.Text;
+
+using CommunityToolkit.Mvvm.Input;
 
 using LowSharp.Client.Lowering;
 
@@ -24,5 +25,21 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     public void StartRepl()
     {
 
+    }
+
+    [RelayCommand]
+    public async Task StartVersions()
+    {
+        var result = await _client.GetComponentVersions();
+        StringBuilder resultText = new StringBuilder();
+        resultText.AppendLine($"Operating System: {result.OperatingSystem} {result.OperatingSystemVersion}");
+        resultText.AppendLine($"Runtime Version: {result.RuntimeVersion}");
+        resultText.AppendLine("-----------------------------------------");
+        resultText.AppendLine("Component Versions:");
+        foreach (var component in result.ComponentVersions)
+        {
+            resultText.AppendLine($"{component.Name}: {component.VersionString}");
+        }
+        await _dialogs.Info("Component Versions", resultText.ToString());
     }
 }

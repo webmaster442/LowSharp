@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-using Grpc.Core;
+﻿using Grpc.Core;
 
 using Lowsharp.Server.Data;
 using Lowsharp.Server.Lowering;
@@ -32,30 +30,5 @@ internal class LowererService : Lowerer.LowererBase
             EngineOutput output = await _engine.ToLowerCodeAsync(input, context.CancellationToken);
             return Mapper.Map(output);
         });
-    }
-
-    public override async Task<GetComponentVersionsRespnse> GetComponentVersions(GetComponentVersionsRequest request, ServerCallContext context)
-    {
-        var response = new GetComponentVersionsRespnse
-        {
-            OperatingSystem = RuntimeInformation.OSDescription,
-            OperatingSystemVersion = Environment.OSVersion.Version.ToString(),
-            RuntimeVersion = RuntimeInformation.FrameworkDescription,
-        };
-
-        IOrderedEnumerable<(string name, string version)> versions
-            = VersionCollector.LoadedAsssemblyVersions().OrderBy(x => x.name);
-
-        foreach (var (name, version) in versions)
-        {
-            response.ComponentVersions.Add(new ComponentVersion
-            {
-                Name = name,
-                VersionString = version,
-            });
-        }
-
-
-        return response;
     }
 }

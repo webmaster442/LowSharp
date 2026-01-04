@@ -6,6 +6,7 @@ package LowSharp.ApiV1.HealthCheck;
 
 service Health {
     rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+    rpc GetComponentVersions(GetComponentVersionsRequest) returns (GetComponentVersionsRespnse);
 }
 
 message HealthCheckRequest {
@@ -15,4 +16,21 @@ message HealthCheckRequest {
 
 message HealthCheckResponse {
     int64 sum = 1;
+}
+
+message GetComponentVersionsRequest {
+
+}
+
+message ComponentVersion {
+    string Name = 1;
+    string VersionString = 2;
+}
+
+message GetComponentVersionsRespnse
+{
+    string OperatingSystem = 1;
+    string OperatingSystemVersion = 2;
+    string RuntimeVersion = 3;
+    repeated ComponentVersion ComponentVersions = 4;
 }

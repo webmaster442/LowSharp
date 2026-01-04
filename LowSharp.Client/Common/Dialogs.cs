@@ -1,4 +1,6 @@
-﻿using LowSharp.ApiV1.Lowering;
+﻿using System.Windows.Media;
+
+using LowSharp.ApiV1.Lowering;
 using LowSharp.Client.Common.Views;
 
 using MahApps.Metro.Controls;
@@ -23,6 +25,15 @@ internal sealed class Dialogs : IDialogs
         {
             DefaultButtonFocus = MessageDialogResult.Affirmative,
             ColorScheme = MetroDialogColorScheme.Accented,
+        });
+    }
+
+    public async Task Info(string title, string message)
+    {
+        await _mainWindow.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, new MetroDialogSettings
+        {
+            DefaultButtonFocus = MessageDialogResult.Affirmative,
+            ColorScheme = MetroDialogColorScheme.Theme,
         });
     }
 

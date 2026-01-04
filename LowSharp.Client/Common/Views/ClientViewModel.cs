@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,6 +10,10 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Grpc.Net.Client;
+
+using LowSharp.ApiV1.HealthCheck;
+
+using Windows.Media.Protection.PlayReady;
 
 namespace LowSharp.Client.Common.Views;
 
@@ -93,6 +98,18 @@ internal sealed partial class ClientViewModel :
             }
         }
         return false;
+    }
+
+    private void ThrowIfCantContinue()
+    {
+        if (!IsRunning)
+        {
+            throw new InvalidOperationException("The server is not running");
+        }
+        if (_channel == null)
+        {
+            throw new InvalidOperationException("Not connected to the server");
+        }
     }
 
     private static async Task WaitTillStartedOrTimeout(string file, TimeSpan timeSpan)
@@ -180,6 +197,9 @@ internal sealed partial class ClientViewModel :
 
     public async Task<bool> DoHealthCheck()
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ThrowIfCantContinue();
+
         var client = new LowSharp.ApiV1.HealthCheck.Health.HealthClient(_channel);
         try
         {
@@ -207,11 +227,35 @@ internal sealed partial class ClientViewModel :
         }
     }
 
+    public async Task<GetComponentVersionsRespnse> GetComponentVersions()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ThrowIfCantContinue();
+
+        var client = new LowSharp.ApiV1.HealthCheck.Health.HealthClient(_channel);
+        try
+        {
+            IsBusy = true;
+            return await client.GetComponentVersionsAsync(new GetComponentVersionsRequest());
+        }
+        catch
+        {
+            return new GetComponentVersionsRespnse();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     public async Task<LowSharp.ApiV1.Lowering.LoweringResponse> LowerCodeAsync(string code,
                                                                                LowSharp.ApiV1.Lowering.InputLanguage inputLanguage,
                                                                                LowSharp.ApiV1.Lowering.Optimization optimization,
                                                                                LowSharp.ApiV1.Lowering.OutputCodeType outputCodeType)
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ThrowIfCantContinue();
+
         var client = new LowSharp.ApiV1.Lowering.Lowerer.LowererClient(_channel);
 
         try
