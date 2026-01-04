@@ -17,6 +17,4 @@ internal static class Messages
     public sealed record class SetInputCode(string Code);
 
     public sealed record class SetOutputCodeRequest(string Code);
-
-    public sealed record class TabIndexChanged(int NewIndex);
 }

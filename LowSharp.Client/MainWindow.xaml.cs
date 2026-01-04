@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Windows.Controls;
-
-using CommunityToolkit.Mvvm.Messaging;
 
 using LowSharp.Client.Common;
 
@@ -26,14 +23,6 @@ public sealed partial class MainWindow : MetroWindow
         if (DataContext is IDisposable disposable)
         {
             disposable.Dispose();
-        }
-    }
-
-    private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (sender is TabControl tabControl)
-        {
-            WeakReferenceMessenger.Default.Send(new Messages.TabIndexChanged(tabControl.SelectedIndex));
         }
     }
 }

@@ -1,6 +1,6 @@
 # Todo
 
-- [ ] Combined start & connect command
+- [x] Combined start & connect command
 - [x] Dracula theme port for syntax highlighting
 - [ ] Port unit tests
 - [ ] Client logging of issues

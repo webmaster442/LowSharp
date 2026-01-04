@@ -1,7 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Diagnostics;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LowSharp.Client.Common.Views;
 
+[DebuggerDisplay("{TabTitle}")]
 internal partial class TabViewModel : ObservableObject
 {
     [ObservableProperty]
@@ -9,5 +12,4 @@ internal partial class TabViewModel : ObservableObject
 
     [ObservableProperty]
     public required partial ViewModelWithMenus Content { get; set; }
-
 }

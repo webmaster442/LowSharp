@@ -80,8 +80,7 @@
             Grid.ColumnSpan="2"
             IsEnabled="{Binding Client.IsConnected}"
             ItemsSource="{Binding Tabs}"
-            SelectedItem="{Binding ActualTabItem, Mode=OneWay}"
-            SelectionChanged="TabControl_SelectionChanged"
+            SelectedItem="{Binding ActualTabItem}"
             Style="{StaticResource MahApps.Styles.TabControl.VisualStudio}">
             <TabControl.ContentTemplate>
                 <DataTemplate>
@@ -151,6 +150,30 @@
                             </Style>
                         </MenuItem.Style>
                         <MenuItem
+                            Command="{Binding Client.StartAndConnectCommand}"
+                            Header="Start &amp; Connect">
+                            <MenuItem.Icon>
+                                <Canvas
+                                    Width="24"
+                                    Height="24">
+                                    <Path
+                                        Data="M10,16.5V7.5L16,12M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+                                        Fill="{StaticResource White}" />
+                                </Canvas>
+                            </MenuItem.Icon>
+                            <MenuItem.IsEnabled>
+                                <MultiBinding Converter="{common:AndConverter}">
+                                    <Binding
+                                        Converter="{common:NegateConverter}"
+                                        Path="Client.IsRunning" />
+                                    <Binding
+                                        Converter="{common:NegateConverter}"
+                                        Path="Client.IsConnected" />
+                                </MultiBinding>
+                            </MenuItem.IsEnabled>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem
                             Command="{Binding Client.StartCommand}"
                             Header="Start"
                             IsEnabled="{Binding Client.IsRunning, Converter={common:NegateConverter}}">
@@ -164,21 +187,6 @@
                                 </Canvas>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem
-                            Command="{Binding Client.StopCommand}"
-                            Header="Stop"
-                            IsEnabled="{Binding Client.IsRunning}">
-                            <MenuItem.Icon>
-                                <Canvas
-                                    Width="24"
-                                    Height="24">
-                                    <Path
-                                        Data="M8.27,3L3,8.27V15.73L8.27,21H15.73C17.5,19.24 21,15.73 21,15.73V8.27L15.73,3M9.1,5H14.9L19,9.1V14.9L14.9,19H9.1L5,14.9V9.1M9.12,7.71L7.71,9.12L10.59,12L7.71,14.88L9.12,16.29L12,13.41L14.88,16.29L16.29,14.88L13.41,12L16.29,9.12L14.88,7.71L12,10.59"
-                                        Fill="{StaticResource White}" />
-                                </Canvas>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
                         <MenuItem
                             Command="{Binding Client.ConnectCommand}"
                             Header="Connect">
@@ -196,6 +204,21 @@
                                     Height="24">
                                     <Path
                                         Data="M21.4 7.5C22.2 8.3 22.2 9.6 21.4 10.3L18.6 13.1L10.8 5.3L13.6 2.5C14.4 1.7 15.7 1.7 16.4 2.5L18.2 4.3L21.2 1.3L22.6 2.7L19.6 5.7L21.4 7.5M15.6 13.3L14.2 11.9L11.4 14.7L9.3 12.6L12.1 9.8L10.7 8.4L7.9 11.2L6.4 9.8L3.6 12.6C2.8 13.4 2.8 14.7 3.6 15.4L5.4 17.2L1.4 21.2L2.8 22.6L6.8 18.6L8.6 20.4C9.4 21.2 10.7 21.2 11.4 20.4L14.2 17.6L12.8 16.2L15.6 13.3Z"
+                                        Fill="{StaticResource White}" />
+                                </Canvas>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem
+                            Command="{Binding Client.StopCommand}"
+                            Header="Stop"
+                            IsEnabled="{Binding Client.IsRunning}">
+                            <MenuItem.Icon>
+                                <Canvas
+                                    Width="24"
+                                    Height="24">
+                                    <Path
+                                        Data="M8.27,3L3,8.27V15.73L8.27,21H15.73C17.5,19.24 21,15.73 21,15.73V8.27L15.73,3M9.1,5H14.9L19,9.1V14.9L14.9,19H9.1L5,14.9V9.1M9.12,7.71L7.71,9.12L10.59,12L7.71,14.88L9.12,16.29L12,13.41L14.88,16.29L16.29,14.88L13.41,12L16.29,9.12L14.88,7.71L12,10.59"
                                         Fill="{StaticResource White}" />
                                 </Canvas>
                             </MenuItem.Icon>

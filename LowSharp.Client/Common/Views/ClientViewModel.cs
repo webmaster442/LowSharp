@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Text;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,8 +11,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Grpc.Net.Client;
 
 using LowSharp.ApiV1.HealthCheck;
-
-using Windows.Media.Protection.PlayReady;
 
 namespace LowSharp.Client.Common.Views;
 
@@ -195,12 +192,20 @@ internal sealed partial class ClientViewModel :
         IsConnected = isOk;
     }
 
+    [RelayCommand]
+    public async Task StartAndConnect()
+    {
+        await Start();
+        IsRunning = true;
+        await Connect();
+    }
+
     public async Task<bool> DoHealthCheck()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ThrowIfCantContinue();
 
-        var client = new LowSharp.ApiV1.HealthCheck.Health.HealthClient(_channel);
+        var client = new Health.HealthClient(_channel);
         try
         {
             int number1 = Random.Shared.Next();
@@ -209,7 +214,7 @@ internal sealed partial class ClientViewModel :
             long expectedSum = (long)number1 + (long)number2;
 
             IsBusy = true;
-            var response = await client.CheckAsync(new LowSharp.ApiV1.HealthCheck.HealthCheckRequest
+            var response = await client.CheckAsync(new HealthCheckRequest
             {
                 Number1 = number1,
                 Number2 = number2,
@@ -217,8 +222,9 @@ internal sealed partial class ClientViewModel :
 
             return response.Sum == expectedSum;
         }
-        catch
+        catch (Exception ex)
         {
+            await _dialogs.Error("Server failed to reply", ex.Message);
             return false;
         }
         finally
@@ -232,14 +238,15 @@ internal sealed partial class ClientViewModel :
         ObjectDisposedException.ThrowIf(_disposed, this);
         ThrowIfCantContinue();
 
-        var client = new LowSharp.ApiV1.HealthCheck.Health.HealthClient(_channel);
+        var client = new Health.HealthClient(_channel);
         try
         {
             IsBusy = true;
             return await client.GetComponentVersionsAsync(new GetComponentVersionsRequest());
         }
-        catch
+        catch (Exception ex)
         {
+            await _dialogs.Error("Server failed to reply", ex.Message);
             return new GetComponentVersionsRespnse();
         }
         finally
@@ -248,20 +255,20 @@ internal sealed partial class ClientViewModel :
         }
     }
 
-    public async Task<LowSharp.ApiV1.Lowering.LoweringResponse> LowerCodeAsync(string code,
-                                                                               LowSharp.ApiV1.Lowering.InputLanguage inputLanguage,
-                                                                               LowSharp.ApiV1.Lowering.Optimization optimization,
-                                                                               LowSharp.ApiV1.Lowering.OutputCodeType outputCodeType)
+    public async Task<ApiV1.Lowering.LoweringResponse> LowerCodeAsync(string code,
+                                                                               ApiV1.Lowering.InputLanguage inputLanguage,
+                                                                               ApiV1.Lowering.Optimization optimization,
+                                                                               ApiV1.Lowering.OutputCodeType outputCodeType)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ThrowIfCantContinue();
 
-        var client = new LowSharp.ApiV1.Lowering.Lowerer.LowererClient(_channel);
+        var client = new ApiV1.Lowering.Lowerer.LowererClient(_channel);
 
         try
         {
             IsBusy = true;
-            var result = await client.ToLowerCodeAsync(new LowSharp.ApiV1.Lowering.LoweringRequest()
+            var result = await client.ToLowerCodeAsync(new ApiV1.Lowering.LoweringRequest()
             {
                 Code = code,
                 Language = inputLanguage,
@@ -272,14 +279,14 @@ internal sealed partial class ClientViewModel :
         }
         catch (Exception ex)
         {
-            return new LowSharp.ApiV1.Lowering.LoweringResponse()
+            return new ApiV1.Lowering.LoweringResponse()
             {
                 ResultCode = string.Empty,
                 Diagnostics =
                 {
-                    new LowSharp.ApiV1.Lowering.Diagnostic()
+                    new ApiV1.Lowering.Diagnostic()
                     {
-                        Severity = LowSharp.ApiV1.Lowering.DiagnosticSeverity.Error,
+                        Severity = ApiV1.Lowering.DiagnosticSeverity.Error,
                         Message = $"Failed to lower code: {ex.Message}"
                     }
                 }
