@@ -11,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddTransient<LoweringEngine>();
-builder.Services.AddDbContext<ServerDbContext>(options => {
+builder.Services.AddDbContext<ServerDbContext>(options =>
+{
     options.UseSqlite($"Data Source={GetDatabasePath()}");
 });
 

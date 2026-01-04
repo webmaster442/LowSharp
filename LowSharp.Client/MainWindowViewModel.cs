@@ -76,7 +76,7 @@ internal sealed partial class MainWindowViewModel :
     public ClientViewModel Client { get; }
 
     [RelayCommand(CanExecute = nameof(CanNewTab))]
-    public void NewTab() 
+    public void NewTab()
         => CreateStartPage();
 
     private bool CanNewTab()

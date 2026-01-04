@@ -26,7 +26,7 @@ public class Evaluator
 
         var newState = await state.ContinueWithAsync(code, _options, cancellationToken);
         _sessionManager.Create(sessionId, newState);
-        
+
         return newState.ReturnValue?.ToString() ?? "null";
     }
 }

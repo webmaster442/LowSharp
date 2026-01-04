@@ -5,7 +5,7 @@ using System.Windows.Markup;
 namespace LowSharp.Client.Common;
 
 internal abstract class TwoWayConverterBase<TFrom, TTo> : MarkupExtension, IValueConverter
-    where TFrom : notnull where TTo: notnull
+    where TFrom : notnull where TTo : notnull
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {

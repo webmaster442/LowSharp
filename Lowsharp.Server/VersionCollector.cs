@@ -13,7 +13,7 @@ internal static class VersionCollector
 
             var name = assemblyName.Name ?? "Unknown";
             var version = assemblyName.Version?.ToString() ?? "Unknown Version";
-            
+
             yield return (name, version);
         }
     }

@@ -81,8 +81,8 @@ internal sealed class JsonDbContextCache
     {
         var targetDate = DateTime.UtcNow - TimeSpan.FromDays(30);
 
-         return _dbContext.CacheItems
-            .Where(c => c.CreateDate < targetDate)
-            .ExecuteDelete();
+        return _dbContext.CacheItems
+           .Where(c => c.CreateDate < targetDate)
+           .ExecuteDelete();
     }
 }

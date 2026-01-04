@@ -29,7 +29,7 @@ internal sealed class SessionCleanupService : IHostedService, IDisposable
         {
             TimeProvider timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>();
             SessionManager sessions = scope.ServiceProvider.GetRequiredService<SessionManager>();
-            
+
             var toRemove = sessions
                 .Where(s => s.lastaccessUtc < (timeProvider.GetUtcNow().AddMinutes(-5)))
                 .Select(s => s.sessionId)
@@ -41,7 +41,7 @@ internal sealed class SessionCleanupService : IHostedService, IDisposable
                 sessions.Remove(sessionId);
                 ++count;
             }
-            
+
             _logger.LogInformation("Cleanup removed {count} inactive sessions", count);
         }
     }

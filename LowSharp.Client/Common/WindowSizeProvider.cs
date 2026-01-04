@@ -38,7 +38,7 @@ internal sealed class WindowSizeProvider : MarkupExtension
     private static double GetWidth()
     {
         return SystemParameters.PrimaryScreenWidth > FullHdWidth
-            ? FullHdWidth 
+            ? FullHdWidth
             : HdWidth;
     }
 }
