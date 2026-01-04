@@ -102,7 +102,7 @@ internal sealed partial class LoweringViewModel :
     [RelayCommand]
     public async Task Lower()
     {
-        string inputCode = WeakReferenceMessenger.Default.Send<RequestMessages.GetInputCodeRequest>();
+        string inputCode = WeakReferenceMessenger.Default.Send<RequestMessages.GetLoweringInputCodeRequest>();
 
         LoweringResponse result = await _client.LowerCodeAsync(inputCode,
                                                                InputLanguages[SelectedInputLanguageIndex],

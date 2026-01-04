@@ -89,7 +89,7 @@ internal sealed partial class MainWindowViewModel :
     void IRecipient<Messages.ReplaceTabContent>.Receive(Messages.ReplaceTabContent message)
     {
         int index = Tabs.IndexOf(ActualTabItem);
-        Tabs[index].TabTitle = message.tabTitle;
+        Tabs[index].TabTitle = message.TabTitle;
         Tabs[index].Content = message.ViewModel;
         ActualTabItem = Tabs[index];
     }

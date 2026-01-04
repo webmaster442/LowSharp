@@ -15,7 +15,7 @@ public partial class LoweringView : UserControl
     {
         InitializeComponent();
 
-        WeakReferenceMessenger.Default.Register<RequestMessages.GetInputCodeRequest>(this, OnGetInputCode); // (recipient, message) => m
+        WeakReferenceMessenger.Default.Register<RequestMessages.GetLoweringInputCodeRequest>(this, OnGetInputCode); // (recipient, message) => m
         WeakReferenceMessenger.Default.Register<Messages.SetInputCode>(this, OnSetInputCode);
         WeakReferenceMessenger.Default.Register<Messages.SetOutputCodeRequest>(this, OnSetOutputCode);
     }
@@ -26,6 +26,6 @@ public partial class LoweringView : UserControl
     private void OnSetInputCode(object recipient, Messages.SetInputCode message)
         => Input.Document.Text = message.Code;
 
-    private void OnGetInputCode(object recipient, RequestMessages.GetInputCodeRequest message)
+    private void OnGetInputCode(object recipient, RequestMessages.GetLoweringInputCodeRequest message)
         => message.Reply(Input.Document.Text);
 }

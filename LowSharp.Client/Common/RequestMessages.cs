@@ -6,5 +6,6 @@ namespace LowSharp.Client.Common;
 
 internal static class RequestMessages
 {
-    public sealed class GetInputCodeRequest : RequestMessage<string>;
+    public sealed class GetLoweringInputCodeRequest : RequestMessage<string>;
+    public sealed class GetReplInputCodeRequest : RequestMessage<string>;
 }

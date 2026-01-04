@@ -10,11 +10,15 @@ internal static class Messages
 
     public sealed record class CloseCurrentTab(ViewModelWithMenus ViewModel);
 
-    public sealed record class ReplaceTabContent(string tabTitle, ViewModelWithMenus ViewModel);
+    public sealed record class ReplaceTabContent(string TabTitle, ViewModelWithMenus ViewModel);
 
     public sealed record class SetInputLanguage(string Language);
 
     public sealed record class SetInputCode(string Code);
 
     public sealed record class SetOutputCodeRequest(string Code);
+
+    public sealed record class AppendReplOutput(string Output);
+
+    public sealed record class SetReplInputCode(string Code);
 }
