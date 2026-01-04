@@ -153,7 +153,7 @@ internal sealed partial class ClientViewModel :
     }
 
     [RelayCommand]
-    public void Connect()
+    public async Task Connect()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
@@ -165,20 +165,51 @@ internal sealed partial class ClientViewModel :
             UnsafeUseInsecureChannelCallCredentials = true,
         });
 
-        IsConnected = true;
+        bool isOk = await DoHealthCheck();
+
+        IsConnected = isOk;
     }
 
-    public async Task<LowSharp.Lowering.ApiV1.LoweringResponse> LowerCodeAsync(string code,
-                                                                               LowSharp.Lowering.ApiV1.InputLanguage inputLanguage,
-                                                                               LowSharp.Lowering.ApiV1.Optimization optimization,
-                                                                               LowSharp.Lowering.ApiV1.OutputCodeType outputCodeType)
+    public async Task<bool> DoHealthCheck()
     {
-        var client = new LowSharp.Lowering.ApiV1.Lowerer.LowererClient(_channel);
+        var client = new LowSharp.ApiV1.HealthCheck.Health.HealthClient(_channel);
+        try
+        {
+            int number1 = Random.Shared.Next();
+            int number2 = Random.Shared.Next();
+
+            long expectedSum = (long)number1 + (long)number2;
+
+            IsBusy = true;
+            var response = await client.CheckAsync(new LowSharp.ApiV1.HealthCheck.HealthCheckRequest
+            {
+                Number1 = number1,
+                Number2 = number2,
+            });
+
+            return response.Sum == expectedSum;
+        }
+        catch
+        {
+            return false;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public async Task<LowSharp.ApiV1.Lowering.LoweringResponse> LowerCodeAsync(string code,
+                                                                               LowSharp.ApiV1.Lowering.InputLanguage inputLanguage,
+                                                                               LowSharp.ApiV1.Lowering.Optimization optimization,
+                                                                               LowSharp.ApiV1.Lowering.OutputCodeType outputCodeType)
+    {
+        var client = new LowSharp.ApiV1.Lowering.Lowerer.LowererClient(_channel);
 
         try
         {
             IsBusy = true;
-            var result = await client.ToLowerCodeAsync(new LowSharp.Lowering.ApiV1.LoweringRequest()
+            var result = await client.ToLowerCodeAsync(new LowSharp.ApiV1.Lowering.LoweringRequest()
             {
                 Code = code,
                 Language = inputLanguage,
@@ -189,14 +220,14 @@ internal sealed partial class ClientViewModel :
         }
         catch (Exception ex)
         {
-            return new LowSharp.Lowering.ApiV1.LoweringResponse()
+            return new LowSharp.ApiV1.Lowering.LoweringResponse()
             {
                 ResultCode = string.Empty,
                 Diagnostics =
                 {
-                    new LowSharp.Lowering.ApiV1.Diagnostic()
+                    new LowSharp.ApiV1.Lowering.Diagnostic()
                     {
-                        Severity = LowSharp.Lowering.ApiV1.DiagnosticSeverity.Error,
+                        Severity = LowSharp.ApiV1.Lowering.DiagnosticSeverity.Error,
                         Message = $"Failed to lower code: {ex.Message}"
                     }
                 }

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option csharp_namespace = "LowSharp.Lowering.ApiV1";
+option csharp_namespace = "LowSharp.ApiV1.Lowering";
 
-package LowSharp.Lowering.ApiV1;
+package LowSharp.ApiV1.Lowering;
 
 service Lowerer {
     rpc ToLowerCode(LoweringRequest) returns (LoweringResponse);

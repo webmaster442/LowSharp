@@ -7,12 +7,10 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Google.Protobuf.Collections;
 
+using LowSharp.ApiV1.Lowering;
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
 using LowSharp.Client.Lowering.Examples;
-using LowSharp.Lowering.ApiV1;
-
-using Windows.Globalization;
 
 namespace LowSharp.Client.Lowering;
 

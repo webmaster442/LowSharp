@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 
 using LowSharp.Client.Common;
-using LowSharp.Lowering.ApiV1;
+using LowSharp.ApiV1.Lowering;
 
 namespace LowSharp.Client.Lowering.Converters;
 

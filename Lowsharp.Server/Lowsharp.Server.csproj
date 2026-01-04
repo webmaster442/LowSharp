@@ -40,6 +40,9 @@
     <Protobuf Include="..\Protobuff\EvaluatorApiV1.proto">
       <Link>EvaluatorApiV1.proto</Link>
     </Protobuf>
+    <Protobuf Include="..\Protobuff\HealthCheckApiV1.proto" GrpcServices="Server" Access="Internal">
+      <Link>HealthCheckApiV1.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\Protobuff\LoweringApiV1.proto" GrpcServices="Server" Access="Internal">
       <Link>LoweringApiV1.proto</Link>
     </Protobuf>

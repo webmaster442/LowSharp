@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using LowSharp.ApiV1.Lowering;
 using LowSharp.Client.Common.Views;
-using LowSharp.Lowering.ApiV1;
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;

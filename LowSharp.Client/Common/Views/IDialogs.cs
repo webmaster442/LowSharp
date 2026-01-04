@@ -1,4 +1,4 @@
-﻿using LowSharp.Lowering.ApiV1;
+﻿using LowSharp.ApiV1.Lowering;
 
 namespace LowSharp.Client.Common.Views;
 

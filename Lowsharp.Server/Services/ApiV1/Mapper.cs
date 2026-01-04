@@ -1,7 +1,7 @@
 ﻿
 using Lowsharp.Server.Lowering;
 
-using LowSharp.Lowering.ApiV1;
+using LowSharp.ApiV1.Lowering;
 
 namespace Lowsharp.Server.Services.ApiV1;
 
@@ -34,9 +34,9 @@ internal static class Mapper
             Code = request.Code,
             InputLanguage = request.Language switch
             {
-                LowSharp.Lowering.ApiV1.InputLanguage.Csharp => Lowering.InputLanguage.Csharp,
-                LowSharp.Lowering.ApiV1.InputLanguage.Fsharp => Lowering.InputLanguage.FSharp,
-                LowSharp.Lowering.ApiV1.InputLanguage.VisualBasic => Lowering.InputLanguage.VisualBasic,
+                LowSharp.ApiV1.Lowering.InputLanguage.Csharp => Lowering.InputLanguage.Csharp,
+                LowSharp.ApiV1.Lowering.InputLanguage.Fsharp => Lowering.InputLanguage.FSharp,
+                LowSharp.ApiV1.Lowering.InputLanguage.VisualBasic => Lowering.InputLanguage.VisualBasic,
                 _ => throw new InvalidOperationException("Unknown Input language")
             },
             OutputType = request.OutputType switch

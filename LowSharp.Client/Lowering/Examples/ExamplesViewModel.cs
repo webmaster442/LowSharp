@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
-using LowSharp.Lowering.ApiV1;
 
 namespace LowSharp.Client.Lowering.Examples;
 
