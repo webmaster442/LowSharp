@@ -12,17 +12,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Lowering\Examples\Examples.txt" />
-    <None Remove="Lowering\Syntax\CsharpNext.xshd" />
-    <None Remove="Lowering\Syntax\Fsharp.xshd" />
-    <None Remove="Lowering\Syntax\ILAsm.xshd" />
+    <Compile Remove="Lowering\Syntax\**" />
+    <EmbeddedResource Remove="Lowering\Syntax\**" />
+    <None Remove="Lowering\Syntax\**" />
+    <Page Remove="Lowering\Syntax\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Common\Syntax\CsharpNext.xshd" />
+    <None Remove="Common\Syntax\Fsharp.xshd" />
+    <None Remove="Common\Syntax\ILAsm.xshd" />
+    <None Remove="Common\Syntax\VbNext.xshd" />
+    <None Remove="Common\Syntax\X64.xshd" />
+    <None Remove="Lowering\Examples\Examples.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Common\Syntax\CsharpNext.xshd" />
+    <EmbeddedResource Include="Common\Syntax\Fsharp.xshd" />
+    <EmbeddedResource Include="Common\Syntax\ILAsm.xshd" />
+    <EmbeddedResource Include="Common\Syntax\VbNext.xshd" />
+    <EmbeddedResource Include="Common\Syntax\X64.xshd" />
     <EmbeddedResource Include="Lowering\Examples\Examples.txt" />
-    <EmbeddedResource Include="Lowering\Syntax\CsharpNext.xshd" />
-    <EmbeddedResource Include="Lowering\Syntax\Fsharp.xshd" />
-    <EmbeddedResource Include="Lowering\Syntax\ILAsm.xshd" />
   </ItemGroup>
 
   <ItemGroup>

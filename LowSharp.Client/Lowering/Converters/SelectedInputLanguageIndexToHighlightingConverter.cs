@@ -21,7 +21,7 @@ internal sealed class SelectedInputLanguageIndexToHighlightingConverter
         return value switch
         {
             0 => s_highlighters!["CsharpNext"],
-            1 => HighlightingManager.Instance.GetDefinition("VB"),
+            1 => s_highlighters!["VBNext"],
             2 => s_highlighters!["F#"],
             _ => null!
         };

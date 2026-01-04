@@ -20,9 +20,9 @@ internal sealed class SelectedOutputTypeIndexToHighlightingConverter
     {
         return value switch
         {
-            0 => s_highlighters!["CsharpNext"],
-            1 => s_highlighters!["ILAsm"],
-            2 => s_highlighters!["CsharpNext"],
+            0 => s_highlighters!["ILAsm"],
+            1 => s_highlighters!["CsharpNext"],
+            2 => s_highlighters!["x64"],
             _ => null!
         };
     }
