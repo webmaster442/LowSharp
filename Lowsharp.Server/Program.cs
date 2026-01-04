@@ -1,5 +1,6 @@
 using Lowsharp.Server;
 using Lowsharp.Server.Data;
+using Lowsharp.Server.Lowering;
 using Lowsharp.Server.Services;
 
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+builder.Services.AddTransient<LoweringEngine>();
 builder.Services.AddDbContext<ServerDbContext>(options => {
     options.UseSqlite($"Data Source={GetDatabasePath()}");
 });

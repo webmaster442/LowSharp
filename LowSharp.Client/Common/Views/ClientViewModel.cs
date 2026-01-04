@@ -64,10 +64,18 @@ internal sealed partial class ClientViewModel :
 
     private void CheckStatus(object? sender, EventArgs e)
     {
-        if (IsBusy || IsConnected)
+        if (IsBusy)
             return;
 
         IsRunning = IsPortInUse(Port);
+
+        if (!IsRunning)
+        {
+            IsConnected = false;
+            _channel?.Dispose();
+            _channel = null;
+            return;
+        }
 
         ObjectDisposedException.ThrowIf(_disposed, this);
     }
