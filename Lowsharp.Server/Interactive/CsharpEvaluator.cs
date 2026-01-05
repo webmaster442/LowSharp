@@ -36,10 +36,19 @@ internal sealed class CsharpEvaluator
             yield break;
         }
 
-        var newState = await state.ContinueWithAsync(code, _options, cancellationToken);
-        
-        _sessionManager.Update(sessionId, newState);
+        object returnValue;
 
-        yield return newState.ReturnValue?.ToString() ?? "null";
+        try
+        {
+            ScriptState<object> newState = await state.ContinueWithAsync(code, _options, cancellationToken);
+            _sessionManager.Update(sessionId, newState);
+            returnValue = newState.ReturnValue;
+        }
+        catch (Exception ex)
+        {
+            returnValue = ex;
+        }
+
+        yield return returnValue?.ToString() ?? "";
     }
 }

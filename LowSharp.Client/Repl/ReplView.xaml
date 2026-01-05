@@ -13,11 +13,11 @@
         <KeyBinding
             Key="Down"
             Command="{Binding NextHistoryCommand}"
-            Modifiers="Ctrl" />
+            Modifiers="Alt" />
         <KeyBinding
             Key="Up"
             Command="{Binding PreviousHistoryCommand}"
-            Modifiers="Ctrl" />
+            Modifiers="Alt" />
         <KeyBinding
             Key="Return"
             Command="{Binding SendCommand}"
@@ -59,11 +59,11 @@
                             <MenuItem
                                 Command="{Binding PreviousHistoryCommand}"
                                 Header="Previous"
-                                InputGestureText="Ctrl+Up" />
+                                InputGestureText="Alt+Up" />
                             <MenuItem
                                 Command="{Binding NextHistoryCommand}"
                                 Header="Next"
-                                InputGestureText="Ctrl+Down" />
+                                InputGestureText="Alt+Down" />
                         </MenuItem>
                     </Menu>
                     <TextBlock

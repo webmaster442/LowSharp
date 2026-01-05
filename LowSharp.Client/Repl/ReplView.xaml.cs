@@ -25,6 +25,7 @@ public partial class ReplView : UserControl
     private void OnOutput(object recipient, Messages.AppendReplOutput message)
     {
         Output.AppendText(message.Output);
+        Output.AppendText(Environment.NewLine);
         Output.ScrollToEnd();
     }
 
