@@ -30,8 +30,13 @@ internal sealed class EvaluatorService : Evaluator.EvaluatorBase
         return Task.FromResult(new UninitializationResponse());
     }
 
-    public override Task Evaluate(EvaluationRequest request, IServerStreamWriter<EvaluationResponse> responseStream, ServerCallContext context)
+    public override async Task Evaluate(EvaluationRequest request, IServerStreamWriter<EvaluationResponse> responseStream, ServerCallContext context)
     {
-        return base.Evaluate(request, responseStream, context);
+        var result = _evaluator.EvaluateAsync(Guid.Parse(request.Id), request.UserInput, context.CancellationToken);
+        await foreach(var output in result)
+        {
+            var response = new EvaluationResponse { Result = output };
+            await responseStream.WriteAsync(response);
+        }
     }
 }

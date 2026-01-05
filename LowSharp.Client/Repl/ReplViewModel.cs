@@ -1,32 +1,53 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
-
-using static System.Net.Mime.MediaTypeNames;
 
 namespace LowSharp.Client.Repl;
 
 internal sealed partial class ReplViewModel : ViewModelWithMenus
 {
     private readonly IClient _client;
+    private readonly List<string> _history;
 
-    private List<string> History { get; }
     private int _historyIndex;
+
+    [ObservableProperty]
+    public partial Guid Session { get; set; }
 
     public ReplViewModel(IClient client)
     {
         _client = client;
-        History = new List<string>();
+        _history = new List<string>();
+        Session = Guid.Empty;
+    }
+
+    public override async Task InitializeAsync()
+    {
+        Session = await _client.InitializeReplSession();
     }
 
     [RelayCommand]
     public async Task Send()
     {
         var input = WeakReferenceMessenger.Default.Send(new RequestMessages.GetReplInputCodeRequest());
-        History.Add(input.Response);
-        _historyIndex = History.Count - 1;
+
+        _history.Add(input.Response);
+        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(string.Empty));
+        var header = $"""
+            {DateTime.UtcNow.ToShortTimeString()} >
+            {input.Response}
+            """;
+        WeakReferenceMessenger.Default.Send(new Messages.AppendReplOutput(header));
+
+        var results = _client.SendReplInput(Session, input);
+        await foreach (string result in results)
+        {
+            WeakReferenceMessenger.Default.Send(new Messages.AppendReplOutput(result));
+        }
+        _historyIndex = _history.Count - 1;
     }
 
     [RelayCommand]
@@ -36,17 +57,21 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
     [RelayCommand]
     public void PreviousHistory()
     {
-        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(History[_historyIndex]));
-        int index = _historyIndex - 1 > -1 ? _historyIndex - 1 : History.Count - 1;
+        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(_history[_historyIndex]));
+        int index = _historyIndex - 1 > -1 ? _historyIndex - 1 : _history.Count - 1;
         _historyIndex = index;
 
     }
 
     [RelayCommand]
+    public void ClearOutput()
+        => WeakReferenceMessenger.Default.Send(new Messages.ClearReplOutput());
+
+    [RelayCommand]
     public void NextHistory()
     {
-        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(History[_historyIndex]));
-        int index = _historyIndex + 1 < History.Count - 1 ? _historyIndex + 1 : 0;
+        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(_history[_historyIndex]));
+        int index = _historyIndex + 1 < _history.Count - 1 ? _historyIndex + 1 : 0;
         _historyIndex = index;
     }
 }

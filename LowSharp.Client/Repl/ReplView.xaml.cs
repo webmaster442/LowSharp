@@ -16,11 +16,16 @@ public partial class ReplView : UserControl
         WeakReferenceMessenger.Default.Register<RequestMessages.GetReplInputCodeRequest>(this, OnGetInput);
         WeakReferenceMessenger.Default.Register<Messages.AppendReplOutput>(this, OnOutput);
         WeakReferenceMessenger.Default.Register<Messages.SetReplInputCode>(this, OnSetInput);
+        WeakReferenceMessenger.Default.Register<Messages.ClearReplOutput>(this, OnClearOutput);
     }
+
+    private void OnClearOutput(object recipient, Messages.ClearReplOutput message)
+        => Output.Document.Text = string.Empty;
 
     private void OnOutput(object recipient, Messages.AppendReplOutput message)
     {
-
+        Output.AppendText(message.Output);
+        Output.ScrollToEnd();
     }
 
     private void OnGetInput(object recipient, RequestMessages.GetReplInputCodeRequest message)

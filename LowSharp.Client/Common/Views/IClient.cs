@@ -15,4 +15,8 @@ internal interface IClient
                                      InputLanguage inputLanguage,
                                      Optimization optimization,
                                      OutputCodeType outputCodeType);
+
+    Task<Guid> InitializeReplSession();
+
+    IAsyncEnumerable<string> SendReplInput(Guid session, string input);
 }

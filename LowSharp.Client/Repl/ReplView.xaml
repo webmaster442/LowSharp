@@ -32,6 +32,9 @@
         <avalonEdit:TextEditor
             x:Name="Output"
             Grid.Row="0"
+            FontFamily="Cascadia Code"
+            FontSize="{DynamicResource EditorFontSize}"
+            Foreground="{StaticResource White}"
             HorizontalScrollBarVisibility="Auto"
             IsReadOnly="True"
             VerticalScrollBarVisibility="Auto"
@@ -47,8 +50,10 @@
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <Menu BorderThickness="1">
-                        <MenuItem Header="#Commands">
-                            <MenuItem Header="#Clear" />
+                        <MenuItem Header="Commands">
+                            <MenuItem
+                                Command="{Binding ClearOutputCommand}"
+                                Header="Clear output" />
                         </MenuItem>
                         <MenuItem Header="History">
                             <MenuItem
@@ -67,7 +72,7 @@
                         Text="Session:" />
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="{Binding SessionId}" />
+                        Text="{Binding Session}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Text="&gt;" />

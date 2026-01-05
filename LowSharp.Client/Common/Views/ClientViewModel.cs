@@ -10,8 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Grpc.Net.Client;
 
-using LowSharp.ApiV1.HealthCheck;
-
 namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class ClientViewModel :
@@ -205,7 +203,7 @@ internal sealed partial class ClientViewModel :
         ObjectDisposedException.ThrowIf(_disposed, this);
         ThrowIfCantContinue();
 
-        var client = new Health.HealthClient(_channel);
+        var client = new ApiV1.HealthCheck.Health.HealthClient(_channel);
         try
         {
             int number1 = Random.Shared.Next();
@@ -214,7 +212,7 @@ internal sealed partial class ClientViewModel :
             long expectedSum = (long)number1 + (long)number2;
 
             IsBusy = true;
-            var response = await client.CheckAsync(new HealthCheckRequest
+            var response = await client.CheckAsync(new ApiV1.HealthCheck.HealthCheckRequest
             {
                 Number1 = number1,
                 Number2 = number2,
@@ -233,21 +231,21 @@ internal sealed partial class ClientViewModel :
         }
     }
 
-    public async Task<GetComponentVersionsRespnse> GetComponentVersions()
+    public async Task<ApiV1.HealthCheck.GetComponentVersionsRespnse> GetComponentVersions()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ThrowIfCantContinue();
 
-        var client = new Health.HealthClient(_channel);
+        var client = new ApiV1.HealthCheck.Health.HealthClient(_channel);
         try
         {
             IsBusy = true;
-            return await client.GetComponentVersionsAsync(new GetComponentVersionsRequest());
+            return await client.GetComponentVersionsAsync(new ApiV1.HealthCheck.GetComponentVersionsRequest());
         }
         catch (Exception ex)
         {
             await _dialogs.Error("Server failed to reply", ex.Message);
-            return new GetComponentVersionsRespnse();
+            return new ApiV1.HealthCheck.GetComponentVersionsRespnse();
         }
         finally
         {
@@ -296,5 +294,51 @@ internal sealed partial class ClientViewModel :
         {
             IsBusy = false;
         }
+    }
+
+    public async Task<Guid> InitializeReplSession()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ThrowIfCantContinue();
+
+        var client = new ApiV1.Evaluate.Evaluator.EvaluatorClient(_channel);
+        try
+        {
+            IsBusy = true;
+            var result = await client.InitializeAsync(new ApiV1.Evaluate.InitializationRequest());
+            return Guid.Parse(result.Id);
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.Error("Server failed to reply", ex.Message);
+            return Guid.Empty;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public async IAsyncEnumerable<string> SendReplInput(Guid session, string input)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ThrowIfCantContinue();
+
+        var client = new ApiV1.Evaluate.Evaluator.EvaluatorClient(_channel);
+        IsBusy = true;
+        var response = client.Evaluate(new ApiV1.Evaluate.EvaluationRequest
+        {
+            Id = session.ToString(),
+            UserInput = input,
+        });
+
+        while (await response.ResponseStream.MoveNext(CancellationToken.None))
+        {
+            var current = response.ResponseStream.Current;
+            yield return current.Result;
+        }
+
+        IsBusy = false;
+
     }
 }

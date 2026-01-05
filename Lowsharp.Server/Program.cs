@@ -11,15 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
-builder.Services.AddScoped<LoweringEngine>();
-builder.Services.AddScoped<CsharpEvaluator>();
-builder.Services.AddScoped<SessionManager>();
+builder.Services.AddMemoryCache();
 builder.Services.AddDbContext<ServerDbContext>(options =>
 {
     options.UseSqlite($"Data Source={GetDatabasePath()}");
 });
-
-builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
+builder.Services.AddSingleton<SessionManager>();
+builder.Services.AddScoped<LoweringEngine>();
+builder.Services.AddScoped<CsharpEvaluator>();
 builder.Services.AddScoped<JsonDbContextCache>(factory =>
 {
     return new JsonDbContextCache(
@@ -30,6 +30,7 @@ builder.Services.AddScoped<JsonDbContextCache>(factory =>
 });
 
 builder.Services.AddHostedService<CacheCleanupService>();
+builder.Services.AddHostedService<SessionCleanupService>();
 
 var app = builder.Build();
 

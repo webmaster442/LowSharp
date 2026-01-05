@@ -21,4 +21,6 @@ internal static class Messages
     public sealed record class AppendReplOutput(string Output);
 
     public sealed record class SetReplInputCode(string Code);
+
+    public sealed record class ClearReplOutput();
 }

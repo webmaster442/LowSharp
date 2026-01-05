@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+﻿using System.Runtime.CompilerServices;
+
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
 namespace Lowsharp.Server.Interactive;
@@ -25,17 +27,19 @@ internal sealed class CsharpEvaluator
         return id;
     }
 
-    public async Task<string> EvaluateAsync(Guid sessionId, string code, CancellationToken cancellationToken)
+    public async IAsyncEnumerable<string> EvaluateAsync(Guid sessionId, string code, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         ScriptState? state = _sessionManager.GetSessionState(sessionId);
         if (state == null)
         {
-            return "Error: Session not Initialized";
+            yield return "Error: Session not Initialized";
+            yield break;
         }
 
         var newState = await state.ContinueWithAsync(code, _options, cancellationToken);
+        
         _sessionManager.Update(sessionId, newState);
 
-        return newState.ReturnValue?.ToString() ?? "null";
+        yield return newState.ReturnValue?.ToString() ?? "null";
     }
 }
