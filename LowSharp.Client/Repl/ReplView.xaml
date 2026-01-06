@@ -29,7 +29,7 @@
             <RowDefinition Height="3" />
             <RowDefinition Height="100" />
         </Grid.RowDefinitions>
-        <avalonEdit:TextEditor
+        <RichTextBox
             x:Name="Output"
             Grid.Row="0"
             FontFamily="Cascadia Code"
@@ -37,8 +37,7 @@
             Foreground="{StaticResource White}"
             HorizontalScrollBarVisibility="Auto"
             IsReadOnly="True"
-            VerticalScrollBarVisibility="Auto"
-            WordWrap="True" />
+            VerticalScrollBarVisibility="Auto" />
         <GridSplitter
             Grid.Row="1"
             HorizontalAlignment="Stretch"

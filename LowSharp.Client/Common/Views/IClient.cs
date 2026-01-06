@@ -1,4 +1,5 @@
-﻿using LowSharp.ApiV1.HealthCheck;
+﻿using LowSharp.ApiV1.Evaluate;
+using LowSharp.ApiV1.HealthCheck;
 using LowSharp.ApiV1.Lowering;
 
 namespace LowSharp.Client.Common.Views;
@@ -18,5 +19,5 @@ internal interface IClient
 
     Task<Guid> InitializeReplSession();
 
-    IAsyncEnumerable<string> SendReplInput(Guid session, string input);
+    IAsyncEnumerable<FormattedText> SendReplInput(Guid session, string input);
 }

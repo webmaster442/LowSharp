@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
+using LowSharp.ApiV1.Evaluate;
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
 
@@ -37,11 +38,8 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
         _history.Add(input.Response);
         WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(string.Empty));
 
-        var header = $"`{input.Response}`\r\n{new string('-', 72)}";
-        WeakReferenceMessenger.Default.Send(new Messages.AppendReplOutput(header));
-
         var results = _client.SendReplInput(Session, input);
-        await foreach (string result in results)
+        await foreach (FormattedText result in results)
         {
             WeakReferenceMessenger.Default.Send(new Messages.AppendReplOutput(result));
         }

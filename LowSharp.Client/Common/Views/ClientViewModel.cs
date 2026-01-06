@@ -10,6 +10,8 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Grpc.Net.Client;
 
+using LowSharp.ApiV1.Evaluate;
+
 namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class ClientViewModel :
@@ -319,7 +321,7 @@ internal sealed partial class ClientViewModel :
         }
     }
 
-    public async IAsyncEnumerable<string> SendReplInput(Guid session, string input)
+    public async IAsyncEnumerable<FormattedText> SendReplInput(Guid session, string input)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ThrowIfCantContinue();
@@ -335,7 +337,7 @@ internal sealed partial class ClientViewModel :
         while (await response.ResponseStream.MoveNext(CancellationToken.None))
         {
             var current = response.ResponseStream.Current;
-            yield return current.Result;
+            yield return current;
         }
 
         IsBusy = false;

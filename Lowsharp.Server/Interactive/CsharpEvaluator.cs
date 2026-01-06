@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
+using Lowsharp.Server.Interactive.Formating;
+
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
@@ -8,11 +10,13 @@ namespace Lowsharp.Server.Interactive;
 internal sealed class CsharpEvaluator
 {
     private readonly SessionManager _sessionManager;
+    private readonly FormatterComponent _formatter;
     private readonly ScriptOptions _options;
 
-    public CsharpEvaluator(SessionManager sessionManager)
+    public CsharpEvaluator(SessionManager sessionManager, FormatterComponent formatter)
     {
         _sessionManager = sessionManager;
+        _formatter = formatter;
         _options = ScriptOptions.Default
             .WithImports("System", "System.IO", "System.Collections.Generic", "System.Linq", "System.Threading.Tasks")
             .WithReferences(AppDomain.CurrentDomain.GetAssemblies()
@@ -27,7 +31,7 @@ internal sealed class CsharpEvaluator
         return id;
     }
 
-    public async IAsyncEnumerable<string> EvaluateAsync(Guid sessionId, string code, [EnumeratorCancellation] CancellationToken cancellationToken)
+    public async IAsyncEnumerable<TextWithFormat> EvaluateAsync(Guid sessionId, string code, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         ScriptState? state = _sessionManager.GetSessionState(sessionId);
         if (state == null)
@@ -49,6 +53,11 @@ internal sealed class CsharpEvaluator
             returnValue = ex;
         }
 
-        yield return returnValue?.ToString() ?? "";
+        var formatParts = _formatter.Format(returnValue);
+
+        foreach (var part in formatParts)
+        {
+            yield return part;
+        }
     }
 }

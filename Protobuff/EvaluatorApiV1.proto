@@ -6,7 +6,7 @@ package LowSharp.ApiV1.Evaluate;
 
 service Evaluator {
     rpc Initialize(InitializationRequest) returns (InitializationResponse);
-    rpc Evaluate(EvaluationRequest) returns (stream EvaluationResponse);
+    rpc Evaluate(EvaluationRequest) returns (stream FormattedText);
     rpc Uninitialize(UninitializationRequest) returns (UninitializationResponse);
 }
 
@@ -16,8 +16,31 @@ message EvaluationRequest {
     string UserInput = 2;
 }
 
-message EvaluationResponse {
-    string Result = 2;
+enum ForegroundColor {
+    Default = 0;
+    Black = 1;
+    Blue = 2;
+    Cyan = 3;
+    Green = 4;
+    Purple = 5;
+    Red = 6;
+    White = 7;
+    Yellow = 8;
+    BrightBlack = 9;
+    BrightBlue = 10;
+    BrightCyan = 11;
+    BrightGreen = 12;
+    BrightPurple = 13;
+    BrightRed = 14;
+    BrightWhite = 15;
+    BrightYellow = 16;
+}
+
+message FormattedText {
+    string Text = 1;
+    bool IsBold = 2;
+    bool IsItalic = 3;
+    ForegroundColor Color = 4;
 }
 
 message InitializationRequest {
