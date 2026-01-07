@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System.Data;
 using System.IO;
 using System.Windows;
 using System.Xml;
@@ -8,6 +7,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
 using LowSharp.Client.Lowering.Converters;
+using LowSharp.Client.Repl;
 
 namespace LowSharp.Client;
 
@@ -34,6 +34,7 @@ public partial class App : Application
             definitions.Add(name, xshd);
         }
 
+        CsharpSyntaxProvider.SetHighlighters(definitions);
         SelectedInputLanguageIndexToHighlightingConverter.SetHighlighters(definitions);
         SelectedOutputTypeIndexToHighlightingConverter.SetHighlighters(definitions);
     }

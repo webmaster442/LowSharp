@@ -1,6 +1,7 @@
 using Lowsharp.Server;
 using Lowsharp.Server.Data;
 using Lowsharp.Server.Interactive;
+using Lowsharp.Server.Interactive.Formating;
 using Lowsharp.Server.Lowering;
 using Lowsharp.Server.Services;
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<ServerDbContext>(options =>
 });
 builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
 builder.Services.AddSingleton<SessionManager>();
+builder.Services.AddSingleton<TextWithFormatFactory>();
 builder.Services.AddScoped<LoweringEngine>();
 builder.Services.AddScoped<CsharpEvaluator>();
 builder.Services.AddScoped<JsonDbContextCache>(factory =>

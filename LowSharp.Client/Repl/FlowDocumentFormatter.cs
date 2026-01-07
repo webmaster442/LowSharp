@@ -5,7 +5,7 @@ using LowSharp.ApiV1.Evaluate;
 
 namespace LowSharp.Client.Repl;
 
-internal static class Formatter
+internal static class FlowDocumentFormatter
 {
     private static readonly Dictionary<ForegroundColor, SolidColorBrush> ColorMap = new()
     {

@@ -11,6 +11,7 @@ namespace LowSharp.Client.Repl;
 internal sealed partial class ReplViewModel : ViewModelWithMenus
 {
     private readonly IClient _client;
+    private readonly IDialogs _dialogs;
     private readonly List<string> _history;
 
     private int _historyIndex;
@@ -18,9 +19,10 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
     [ObservableProperty]
     public partial Guid Session { get; set; }
 
-    public ReplViewModel(IClient client)
+    public ReplViewModel(IClient client, IDialogs dialogs)
     {
         _client = client;
+        _dialogs = dialogs;
         _history = new List<string>();
         Session = Guid.Empty;
     }
@@ -39,9 +41,17 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
         WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(string.Empty));
 
         var results = _client.SendReplInput(Session, input);
-        await foreach (FormattedText result in results)
+        try
         {
-            WeakReferenceMessenger.Default.Send(new Messages.AppendReplOutput(result));
+            await foreach (FormattedText result in results)
+            {
+                WeakReferenceMessenger.Default.Send(new Messages.AppendReplOutput(result));
+            }
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.Error("Evaluation communication error", ex.Message);
+            _client.HideIsBusy();
         }
         _historyIndex = _history.Count - 1;
     }

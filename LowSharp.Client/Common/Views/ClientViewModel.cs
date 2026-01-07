@@ -341,6 +341,10 @@ internal sealed partial class ClientViewModel :
         }
 
         IsBusy = false;
+    }
 
+    public void HideIsBusy()
+    {
+        IsBusy = false;
     }
 }

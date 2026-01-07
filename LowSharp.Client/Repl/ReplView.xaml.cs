@@ -25,7 +25,7 @@ public partial class ReplView : UserControl
 
     private void OnOutput(object recipient, Messages.AppendReplOutput message)
     {
-        Formatter.AppendFormattedText(Output.Document, message.Output);
+        FlowDocumentFormatter.AppendFormattedText(Output.Document, message.Output);
         Output.CaretPosition = Output.Document.ContentEnd;
     }
 

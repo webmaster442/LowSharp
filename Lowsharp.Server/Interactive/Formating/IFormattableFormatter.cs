@@ -1,15 +1,10 @@
 ﻿namespace Lowsharp.Server.Interactive.Formating;
 
-internal class IFormattableFormatter : ObjectFormatter<IFormattable>
+internal sealed class IFormattableFormatter : ObjectFormatter<IFormattable>
 {
     protected override IEnumerable<TextWithFormat> Format(IFormattable obj, IObjectFormatter parent)
     {
-        yield return new TextWithFormat
-        {
-            Text = obj.GetType().FullName ?? "unknown type",
-            Italic = true,
-            Color = ForegroundColor.Yellow
-        };
+        yield return FormatType();
         yield return Environment.NewLine;
         yield return new TextWithFormat
         {
@@ -18,4 +13,3 @@ internal class IFormattableFormatter : ObjectFormatter<IFormattable>
         yield return Environment.NewLine;
     }
 }
-

@@ -12,5 +12,15 @@ internal abstract class ObjectFormatter<T> : IObjectFormatter
             : throw new ArgumentException($"Object is not of type {typeof(T).FullName}", nameof(obj));
     }
 
+    protected static TextWithFormat FormatType()
+    {
+        return new TextWithFormat
+        {
+            Text = typeof(T).Name,
+            Color = ForegroundColor.Yellow,
+            Italic = true
+        };
+    }
+
     protected abstract IEnumerable<TextWithFormat> Format(T obj, IObjectFormatter parent);
 }

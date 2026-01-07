@@ -29,7 +29,7 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartRepl()
     {
-        var vm = new ReplViewModel(_client);
+        var vm = new ReplViewModel(_client, _dialogs);
         await vm.InitializeAsync();
         ReplaceContents("REPL", vm);
     }

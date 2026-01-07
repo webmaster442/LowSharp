@@ -1,15 +1,16 @@
 ﻿namespace Lowsharp.Server.Interactive.Formating;
 
-internal sealed class FormatterComponent : IObjectFormatter
+internal sealed class TextWithFormatFactory : IObjectFormatter
 {
     private readonly IObjectFormatter[] _formatters;
 
-    public FormatterComponent()
+    public TextWithFormatFactory()
     {
-        _formatters = new IObjectFormatter[]
-        {
+        _formatters =
+        [
+            new ExceptionFormatter(),
             new IFormattableFormatter(),
-        };
+        ];
     }
 
     public IEnumerable<TextWithFormat> Format(object obj)

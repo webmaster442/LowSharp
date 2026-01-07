@@ -20,4 +20,5 @@ internal interface IClient
     Task<Guid> InitializeReplSession();
 
     IAsyncEnumerable<FormattedText> SendReplInput(Guid session, string input);
+    void HideIsBusy();
 }

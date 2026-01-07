@@ -89,7 +89,7 @@
                     FontSize="{DynamicResource EditorFontSize}"
                     Foreground="{StaticResource White}"
                     HorizontalScrollBarVisibility="Auto"
-                    SyntaxHighlighting="CsharpNext"
+                    SyntaxHighlighting="{local:CsharpSyntaxProvider}"
                     VerticalScrollBarVisibility="Auto"
                     WordWrap="True" />
                 <Button
