@@ -10,6 +10,7 @@ internal sealed class TextWithFormatFactory : IObjectFormatter
         [
             new ExceptionFormatter(),
             new IFormattableFormatter(),
+            new ObjectPropertiesFormatter(),
         ];
     }
 
@@ -24,10 +25,8 @@ internal sealed class TextWithFormatFactory : IObjectFormatter
         }
         return
         [
-            new TextWithFormat
-            {
-                Text = obj?.ToString() ?? "null"
-            }
+            obj?.ToString() ?? string.Empty,
+            Environment.NewLine,
         ];
     }
 

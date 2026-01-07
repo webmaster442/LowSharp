@@ -12,11 +12,11 @@ internal abstract class ObjectFormatter<T> : IObjectFormatter
             : throw new ArgumentException($"Object is not of type {typeof(T).FullName}", nameof(obj));
     }
 
-    protected static TextWithFormat FormatType()
+    protected static TextWithFormat FormatType(object o)
     {
         return new TextWithFormat
         {
-            Text = typeof(T).Name,
+            Text = o.GetType().Name,
             Color = ForegroundColor.Yellow,
             Italic = true
         };

@@ -4,7 +4,7 @@ internal sealed class IFormattableFormatter : ObjectFormatter<IFormattable>
 {
     protected override IEnumerable<TextWithFormat> Format(IFormattable obj, IObjectFormatter parent)
     {
-        yield return FormatType();
+        yield return FormatType(obj);
         yield return Environment.NewLine;
         yield return new TextWithFormat
         {

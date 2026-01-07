@@ -61,13 +61,15 @@ internal sealed class CsharpEvaluator
             returnValue = ex;
         }
 
-        IAsyncEnumerable<TextWithFormat> formattedPrompt = CsharpFormatter.Format(prompt);
+        IAsyncEnumerable<TextWithFormat> formattedPrompt = CsharpFormatter.Format(prompt);       
         IEnumerable<TextWithFormat> resultParts = _formatter.Format(returnValue);
 
         await foreach(var promptPart in formattedPrompt)
         {
             yield return promptPart;
         }
+        yield return Environment.NewLine;
+        yield return new string('-', 80);
         yield return Environment.NewLine;
         foreach (var resultPart in resultParts)
         {
@@ -95,7 +97,6 @@ internal sealed class CsharpEvaluator
         {
             solution = solution.AddMetadataReference(project, reference);
         }
-
 
         var sourceText = SourceText.From(code);
 
