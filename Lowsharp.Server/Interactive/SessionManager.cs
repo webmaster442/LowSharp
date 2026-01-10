@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Concurrent;
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Scripting;
 
 namespace Lowsharp.Server.Interactive;
@@ -16,30 +17,32 @@ internal sealed class SessionManager : IEnumerable<(Guid sessionId, DateTimeOffs
         _timeProvider = timeProvider;
     }
 
-    public ScriptState? GetSessionState(Guid sessionId)
+    public (ScriptState state, Document document)? GetSessionState(Guid sessionId)
     {
         if (_sessions.TryGetValue(sessionId, out var session))
         {
-            return session.ScriptState;
+            return (session.ScriptState, session.Document);
         }
         return null;
     }
 
-    public void Update(Guid sessionId, ScriptState newState)
+    public void Update(Guid sessionId, ScriptState newState, Document newDocument)
     {
         _sessions[sessionId] = new Session
         {
             LastAccessUtc = _timeProvider.GetUtcNow(),
-            ScriptState = newState
+            ScriptState = newState,
+            Document = newDocument,
         };
     }
 
-    public void Create(Guid sessionId, ScriptState initialState)
+    public void Create(Guid sessionId, ScriptState initialState, Document initialDocument)
     {
         var session = new Session
         {
             LastAccessUtc = _timeProvider.GetUtcNow(),
-            ScriptState = initialState
+            ScriptState = initialState,
+            Document = initialDocument,
         };
         _sessions[sessionId] = session;
     }

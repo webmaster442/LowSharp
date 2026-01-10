@@ -33,14 +33,15 @@ internal sealed class CsharpEvaluator
     {
         var id = Guid.NewGuid();
         ScriptState state = await CSharpScript.RunAsync("", _options);
-        _sessionManager.Create(id, state);
+        Document document = CreateDocumentForHighlight(state, id, "");
+        _sessionManager.Create(id, state, document);
         return id;
     }
 
     public async IAsyncEnumerable<TextWithFormat> EvaluateAsync(Guid sessionId, string code, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        ScriptState? state = _sessionManager.GetSessionState(sessionId);
-        if (state == null)
+        (ScriptState state, Document document)? session = _sessionManager.GetSessionState(sessionId);
+        if (session == null)
         {
             yield return "Error: Session not Initialized";
             yield break;
@@ -48,12 +49,11 @@ internal sealed class CsharpEvaluator
 
         object returnValue;
 
-        Document prompt = CreateDocumentForHighlight(state, sessionId, code);
-
+        Document newDoc = session.Value.document.WithText(SourceText.From(code));
         try
         {
-            ScriptState<object> newState = await state.ContinueWithAsync(code, _options, cancellationToken);
-            _sessionManager.Update(sessionId, newState);
+            ScriptState<object> newState = await session.Value.state.ContinueWithAsync(code, _options, cancellationToken);
+            _sessionManager.Update(sessionId, newState, newDoc);
             returnValue = newState.ReturnValue;
         }
         catch (Exception ex)
@@ -61,7 +61,7 @@ internal sealed class CsharpEvaluator
             returnValue = ex;
         }
 
-        IAsyncEnumerable<TextWithFormat> formattedPrompt = CsharpFormatter.Format(prompt);       
+        IAsyncEnumerable<TextWithFormat> formattedPrompt = CsharpFormatter.Format(newDoc); 
         IEnumerable<TextWithFormat> resultParts = _formatter.Format(returnValue);
 
         await foreach(var promptPart in formattedPrompt)

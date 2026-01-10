@@ -12,5 +12,15 @@ internal sealed class ExceptionFormatter : ObjectFormatter<Exception>
             Color = ForegroundColor.Red
         };
         yield return Environment.NewLine;
+        foreach (var line in obj.StackTrace?.Split([Environment.NewLine], StringSplitOptions.None) ?? Array.Empty<string>())
+        {
+            yield return new TextWithFormat
+            {
+                Text = line,
+                Color = ForegroundColor.Default,
+                Italic = true
+            };
+            yield return Environment.NewLine;
+        }
     }
 }
