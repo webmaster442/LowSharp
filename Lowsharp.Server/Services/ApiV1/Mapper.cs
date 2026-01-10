@@ -1,4 +1,6 @@
-﻿using Lowsharp.Server.Interactive;
+﻿using System.Text.RegularExpressions;
+
+using Lowsharp.Server.Interactive;
 using Lowsharp.Server.Lowering;
 
 using LowSharp.ApiV1.Evaluate;
@@ -85,5 +87,48 @@ internal static class Mapper
                 _ => throw new InvalidOperationException("Unknown color")
             }
         };
+    }
+
+    public static RegexOptions Map(LowSharp.ApiV1.Regex.RegexOptions options)
+    {
+        RegexOptions result = RegexOptions.None;
+
+        if (options.IgnoreCase)
+            result |= RegexOptions.IgnoreCase;
+        if (options.Multiline)
+            result |= RegexOptions.Multiline;
+        if (options.ExplicitCapture)
+            result |= RegexOptions.ExplicitCapture;
+        if (options.Compiled)
+            result |= RegexOptions.Compiled;
+        if (options.Singleline)
+            result |= RegexOptions.Singleline;
+        if (options.IgnorePatternWhitespace)
+            result |= RegexOptions.IgnorePatternWhitespace;
+        if (options.RightToLeft)
+            result |= RegexOptions.RightToLeft;
+        if (options.EcmaScript)
+            result |= RegexOptions.ECMAScript;
+        if (options.CultureInvariant)
+            result |= RegexOptions.CultureInvariant;
+        if (options.NonBackTracking)
+            result |= RegexOptions.NonBacktracking;
+
+        return result;
+    }
+
+    public static IEnumerable<LowSharp.ApiV1.Regex.RegexMatch> Map(MatchCollection matches)
+    {
+        foreach (Match m in matches)
+        {
+            yield return new LowSharp.ApiV1.Regex.RegexMatch
+            {
+                Value = m.Value,
+                Success = m.Success,
+                Index = m.Index,
+                Length = m.Length,
+                Name = m.Name,
+            };
+        }
     }
 }
