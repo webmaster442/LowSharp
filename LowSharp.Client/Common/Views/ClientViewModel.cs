@@ -16,13 +16,11 @@ namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class ClientViewModel :
     ObservableObject,
-    IDisposable,
-    IClient
+    IDisposable
 {
     private readonly DispatcherTimer _checkTimer;
     private readonly IDialogs _dialogs;
     private readonly string _serverPath;
-    private GrpcChannel? _channel;
     private bool _disposed;
 
     [ObservableProperty]
@@ -37,6 +35,10 @@ internal sealed partial class ClientViewModel :
     [ObservableProperty]
     public partial bool IsBusy { get; set; }
 
+    public GrpcChannel? Channel { get; private set; }
+
+    public IClient ApiClient { get; }
+
     partial void OnIsBusyChanged(bool oldValue, bool newValue)
         => WeakReferenceMessenger.Default.Send(new Messages.IsBusyChanged(newValue));
 
@@ -50,14 +52,15 @@ internal sealed partial class ClientViewModel :
             Interval = TimeSpan.FromSeconds(2),
         };
         _checkTimer.Tick += CheckStatus;
+        ApiClient = new ClientFunctions(this, dialogs);
     }
 
     public void Dispose()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         _checkTimer.Stop();
-        _channel?.Dispose();
-        _channel = null;
+        Channel?.Dispose();
+        Channel = null;
         Stop();
         _disposed = true;
     }
@@ -74,8 +77,8 @@ internal sealed partial class ClientViewModel :
         if (!IsRunning)
         {
             IsConnected = false;
-            _channel?.Dispose();
-            _channel = null;
+            Channel?.Dispose();
+            Channel = null;
             return;
         }
 
@@ -97,13 +100,14 @@ internal sealed partial class ClientViewModel :
         return false;
     }
 
-    private void ThrowIfCantContinue()
+    public void ThrowIfCantContinue()
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
         if (!IsRunning)
         {
             throw new InvalidOperationException("The server is not running");
         }
-        if (_channel == null)
+        if (Channel == null)
         {
             throw new InvalidOperationException("Not connected to the server");
         }
@@ -161,8 +165,8 @@ internal sealed partial class ClientViewModel :
     [RelayCommand]
     public void Stop()
     {
-        _channel?.Dispose();
-        _channel = null;
+        Channel?.Dispose();
+        Channel = null;
 
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (!IsRunning)
@@ -179,15 +183,15 @@ internal sealed partial class ClientViewModel :
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (IsConnected || _channel != null)
+        if (IsConnected || Channel != null)
             return;
 
-        _channel = GrpcChannel.ForAddress($"http://localhost:{Port}", new GrpcChannelOptions
+        Channel = GrpcChannel.ForAddress($"http://localhost:{Port}", new GrpcChannelOptions
         {
             UnsafeUseInsecureChannelCallCredentials = true,
         });
 
-        bool isOk = await DoHealthCheck();
+        bool isOk = await ApiClient.DoHealthCheck();
 
         IsConnected = isOk;
     }
@@ -198,149 +202,6 @@ internal sealed partial class ClientViewModel :
         await Start();
         IsRunning = true;
         await Connect();
-    }
-
-    public async Task<bool> DoHealthCheck()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        ThrowIfCantContinue();
-
-        var client = new ApiV1.HealthCheck.Health.HealthClient(_channel);
-        try
-        {
-            int number1 = Random.Shared.Next();
-            int number2 = Random.Shared.Next();
-
-            long expectedSum = (long)number1 + (long)number2;
-
-            IsBusy = true;
-            var response = await client.CheckAsync(new ApiV1.HealthCheck.HealthCheckRequest
-            {
-                Number1 = number1,
-                Number2 = number2,
-            });
-
-            return response.Sum == expectedSum;
-        }
-        catch (Exception ex)
-        {
-            await _dialogs.Error("Server failed to reply", ex.Message);
-            return false;
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    public async Task<ApiV1.HealthCheck.GetComponentVersionsRespnse> GetComponentVersions()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        ThrowIfCantContinue();
-
-        var client = new ApiV1.HealthCheck.Health.HealthClient(_channel);
-        try
-        {
-            IsBusy = true;
-            return await client.GetComponentVersionsAsync(new ApiV1.HealthCheck.GetComponentVersionsRequest());
-        }
-        catch (Exception ex)
-        {
-            await _dialogs.Error("Server failed to reply", ex.Message);
-            return new ApiV1.HealthCheck.GetComponentVersionsRespnse();
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    public async Task<ApiV1.Lowering.LoweringResponse> LowerCodeAsync(string code,
-                                                                               ApiV1.Lowering.InputLanguage inputLanguage,
-                                                                               ApiV1.Lowering.Optimization optimization,
-                                                                               ApiV1.Lowering.OutputCodeType outputCodeType)
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        ThrowIfCantContinue();
-
-        var client = new ApiV1.Lowering.Lowerer.LowererClient(_channel);
-
-        try
-        {
-            IsBusy = true;
-            var result = await client.ToLowerCodeAsync(new ApiV1.Lowering.LoweringRequest()
-            {
-                Code = code,
-                Language = inputLanguage,
-                OptimizationLevel = optimization,
-                OutputType = outputCodeType
-            });
-            return result;
-        }
-        catch (Exception ex)
-        {
-            return new ApiV1.Lowering.LoweringResponse()
-            {
-                ResultCode = string.Empty,
-                Diagnostics =
-                {
-                    new ApiV1.Lowering.Diagnostic()
-                    {
-                        Severity = ApiV1.Lowering.DiagnosticSeverity.Error,
-                        Message = $"Failed to lower code: {ex.Message}"
-                    }
-                }
-            };
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    public async Task<Guid> InitializeReplSession()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        ThrowIfCantContinue();
-
-        var client = new ApiV1.Evaluate.Evaluator.EvaluatorClient(_channel);
-        try
-        {
-            IsBusy = true;
-            var result = await client.InitializeAsync(new ApiV1.Evaluate.InitializationRequest());
-            return Guid.Parse(result.Id);
-        }
-        catch (Exception ex)
-        {
-            await _dialogs.Error("Server failed to reply", ex.Message);
-            return Guid.Empty;
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
-    public async IAsyncEnumerable<FormattedText> SendReplInput(Guid session, string input)
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        ThrowIfCantContinue();
-
-        var client = new ApiV1.Evaluate.Evaluator.EvaluatorClient(_channel);
-        IsBusy = true;
-        var response = client.Evaluate(new ApiV1.Evaluate.EvaluationRequest
-        {
-            Id = session.ToString(),
-            UserInput = input,
-        });
-
-        while (await response.ResponseStream.MoveNext(CancellationToken.None))
-        {
-            var current = response.ResponseStream.Current;
-            yield return current;
-        }
-
-        IsBusy = false;
     }
 
     public void HideIsBusy()

@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.Input;
 
 using LowSharp.Client.Lowering;
+using LowSharp.Client.RegexTesting;
 using LowSharp.Client.Repl;
 
 namespace LowSharp.Client.Common.Views;
@@ -32,6 +33,14 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
         var vm = new ReplViewModel(_client, _dialogs);
         await vm.InitializeAsync();
         ReplaceContents("REPL", vm);
+    }
+
+    [RelayCommand]
+    public async Task StartRegex()
+    {
+        var vm = new RegexTestingViewModel();
+        await vm.InitializeAsync();
+        ReplaceContents("Regex Testing", vm);
     }
 
     [RelayCommand]

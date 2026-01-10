@@ -49,7 +49,7 @@ internal sealed partial class MainWindowViewModel :
 
     [MemberNotNull(nameof(ActualTabItem))]
     private void CreateStartPage()
-        => CreateTab("Start page", new StartPageViewModel(Client, _dialogs));
+        => CreateTab("Start page", new StartPageViewModel(Client.ApiClient, _dialogs));
 
     public BindingList<TabViewModel> Tabs { get; }
 

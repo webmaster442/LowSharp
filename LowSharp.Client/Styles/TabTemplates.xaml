@@ -4,6 +4,7 @@
     xmlns:common="clr-namespace:LowSharp.Client.Common.Views"
     xmlns:lowering="clr-namespace:LowSharp.Client.Lowering"
     xmlns:repl="clr-namespace:LowSharp.Client.Repl"
+    xmlns:regex="clr-namespace:LowSharp.Client.RegexTesting"
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <system:Double x:Key="EditorFontSize">16</system:Double>
@@ -18,6 +19,10 @@
 
     <DataTemplate DataType="{x:Type repl:ReplViewModel}">
         <repl:ReplView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type regex:RegexTestingViewModel}">
+        <regex:RegexTestingView/>
     </DataTemplate>
     
 </ResourceDictionary>

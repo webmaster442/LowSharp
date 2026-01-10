@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.33.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.33.3" />
     <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
     <PackageReference Include="Grpc.Tools" Version="2.76.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,6 +48,9 @@
     </Protobuf>
     <Protobuf Include="..\Protobuff\LoweringApiV1.proto" GrpcServices="Client" Access="Internal">
       <Link>LoweringApiV1.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\Protobuff\RegexApiV1.proto">
+      <Link>RegexApiV1.proto</Link>
     </Protobuf>
   </ItemGroup>
 
