@@ -13,7 +13,7 @@ internal sealed class InputLanguageToTextConverter
         return value switch
         {
             InputLanguage.Csharp => "C#",
-            InputLanguage.VisualBasic => "VB.NET",
+            InputLanguage.Visualbasic => "VB.NET",
             InputLanguage.Fsharp => "F#",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };

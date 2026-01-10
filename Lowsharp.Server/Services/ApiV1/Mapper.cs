@@ -37,14 +37,14 @@ internal static class Mapper
             {
                 LowSharp.ApiV1.Lowering.InputLanguage.Csharp => Lowering.InputLanguage.Csharp,
                 LowSharp.ApiV1.Lowering.InputLanguage.Fsharp => Lowering.InputLanguage.FSharp,
-                LowSharp.ApiV1.Lowering.InputLanguage.VisualBasic => Lowering.InputLanguage.VisualBasic,
+                LowSharp.ApiV1.Lowering.InputLanguage.Visualbasic => Lowering.InputLanguage.VisualBasic,
                 _ => throw new InvalidOperationException("Unknown Input language")
             },
             OutputType = request.OutputType switch
             {
                 OutputCodeType.Il => OutputLanguage.IL,
-                OutputCodeType.JitAsm => OutputLanguage.JitAsm,
-                OutputCodeType.LoweredCsharp => OutputLanguage.Csharp,
+                OutputCodeType.Jitasm => OutputLanguage.JitAsm,
+                OutputCodeType.Loweredcsharp => OutputLanguage.Csharp,
                 _ => throw new InvalidOperationException("Unknown Output type")
             },
             OutputOptimizationLevel = request.OptimizationLevel switch
@@ -65,7 +65,7 @@ internal static class Mapper
             IsItalic = output.Italic,
             Color = output.Color switch
             {
-                Interactive.ForegroundColor.Default => LowSharp.ApiV1.Evaluate.ForegroundColor.Default,
+                Interactive.ForegroundColor.Default => LowSharp.ApiV1.Evaluate.ForegroundColor.DefaultUnspecified,
                 Interactive.ForegroundColor.Black => LowSharp.ApiV1.Evaluate.ForegroundColor.Black,
                 Interactive.ForegroundColor.Blue => LowSharp.ApiV1.Evaluate.ForegroundColor.Blue,
                 Interactive.ForegroundColor.Cyan => LowSharp.ApiV1.Evaluate.ForegroundColor.Cyan,
@@ -74,14 +74,14 @@ internal static class Mapper
                 Interactive.ForegroundColor.Red => LowSharp.ApiV1.Evaluate.ForegroundColor.Red,
                 Interactive.ForegroundColor.White => LowSharp.ApiV1.Evaluate.ForegroundColor.White,
                 Interactive.ForegroundColor.Yellow => LowSharp.ApiV1.Evaluate.ForegroundColor.Yellow,
-                Interactive.ForegroundColor.BrightBlack => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightBlack,
-                Interactive.ForegroundColor.BrightBlue => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightBlue,
-                Interactive.ForegroundColor.BrightCyan => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightCyan,
-                Interactive.ForegroundColor.BrightGreen => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightGreen,
-                Interactive.ForegroundColor.BrightPurple => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightPurple,
-                Interactive.ForegroundColor.BrightRed => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightRed,
-                Interactive.ForegroundColor.BrightWhite => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightWhite,
-                Interactive.ForegroundColor.BrightYellow => LowSharp.ApiV1.Evaluate.ForegroundColor.BrightYellow,
+                Interactive.ForegroundColor.BrightBlack => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightblack,
+                Interactive.ForegroundColor.BrightBlue => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightblue,
+                Interactive.ForegroundColor.BrightCyan => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightcyan,
+                Interactive.ForegroundColor.BrightGreen => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightgreen,
+                Interactive.ForegroundColor.BrightPurple => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightpurple,
+                Interactive.ForegroundColor.BrightRed => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightred,
+                Interactive.ForegroundColor.BrightWhite => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightwhite,
+                Interactive.ForegroundColor.BrightYellow => LowSharp.ApiV1.Evaluate.ForegroundColor.Brightyellow,
                 _ => throw new InvalidOperationException("Unknown color")
             }
         };

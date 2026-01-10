@@ -146,7 +146,7 @@ internal sealed partial class LoweringViewModel :
         }
         else if (message.Language.Contains("v", StringComparison.OrdinalIgnoreCase))
         {
-            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.VisualBasic);
+            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.Visualbasic);
         }
         else if (message.Language.Contains("fs", StringComparison.OrdinalIgnoreCase))
         {

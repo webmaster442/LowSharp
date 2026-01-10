@@ -11,9 +11,9 @@ internal sealed class OutputCodeTypeToStringConverter : OneWayConverterBase<Outp
     {
         return value switch
         {
-            OutputCodeType.LoweredCsharp => "C# (Lowered)",
+            OutputCodeType.Loweredcsharp => "C# (Lowered)",
             OutputCodeType.Il => "IL",
-            OutputCodeType.JitAsm => "JIT ASM",
+            OutputCodeType.Jitasm => "JIT ASM",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
     }

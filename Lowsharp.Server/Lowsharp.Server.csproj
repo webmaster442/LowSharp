@@ -46,6 +46,9 @@
     <Protobuf Include="..\Protobuff\LoweringApiV1.proto" GrpcServices="Server" Access="Internal">
       <Link>LoweringApiV1.proto</Link>
     </Protobuf>
+    <Protobuf Include="..\Protobuff\RegexApiV1.proto" GrpcServices="Server" Access="Internal">
+      <Link>RegexApiV1.proto</Link>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

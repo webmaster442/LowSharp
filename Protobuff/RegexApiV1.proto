@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package lowsharp.apiv1.regex;
+
+option csharp_namespace = "LowSharp.ApiV1.Regex";
+
+service RegexTester {
+  rpc Match (RegexRequest) returns (RegexMatchResponse);
+  rpc Replace (RegexReplaceRequest) returns (RegexReplaceResponse);
+  rpc Split (RegexRequest) returns (RegexSplitResponse);
+}
+
+message RegexOptions {
+  bool ignore_case = 1;
+  bool multiline = 2;
+  bool explicit_capture = 3;
+  bool compiled = 4;
+  bool singleline = 5;
+  bool ignore_pattern_whitespace = 6;
+  bool right_to_left = 7;
+  bool ecma_script = 8;
+  bool culture_invariant = 9;
+  bool non_back_tracking = 10;
+  int32 timeout_milliseconds = 11;
+}
+
+message RegexMatchResponse {
+  repeated RegexMatch matches = 1;
+  int32 extecution_time_ms = 2;
+  string error_message = 3;
+}
+
+message RegexRequest {
+  string pattern = 1;
+  string input = 2;
+  RegexOptions options = 3;
+}
+
+message RegexReplaceRequest {
+  string pattern = 1;
+  string input = 2;
+  string replacement = 3;
+  RegexOptions options = 4;
+}
+
+message RegexMatch {
+  string value = 1;
+  bool success = 2;
+  int32 index = 3;
+  int32 length = 4;
+  string name = 5;
+}
+
+message RegexReplaceResponse {
+  string result = 1;
+  int32 extecution_time_ms = 2;
+  string error_message = 3;
+}
+
+message RegexSplitResponse {
+  repeated string results = 1;
+  int32 extecution_time_ms = 2;
+  string error_message = 3;
+}

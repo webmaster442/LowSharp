@@ -48,7 +48,7 @@ internal sealed class Dialogs : IDialogs
         {
             string filename = openFileDialog.FileName;
             InputLanguage language = filename.EndsWith(".vb", StringComparison.OrdinalIgnoreCase)
-                ? InputLanguage.VisualBasic
+                ? InputLanguage.Visualbasic
                 : filename.EndsWith(".fs", StringComparison.OrdinalIgnoreCase)
                     ? InputLanguage.Fsharp
                     : InputLanguage.Csharp;

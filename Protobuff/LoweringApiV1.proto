@@ -1,51 +1,55 @@
 syntax = "proto3";
 
+package lowsharp.apiv1.lowering;
+
 option csharp_namespace = "LowSharp.ApiV1.Lowering";
 
-package LowSharp.ApiV1.Lowering;
-
 service Lowerer {
-    rpc ToLowerCode(LoweringRequest) returns (LoweringResponse);
+  rpc ToLowerCode(LoweringRequest) returns (LoweringResponse);
 }
 
 // ToLowerCode types
 
 enum InputLanguage {
-    Csharp = 0;
-    VisualBasic = 1;
-    FSharp = 2;
+  INPUT_LANGUAGE_UNSPECIFIED = 0;
+  INPUT_LANGUAGE_CSHARP = 1;
+  INPUT_LANGUAGE_VISUALBASIC = 2;
+  INPUT_LANGUAGE_FSHARP = 3;
 }
 
 enum Optimization {
-    Debug = 0;
-    Release = 1;
+  OPTIMIZATION_UNSPECIFIED = 0;
+  OPTIMIZATION_DEBUG = 1;
+  OPTIMIZATION_RELEASE = 2;
 }
 
 enum OutputCodeType {
-    Il = 0;
-    LoweredCsharp = 1;
-    JitAsm = 2;
+  OUTPUT_CODE_TYPE_UNSPECIFIED = 0;
+  OUTPUT_CODE_TYPE_IL = 1;
+  OUTPUT_CODE_TYPE_LOWEREDCSHARP = 2;
+  OUTPUT_CODE_TYPE_JITASM = 3;
 }
 
 enum DiagnosticSeverity {
-    Info = 0;
-    Warning = 1;
-    Error = 2;
+  DIAGNOSTIC_SEVERITY_UNSPECIFIED = 0;
+  DIAGNOSTIC_SEVERITY_INFO = 1;
+  DIAGNOSTIC_SEVERITY_WARNING = 2;
+  DIAGNOSTIC_SEVERITY_ERROR = 3;
 }
 
 message Diagnostic {
-    string Message = 1;
-    DiagnosticSeverity Severity = 2;
+  string message = 1;
+  DiagnosticSeverity severity = 2;
 }
 
 message LoweringRequest {
-    string Code = 1;
-    InputLanguage Language = 2;
-    Optimization OptimizationLevel = 3;
-    OutputCodeType OutputType = 4;
+  string code = 1;
+  InputLanguage language = 2;
+  Optimization optimization_level = 3;
+  OutputCodeType output_type = 4;
 }
 
 message LoweringResponse {
-    string ResultCode = 1;
-    repeated Diagnostic Diagnostics = 2;
+  string result_code = 1;
+  repeated Diagnostic diagnostics = 2;
 }
