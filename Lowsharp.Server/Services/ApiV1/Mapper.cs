@@ -48,6 +48,7 @@ internal static class Mapper
                 OutputCodeType.Jitasm => OutputLanguage.JitAsm,
                 OutputCodeType.Loweredcsharp => OutputLanguage.Csharp,
                 OutputCodeType.Syntaxtreejson => OutputLanguage.SyntaxTreeJson,
+                OutputCodeType.Nonmoml => OutputLanguage.NomnommlClassTree,
                 _ => throw new InvalidOperationException("Unknown Output type")
             },
             OutputOptimizationLevel = request.OptimizationLevel switch

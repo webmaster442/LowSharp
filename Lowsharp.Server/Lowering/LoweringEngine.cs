@@ -33,6 +33,7 @@ public sealed class LoweringEngine
             OutputLanguage.Csharp => new CsharpDecompiler(),
             OutputLanguage.IL => new ILDecompiler(),
             OutputLanguage.JitAsm => new JitDecompiler(),
+            OutputLanguage.NomnommlClassTree => new NomnomClassTreeDecompiler(),
             _ => throw new NotSupportedException("Unsupported output type."),
         };
     }

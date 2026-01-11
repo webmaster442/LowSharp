@@ -7,7 +7,34 @@ namespace Lowsharp.Server.Lowering.Decompilers;
 
 internal abstract class VisualizingDecompilerBase : IDecompiler
 {
-    internal sealed record class Item(string Name, bool IsInterface, bool IsAbstract);
+    internal sealed class Item : IEquatable<Item?>
+    {
+        public required string Name { get; init; }
+        public required bool IsInterface { get; init; }
+        public required bool IsAbstract { get; init; }
+
+        public List<string> Methods { get; set; } = new();
+        public List<string> Properties { get; set; } = new();
+        public List<string> Fields { get; set; } = new();
+
+        public override bool Equals(object? obj)
+        {
+            return this.Equals(obj as Item);
+        }
+
+        public bool Equals(Item? other)
+        {
+            return other is not null &&
+                   Name == other.Name &&
+                   IsInterface == other.IsInterface &&
+                   IsAbstract == other.IsAbstract;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, IsInterface, IsAbstract);
+        }
+    }
 
     internal sealed record class Relation(Item Base, Item Derived, bool AreInSameNamespace);
 
@@ -33,7 +60,7 @@ internal abstract class VisualizingDecompilerBase : IDecompiler
 
             var renderer = CreateRenderer();
 
-            var types = assembly.GetTypes().Where(t => t.IsVisible);
+            var types = assembly.GetTypes();
             foreach (var type in types)
             {
                 renderer.AddType(type);

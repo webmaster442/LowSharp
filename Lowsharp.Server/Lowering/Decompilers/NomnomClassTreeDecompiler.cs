@@ -19,6 +19,10 @@ internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
             {
                 str = str.Replace("]", "\\]");
             }
+            if (str.Contains(';'))
+            {
+                str = str.Replace(";", "\\;");
+            }
             return str;
         }
 
@@ -34,19 +38,25 @@ internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
         public override string Render()
         {
             StringBuilder buffer = new StringBuilder();
-            foreach (var item in Items)
+            foreach (Item item in Items)
             {
                 if (item.IsInterface)
                 {
-                    buffer.AppendLine($"[<reference> {Escape(item.Name)}]");
+                    buffer.AppendLine($"[<reference> {Escape(item.Name)}|");
+                    RenderItemContents(buffer, item);
+                    buffer.AppendLine("]");
                 }
                 else if (item.IsAbstract)
                 {
-                    buffer.AppendLine($"[<abstract> {Escape(item.Name)}]");
+                    buffer.AppendLine($"[<abstract> {Escape(item.Name)}|");
+                    RenderItemContents(buffer, item);
+                    buffer.AppendLine("]");
                 }
                 else
                 {
-                    buffer.AppendLine($"[{Escape(item.Name)}]");
+                    buffer.AppendLine($"[{Escape(item.Name)}|");
+                    RenderItemContents(buffer, item);
+                    buffer.AppendLine("]");
                 }
             }
 
@@ -79,6 +89,30 @@ internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
             }
 
             return buffer.ToString();
+        }
+
+        private void RenderItemContents(StringBuilder buffer, Item item)
+        {
+            foreach (var field in item.Fields)
+            {
+                buffer.AppendLine($"  + {Escape(field)}");
+            }
+
+            if (item.Fields.Count > 0)
+                buffer.AppendLine("|");
+
+            foreach (var property in item.Properties)
+            {
+                buffer.AppendLine($"  + {Escape(property)}");
+            }
+
+            if (item.Properties.Count > 0)
+                buffer.AppendLine("|");
+
+            foreach (var method in item.Methods)
+            {
+                buffer.AppendLine($"  + {Escape(method)}");
+            }
         }
     }
 }
