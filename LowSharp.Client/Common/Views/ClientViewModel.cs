@@ -191,7 +191,7 @@ internal sealed partial class ClientViewModel :
             UnsafeUseInsecureChannelCallCredentials = true,
         });
 
-        bool isOk = await ApiClient.DoHealthCheck();
+        bool isOk = await ApiClient.DoHealthCheckAsync();
 
         IsConnected = isOk;
     }

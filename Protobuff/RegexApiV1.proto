@@ -21,7 +21,7 @@ message RegexOptions {
   bool ecma_script = 8;
   bool culture_invariant = 9;
   bool non_back_tracking = 10;
-  int32 timeout_milliseconds = 11;
+  int64 timeout_milliseconds = 11;
 }
 
 message RegexMatchResponse {

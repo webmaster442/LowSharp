@@ -29,7 +29,7 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
 
     public override async Task InitializeAsync()
     {
-        Session = await _client.InitializeReplSession();
+        Session = await _client.InitializeReplSessionAsync();
     }
 
     [RelayCommand]
@@ -40,7 +40,7 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
         _history.Add(input.Response);
         WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(string.Empty));
 
-        var results = _client.SendReplInput(Session, input);
+        var results = _client.SendReplInputAsync(Session, input);
         try
         {
             await foreach (FormattedText result in results)

@@ -13,7 +13,7 @@ internal class ClientFunctions : IClient
 
     public bool IsBusy => _clientViewModel.IsBusy;
 
-    public async Task<bool> DoHealthCheck()
+    public async Task<bool> DoHealthCheckAsync()
     {
         _clientViewModel.ThrowIfCantContinue();
 
@@ -46,7 +46,7 @@ internal class ClientFunctions : IClient
     }
 
 
-    public async Task<ApiV1.HealthCheck.GetComponentVersionsRespnse> GetComponentVersions()
+    public async Task<ApiV1.HealthCheck.GetComponentVersionsRespnse> GetComponentVersionsAsync()
     {
         _clientViewModel.ThrowIfCantContinue();
 
@@ -70,7 +70,7 @@ internal class ClientFunctions : IClient
     public void HideIsBusy()
         => _clientViewModel.IsBusy = false;
 
-    public async Task<Guid> InitializeReplSession()
+    public async Task<Guid> InitializeReplSessionAsync()
     {
         _clientViewModel.ThrowIfCantContinue();
 
@@ -134,7 +134,7 @@ internal class ClientFunctions : IClient
         }
     }
 
-    public async IAsyncEnumerable<ApiV1.Evaluate.FormattedText> SendReplInput(Guid session, string input)
+    public async IAsyncEnumerable<ApiV1.Evaluate.FormattedText> SendReplInputAsync(Guid session, string input)
     {
         _clientViewModel.ThrowIfCantContinue();
 
@@ -153,5 +153,91 @@ internal class ClientFunctions : IClient
         }
 
         _clientViewModel.IsBusy = false;
+    }
+
+    public async Task<ApiV1.Regex.RegexMatchResponse> RegexMatchAsync(string input,
+                                                                      string pattern,
+                                                                      ApiV1.Regex.RegexOptions options)
+    {
+        _clientViewModel.ThrowIfCantContinue();
+        var client = new ApiV1.Regex.RegexTester.RegexTesterClient(_clientViewModel.Channel);
+        _clientViewModel.IsBusy = true;
+        try
+        {
+            var result = await client.MatchAsync(new ApiV1.Regex.RegexRequest
+            {
+                Input = input,
+                Pattern = pattern,
+                Options = options,
+            });
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.Error("Server failed to reply", ex.Message);
+            return new ApiV1.Regex.RegexMatchResponse();
+        }
+        finally
+        {
+            _clientViewModel.IsBusy = false;
+        }
+    }
+
+    public async Task<string> RegexReplaceAsync(string input,
+                                                string replacement,
+                                                string pattern,
+                                                ApiV1.Regex.RegexOptions options)
+    {
+        _clientViewModel.ThrowIfCantContinue();
+        var client = new ApiV1.Regex.RegexTester.RegexTesterClient(_clientViewModel.Channel);
+        _clientViewModel.IsBusy = true;
+        try
+        {
+            var result = await client.ReplaceAsync(new ApiV1.Regex.RegexReplaceRequest
+            {
+                Input = input,
+                Options = options,
+                Pattern = pattern,
+                Replacement = replacement,
+            });
+            return result.Result;
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.Error("Server failed to reply", ex.Message);
+            return "";
+        }
+        finally
+        {
+            _clientViewModel.IsBusy = false;
+        }
+    }
+
+    public async Task<IList<string>> RegexSplitAsync(string input,
+                                                     string pattern,
+                                                     ApiV1.Regex.RegexOptions options)
+    {
+        _clientViewModel.ThrowIfCantContinue();
+        var client = new ApiV1.Regex.RegexTester.RegexTesterClient(_clientViewModel.Channel);
+        _clientViewModel.IsBusy = true;
+        try
+        {
+            var result = await client.SplitAsync(new ApiV1.Regex.RegexRequest
+            {
+                Input = input,
+                Pattern = pattern,
+                Options = options,
+            });
+            return result.Results;
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.Error("Server failed to reply", ex.Message);
+            return [];
+        }
+        finally
+        {
+            _clientViewModel.IsBusy = false;
+        }
     }
 }

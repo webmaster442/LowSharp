@@ -38,7 +38,7 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartRegex()
     {
-        var vm = new RegexTestingViewModel();
+        var vm = new RegexTestingViewModel(_client);
         await vm.InitializeAsync();
         ReplaceContents("Regex Testing", vm);
     }
@@ -46,7 +46,7 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartVersions()
     {
-        var result = await _client.GetComponentVersions();
+        var result = await _client.GetComponentVersionsAsync();
         StringBuilder resultText = new StringBuilder();
         resultText.AppendLine($"Operating System: {result.OperatingSystem} {result.OperatingSystemVersion}");
         resultText.AppendLine($"Runtime Version: {result.RuntimeVersion}");
