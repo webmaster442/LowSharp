@@ -26,45 +26,6 @@ public sealed class LoweringEngine
         _fsCompiler = new FsharpCompiler();
     }
 
-    private async Task<(bool result, IEnumerable<LoweringDiagnostic> diagnostics)> Compile(EngineInput request,
-                                                                                           RecyclableMemoryStream assemblyStream,
-                                                                                           RecyclableMemoryStream pdbStream,
-                                                                                           CancellationToken cancellationToken)
-    {
-
-
-        return request.InputLanguage switch
-        {
-            InputLanguage.Csharp => _csCompiler.CompileCsharp(request.Code,
-                                                              request.CsharpLanguageVersion,
-                                                              request.OutputOptimizationLevel,
-                                                              assemblyStream,
-                                                              pdbStream,
-                                                              cancellationToken),
-
-            InputLanguage.VisualBasic => _vbCompiler.CompileVisualBasic(request.Code,
-                                                                        request.VisualBasicLanguageVersion,
-                                                                        request.OutputOptimizationLevel,
-                                                                        assemblyStream,
-                                                                        pdbStream,
-                                                                        cancellationToken),
-
-            InputLanguage.FSharp => await _fsCompiler.Compile(request.Code,
-                                                             request.OutputOptimizationLevel,
-                                                             assemblyStream,
-                                                             pdbStream,
-                                                             cancellationToken),
-
-            _ => ((bool result, IEnumerable<LoweringDiagnostic> diagnostics))(false, new List<LoweringDiagnostic>
-                {
-                    new() {
-                        Message = "Unsupported input language.",
-                        Severity = MessageSeverity.Error
-                    }
-                }),
-        };
-    }
-
     private static IDecompiler CreateDecompiler(OutputLanguage outputType)
     {
         return outputType switch
@@ -83,17 +44,36 @@ public sealed class LoweringEngine
 
         var response = new EngineOutput();
 
-        (bool result, IEnumerable<LoweringDiagnostic> diagnostics) = await Compile(request, assemblyStream, pdbStream, cancellationToken);
+        ICompiler compiler = request.InputLanguage switch
+        {
+            InputLanguage.Csharp => _csCompiler,
+            InputLanguage.VisualBasic => _vbCompiler,
+            InputLanguage.FSharp => _fsCompiler,
+            _ => throw new NotSupportedException("Unsupported input language."),
+        };
 
-        response.AppendDiagnostics(diagnostics);
+        if (request.OutputLanguage == OutputLanguage.SyntaxTreeJson)
+        {
+            string json = await compiler.CompileToSyntaxTreeJsonAsync(request.Code, cancellationToken);
+            response.SetDecompilation(json);
+            return response;
+        }
 
-        if (!result)
+        var compileResult = await compiler.CompileAsync(request.Code,
+                                                        request.OutputOptimizationLevel,
+                                                        assemblyStream,
+                                                        pdbStream,
+                                                        cancellationToken);
+
+        response.AppendDiagnostics(compileResult.Diagnostics);
+
+        if (!compileResult.Success)
         {
             response.SetDecompilation(string.Empty);
             return response;
         }
 
-        IDecompiler decompiler = CreateDecompiler(request.OutputType);
+        IDecompiler decompiler = CreateDecompiler(request.OutputLanguage);
 
         if (!decompiler.TryDecompile(assemblyStream, pdbStream, out string loweredCode))
         {

@@ -1,4 +1,6 @@
-﻿using Lowsharp.Server.Lowering;
+﻿using System.Threading;
+
+using Lowsharp.Server.Lowering;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
@@ -20,16 +22,15 @@ internal sealed class VisualBasicCompiler : RoslynCompilerBase
             .WithPlatform(Platform.AnyCpu);
     }
 
-    public (bool result, IEnumerable<LoweringDiagnostic> diagnostics) CompileVisualBasic(string code,
-                                                                                         VisualBasicLanguageVersion languageVersion,
-                                                                                         OutputOptimizationLevel outputOptimizationLevel,
-                                                                                         RecyclableMemoryStream assemblyStream,
-                                                                                         RecyclableMemoryStream pdbStream,
-                                                                                         CancellationToken cancellationToken)
+    public override async Task<CompilerOutput> CompileAsync(string code,
+                                                            OutputOptimizationLevel outputOptimizationLevel,
+                                                            RecyclableMemoryStream assemblyStream,
+                                                            RecyclableMemoryStream pdbStream,
+                                                            CancellationToken cancellationToken)
     {
         try
         {
-            var syntaxTree = VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default.WithLanguageVersion(languageVersion.ToLanguageVersion()));
+            var syntaxTree = VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default.WithLanguageVersion(LanguageVersion.Latest));
 
             VisualBasicCompilation compilation = VisualBasicCompilation.Create("inMemory")
                 .WithOptions(_compilerOptions.WithOptimizationLevel(outputOptimizationLevel.ToOptimizationLevel()))
@@ -40,12 +41,13 @@ internal sealed class VisualBasicCompiler : RoslynCompilerBase
 
             var messages = result.Diagnostics
                 .Where(d => d.Severity != DiagnosticSeverity.Hidden)
-                .Select(Mappers.ToLoweringDiagnostic);
+                .Select(Mappers.ToLoweringDiagnostic)
+                .ToArray();
 
             assemblyStream.Seek(0, SeekOrigin.Begin);
             pdbStream.Seek(0, SeekOrigin.Begin);
 
-            return (result.Success, messages);
+            return new(result.Success, messages);
         }
         catch (Exception ex)
         {
@@ -54,7 +56,13 @@ internal sealed class VisualBasicCompiler : RoslynCompilerBase
                 Message = $"An unexpected error occurred during compilation: {ex.Message}",
                 Severity = MessageSeverity.Error
             };
-            return (false, new[] { diagnostic });
+            return new(false, [diagnostic]);
         }
+    }
+
+    public override Task<string> CompileToSyntaxTreeJsonAsync(string code, CancellationToken cancellationToken)
+    {
+        var syntaxTree = VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default.WithLanguageVersion(LanguageVersion.Latest));
+        return Task.FromResult(SerializeSyntaxTree(syntaxTree));
     }
 }

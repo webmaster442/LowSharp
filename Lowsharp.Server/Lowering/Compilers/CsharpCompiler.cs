@@ -7,16 +7,13 @@ using Microsoft.IO;
 
 namespace Lowsharp.Server.Lowering.Compilers;
 
-internal sealed class CsharpCompiler
+internal sealed class CsharpCompiler : RoslynCompilerBase
 {
     private readonly CSharpCompilationOptions _compilerOptions;
-    private readonly IEnumerable<PortableExecutableReference> _references;
-    private readonly EmitOptions _emitOptions;
 
-    public CsharpCompiler(IEnumerable<PortableExecutableReference> references, EmitOptions emitOptions)
+    public CsharpCompiler(IEnumerable<PortableExecutableReference> references, EmitOptions emitOptions) 
+        : base(references, emitOptions)
     {
-        _emitOptions = emitOptions;
-        _references = references;
         _compilerOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             .WithPlatform(Platform.AnyCpu)
             .WithAllowUnsafe(true)
@@ -26,16 +23,15 @@ internal sealed class CsharpCompiler
             .WithDeterministic(true);
     }
 
-    public (bool result, IEnumerable<LoweringDiagnostic> diagnostics) CompileCsharp(string code,
-                                                                                    CsharpLanguageVersion languageVersion,
-                                                                                    OutputOptimizationLevel outputOptimizationLevel,
-                                                                                    RecyclableMemoryStream assemblyStream,
-                                                                                    RecyclableMemoryStream pdbStream,
-                                                                                    CancellationToken cancellationToken)
+    public override async Task<CompilerOutput> CompileAsync(string code,
+                                                            OutputOptimizationLevel outputOptimizationLevel,
+                                                            RecyclableMemoryStream assemblyStream,
+                                                            RecyclableMemoryStream pdbStream,
+                                                            CancellationToken cancellationToken)
     {
         try
         {
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(code, CSharpParseOptions.Default.WithLanguageVersion(languageVersion.ToLanguageVersion()));
+            SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree(code, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
 
             CSharpCompilation compilation = CSharpCompilation.Create("inMemory")
                 .WithOptions(_compilerOptions.WithOptimizationLevel(outputOptimizationLevel.ToOptimizationLevel()))
@@ -46,12 +42,13 @@ internal sealed class CsharpCompiler
 
             var messages = result.Diagnostics
                 .Where(d => d.Severity != DiagnosticSeverity.Hidden)
-                .Select(Mappers.ToLoweringDiagnostic);
+                .Select(Mappers.ToLoweringDiagnostic)
+                .ToArray();
 
             assemblyStream.Seek(0, SeekOrigin.Begin);
             pdbStream.Seek(0, SeekOrigin.Begin);
 
-            return (result.Success, messages);
+            return new(result.Success, messages);
         }
         catch (Exception ex)
         {
@@ -60,7 +57,14 @@ internal sealed class CsharpCompiler
                 Message = $"Compilation failed with exception: {ex.Message}",
                 Severity = MessageSeverity.Error
             };
-            return (false, new[] { diagnostic });
+            return new(false, [diagnostic]);
         }
+    }
+
+    public override Task<string> CompileToSyntaxTreeJsonAsync(string code,
+                                                              CancellationToken cancellationToken)
+    {
+        SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree(code, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
+        return Task.FromResult(SerializeSyntaxTree(syntaxTree));
     }
 }

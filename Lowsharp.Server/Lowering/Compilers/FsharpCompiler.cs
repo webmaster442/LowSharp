@@ -9,7 +9,7 @@ using Microsoft.IO;
 
 namespace Lowsharp.Server.Lowering.Compilers;
 
-internal sealed class FsharpCompiler
+internal sealed class FsharpCompiler : ICompiler
 {
     private readonly FSharpChecker _compiler;
 
@@ -31,11 +31,11 @@ internal sealed class FsharpCompiler
                                          transparentCompilerCacheSizes: null);
     }
 
-    public async Task<(bool result, IEnumerable<LoweringDiagnostic> diagnostics)> Compile(string code,
-                                                                                          OutputOptimizationLevel outputOptimizationLevel,
-                                                                                          RecyclableMemoryStream assemblyStream,
-                                                                                          RecyclableMemoryStream pdbStream,
-                                                                                          CancellationToken cancellationToken)
+    public async Task<CompilerOutput> CompileAsync(string code,
+                                                   OutputOptimizationLevel outputOptimizationLevel,
+                                                   RecyclableMemoryStream assemblyStream,
+                                                   RecyclableMemoryStream pdbStream,
+                                                   CancellationToken cancellationToken)
     {
         using var souceTemp = new TempFile(".fs");
         using var targetTemp = new TempFile(".dll");
@@ -79,7 +79,16 @@ internal sealed class FsharpCompiler
         assemblyStream.Seek(0, SeekOrigin.Begin);
         pdbStream.Seek(0, SeekOrigin.Begin);
 
-        return (errors.Length == 0, errors.Where(e => !e.Severity.IsHidden).Select(Mappers.ToLoweringDiagnostic));
+        var messages = errors
+            .Where(e => !e.Severity.IsHidden)
+            .Select(Mappers.ToLoweringDiagnostic)
+            .ToArray();
 
+        return new CompilerOutput(messages.Length == 0, messages);
+    }
+
+    public async Task<string> CompileToSyntaxTreeJsonAsync(string code, CancellationToken cancellationToken)
+    {
+        return "Syntax JSON is not supported at the moment for F#";
     }
 }

@@ -14,6 +14,7 @@ internal sealed class OutputCodeTypeToStringConverter : OneWayConverterBase<Outp
             OutputCodeType.Loweredcsharp => "C# (Lowered)",
             OutputCodeType.Il => "IL",
             OutputCodeType.Jitasm => "JIT ASM",
+            OutputCodeType.Syntaxtreejson => "Syntax Tree (JSON)",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
     }

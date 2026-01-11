@@ -42,11 +42,12 @@ internal static class Mapper
                 LowSharp.ApiV1.Lowering.InputLanguage.Visualbasic => Lowering.InputLanguage.VisualBasic,
                 _ => throw new InvalidOperationException("Unknown Input language")
             },
-            OutputType = request.OutputType switch
+            OutputLanguage = request.OutputType switch
             {
                 OutputCodeType.Il => OutputLanguage.IL,
                 OutputCodeType.Jitasm => OutputLanguage.JitAsm,
                 OutputCodeType.Loweredcsharp => OutputLanguage.Csharp,
+                OutputCodeType.Syntaxtreejson => OutputLanguage.SyntaxTreeJson,
                 _ => throw new InvalidOperationException("Unknown Output type")
             },
             OutputOptimizationLevel = request.OptimizationLevel switch
