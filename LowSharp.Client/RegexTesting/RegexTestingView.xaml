@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:LowSharp.Client.RegexTesting"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -152,7 +153,11 @@
                     FontSize="{DynamicResource EditorFontSize}"
                     Foreground="{StaticResource White}"
                     ShowLineNumbers="True"
-                    WordWrap="True" />
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Pattern, Mode=TwoWay}"/>
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
             </Expander>
             <Expander
                 x:Name="TargetExpander"
@@ -164,7 +169,11 @@
                     FontSize="{DynamicResource EditorFontSize}"
                     Foreground="{StaticResource White}"
                     ShowLineNumbers="True"
-                    WordWrap="True" />
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Input, Mode=TwoWay}"/>
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
             </Expander>
             <Expander
                 x:Name="ReplacementExpander"
@@ -177,7 +186,11 @@
                     FontSize="{DynamicResource EditorFontSize}"
                     Foreground="{StaticResource White}"
                     ShowLineNumbers="True"
-                    WordWrap="True" />
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Replacement, Mode=TwoWay}"/>
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
             </Expander>
             <Expander
                 x:Name="ResultsExpander"
@@ -190,7 +203,11 @@
                     Foreground="{StaticResource White}"
                     IsReadOnly="True"
                     ShowLineNumbers="True"
-                    WordWrap="True" />
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Result}"/>
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
             </Expander>
         </Grid>
     </Grid>
