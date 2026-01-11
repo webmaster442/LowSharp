@@ -137,7 +137,10 @@ internal sealed partial class LoweringViewModel :
     }
 
     private static ObservableCollection<T> Fill<T>() where T : struct, Enum
-        => new(Enum.GetValues<T>());
+    {
+        var values = Enum.GetValues<T>().Where(v => Enum.GetName<T>(v) != "Unspecified");
+        return new(values);
+    }
 
     void IRecipient<Messages.IsBusyChanged>.Receive(Messages.IsBusyChanged message)
         => IsBusy = message.IsBusy;
