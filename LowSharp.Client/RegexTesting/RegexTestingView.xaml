@@ -5,10 +5,10 @@
     xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:common="clr-namespace:LowSharp.Client.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:LowSharp.Client.RegexTesting"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -95,6 +95,12 @@
                     Margin="5,10"
                     Command="{Binding ExecuteCommand}"
                     Content="Execute (F5)" />
+                <TextBlock
+                    Margin="5"
+                    Text="Last execution time (ms):" />
+                <TextBlock
+                    Margin="5,0"
+                    Text="{Binding ExecutionTimeInMs}" />
             </StackPanel>
         </GroupBox>
         <StackPanel
@@ -155,7 +161,7 @@
                     ShowLineNumbers="True"
                     WordWrap="True">
                     <i:Interaction.Behaviors>
-                        <common:AvalonEditBehaviour BindedText="{Binding Pattern, Mode=TwoWay}"/>
+                        <common:AvalonEditBehaviour BindedText="{Binding Pattern, Mode=TwoWay}" />
                     </i:Interaction.Behaviors>
                 </avalon:TextEditor>
             </Expander>
@@ -171,7 +177,7 @@
                     ShowLineNumbers="True"
                     WordWrap="True">
                     <i:Interaction.Behaviors>
-                        <common:AvalonEditBehaviour BindedText="{Binding Input, Mode=TwoWay}"/>
+                        <common:AvalonEditBehaviour BindedText="{Binding Input, Mode=TwoWay}" />
                     </i:Interaction.Behaviors>
                 </avalon:TextEditor>
             </Expander>
@@ -188,7 +194,7 @@
                     ShowLineNumbers="True"
                     WordWrap="True">
                     <i:Interaction.Behaviors>
-                        <common:AvalonEditBehaviour BindedText="{Binding Replacement, Mode=TwoWay}"/>
+                        <common:AvalonEditBehaviour BindedText="{Binding Replacement, Mode=TwoWay}" />
                     </i:Interaction.Behaviors>
                 </avalon:TextEditor>
             </Expander>
@@ -205,7 +211,7 @@
                     ShowLineNumbers="True"
                     WordWrap="True">
                     <i:Interaction.Behaviors>
-                        <common:AvalonEditBehaviour BindedText="{Binding Result}"/>
+                        <common:AvalonEditBehaviour BindedText="{Binding Result}" />
                     </i:Interaction.Behaviors>
                 </avalon:TextEditor>
             </Expander>
