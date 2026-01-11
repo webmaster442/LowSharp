@@ -1,5 +1,6 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 using Lowsharp.Server.Lowering.Syntax;
@@ -33,11 +34,12 @@ internal abstract class RoslynCompilerBase : ICompiler
 
     protected string SerializeSyntaxTree(SyntaxTree syntax)
     {
-        var dto = SyntaxNodeFactory.ConvertCsharp(syntax);
+        NodeOrTokenDto dto = RoslynSyntaxNodeFactory.Create(syntax);
         JsonSerializerOptions options = new JsonSerializerOptions
         {
             WriteIndented = true,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
         return JsonSerializer.Serialize(dto, options);
     }

@@ -3,11 +3,11 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Lowsharp.Server.Lowering.Syntax;
 
-internal static class SyntaxNodeFactory
+internal static class RoslynSyntaxNodeFactory
 {
-    public static NodeOrTokenDto ConvertCsharp(SyntaxTree tree,
-                                               bool includeTrivia = true,
-                                               bool includeTokenText = true)
+    public static NodeOrTokenDto Create(SyntaxTree tree,
+                                        bool includeTrivia = true,
+                                        bool includeTokenText = true)
     {
         if (tree == null)
         {
