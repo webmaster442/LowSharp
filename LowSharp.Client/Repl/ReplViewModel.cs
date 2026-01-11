@@ -19,12 +19,16 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
     [ObservableProperty]
     public partial Guid Session { get; set; }
 
+    [ObservableProperty]
+    public partial string ReplInput { get; set; }
+
     public ReplViewModel(IClient client, IDialogs dialogs)
     {
         _client = client;
         _dialogs = dialogs;
         _history = new List<string>();
         Session = Guid.Empty;
+        ReplInput = string.Empty;
     }
 
     public override async Task InitializeAsync()
@@ -35,12 +39,9 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task Send()
     {
-        var input = WeakReferenceMessenger.Default.Send(new RequestMessages.GetReplInputCodeRequest());
-
-        _history.Add(input.Response);
-        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(string.Empty));
-
-        var results = _client.SendReplInputAsync(Session, input);
+        _history.Add(ReplInput);
+        var results = _client.SendReplInputAsync(Session, ReplInput);
+        ReplInput = string.Empty;
         try
         {
             await foreach (FormattedText result in results)
@@ -58,12 +59,12 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
 
     [RelayCommand]
     public void SetInput(string text)
-        => WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(text));
+        => ReplInput = text;
 
     [RelayCommand]
     public void PreviousHistory()
     {
-        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(_history[_historyIndex]));
+        ReplInput = _history[_historyIndex];
         int index = _historyIndex - 1 > -1 ? _historyIndex - 1 : _history.Count - 1;
         _historyIndex = index;
 
@@ -76,7 +77,7 @@ internal sealed partial class ReplViewModel : ViewModelWithMenus
     [RelayCommand]
     public void NextHistory()
     {
-        WeakReferenceMessenger.Default.Send(new Messages.SetReplInputCode(_history[_historyIndex]));
+        ReplInput = _history[_historyIndex];
         int index = _historyIndex + 1 < _history.Count - 1 ? _historyIndex + 1 : 0;
         _historyIndex = index;
     }

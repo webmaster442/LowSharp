@@ -16,8 +16,7 @@ namespace LowSharp.Client.Lowering;
 
 internal sealed partial class LoweringViewModel :
     ViewModelWithMenus,
-    IRecipient<Messages.IsBusyChanged>,
-    IRecipient<Messages.SetInputLanguage>
+    IRecipient<Messages.IsBusyChanged>
 {
     private readonly IClient _client;
     private readonly IDialogs _dialogs;
@@ -46,14 +45,21 @@ internal sealed partial class LoweringViewModel :
     [ObservableProperty]
     public partial int SelectedOptimizationIndex { get; set; }
 
+    [ObservableProperty]
+    public partial string InputCode { get; set; }
+
+    [ObservableProperty]
+    public partial string OutputCode { get; set; }
+
     public LoweringViewModel(IClient client, IDialogs dialogs)
     {
         _client = client;
         _dialogs = dialogs;
         IsBusy = client.IsBusy;
-        Examples = new ExamplesViewModel();
+        Examples = new ExamplesViewModel(this);
+        InputCode = string.Empty;
+        OutputCode = string.Empty;
         WeakReferenceMessenger.Default.Register<Messages.IsBusyChanged>(this);
-        WeakReferenceMessenger.Default.Register<Messages.SetInputLanguage>(this);
 
         ShowLineNumbers = new MenuCheckableViewModel
         {
@@ -93,7 +99,7 @@ internal sealed partial class LoweringViewModel :
         if (_dialogs.TryOpenCode(out var result))
         {
             var code = System.IO.File.ReadAllText(result.filename);
-            WeakReferenceMessenger.Default.Send(new Messages.SetInputCode(code));
+            InputCode = code;
             SelectedInputLanguageIndex = InputLanguages.IndexOf(result.language);
         }
     }
@@ -102,20 +108,18 @@ internal sealed partial class LoweringViewModel :
     [RelayCommand]
     public async Task Lower()
     {
-        string inputCode = WeakReferenceMessenger.Default.Send<RequestMessages.GetLoweringInputCodeRequest>();
-
-        LoweringResponse result = await _client.LowerCodeAsync(inputCode,
+        LoweringResponse result = await _client.LowerCodeAsync(InputCode,
                                                                InputLanguages[SelectedInputLanguageIndex],
                                                                Optimizations[SelectedOptimizationIndex],
                                                                OutputTypes[SelectedOutputTypeIndex]);
 
         if (result.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
         {
-            WeakReferenceMessenger.Default.Send(new Messages.SetOutputCodeRequest(GetDiagnostics(result.Diagnostics)));
+            OutputCode = GetDiagnostics(result.Diagnostics);
             return;
         }
 
-        WeakReferenceMessenger.Default.Send(new Messages.SetOutputCodeRequest(result.ResultCode));
+        OutputCode = result.ResultCode;
     }
 
     private static string GetDiagnostics(RepeatedField<Diagnostic> diagnostics)
@@ -137,20 +141,4 @@ internal sealed partial class LoweringViewModel :
 
     void IRecipient<Messages.IsBusyChanged>.Receive(Messages.IsBusyChanged message)
         => IsBusy = message.IsBusy;
-
-    void IRecipient<Messages.SetInputLanguage>.Receive(Messages.SetInputLanguage message)
-    {
-        if (message.Language.Contains("cs", StringComparison.OrdinalIgnoreCase))
-        {
-            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.Csharp);
-        }
-        else if (message.Language.Contains("v", StringComparison.OrdinalIgnoreCase))
-        {
-            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.Visualbasic);
-        }
-        else if (message.Language.Contains("fs", StringComparison.OrdinalIgnoreCase))
-        {
-            SelectedInputLanguageIndex = InputLanguages.IndexOf(InputLanguage.Fsharp);
-        }
-    }
 }

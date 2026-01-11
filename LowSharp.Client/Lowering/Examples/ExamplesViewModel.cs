@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 
-using LowSharp.Client.Common;
+using LowSharp.ApiV1.Lowering;
 using LowSharp.Client.Common.Views;
 
 namespace LowSharp.Client.Lowering.Examples;
@@ -9,8 +8,9 @@ namespace LowSharp.Client.Lowering.Examples;
 internal sealed partial class ExamplesViewModel : ViewModelWithMenus
 {
     private readonly List<Example> _exampleList;
+    private readonly LoweringViewModel _loweringViewModel;
 
-    public ExamplesViewModel()
+    public ExamplesViewModel(LoweringViewModel loweringViewModel)
     {
         using var exampleReader = new ExampleReader();
         _exampleList = new List<Example>();
@@ -18,13 +18,31 @@ internal sealed partial class ExamplesViewModel : ViewModelWithMenus
         {
             _exampleList.Add(example);
         });
+        _loweringViewModel = loweringViewModel;
     }
 
     [RelayCommand]
     public void LoadExample(Example example)
     {
-        WeakReferenceMessenger.Default.Send(new Messages.SetInputCode(example.Content));
-        WeakReferenceMessenger.Default.Send(new Messages.SetInputLanguage(example.Language));
+        _loweringViewModel.InputCode = example.Content;
+        _loweringViewModel.SelectedInputLanguageIndex = GetLanguageIndex(example.Language);
+    }
+
+    private int GetLanguageIndex(string language)
+    {
+        if (language.Contains("cs", StringComparison.OrdinalIgnoreCase))
+        {
+            return _loweringViewModel.InputLanguages.IndexOf(InputLanguage.Csharp);
+        }
+        else if (language.Contains("v", StringComparison.OrdinalIgnoreCase))
+        {
+            return _loweringViewModel.InputLanguages.IndexOf(InputLanguage.Visualbasic);
+        }
+        else if (language.Contains("fs", StringComparison.OrdinalIgnoreCase))
+        {
+            return _loweringViewModel.InputLanguages.IndexOf(InputLanguage.Fsharp);
+        }
+        throw new ArgumentException($"Unknown language: {language}", nameof(language));
     }
 
     internal MenuViewModel GenerateMenu()

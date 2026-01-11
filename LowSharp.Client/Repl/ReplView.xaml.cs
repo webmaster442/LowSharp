@@ -13,9 +13,7 @@ public partial class ReplView : UserControl
     public ReplView()
     {
         InitializeComponent();
-        WeakReferenceMessenger.Default.Register<RequestMessages.GetReplInputCodeRequest>(this, OnGetInput);
         WeakReferenceMessenger.Default.Register<Messages.AppendReplOutput>(this, OnOutput);
-        WeakReferenceMessenger.Default.Register<Messages.SetReplInputCode>(this, OnSetInput);
         WeakReferenceMessenger.Default.Register<Messages.ClearReplOutput>(this, OnClearOutput);
         Output.Document = new System.Windows.Documents.FlowDocument();
     }
@@ -28,10 +26,4 @@ public partial class ReplView : UserControl
         FlowDocumentFormatter.AppendFormattedText(Output.Document, message.Output);
         Output.CaretPosition = Output.Document.ContentEnd;
     }
-
-    private void OnGetInput(object recipient, RequestMessages.GetReplInputCodeRequest message)
-        => message.Reply(ReplInput.Document.Text);
-
-    private void OnSetInput(object recipient, Messages.SetReplInputCode message)
-        => ReplInput.Document.Text = message.Code;
 }

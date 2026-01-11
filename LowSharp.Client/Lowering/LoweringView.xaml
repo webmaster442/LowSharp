@@ -6,6 +6,7 @@
     xmlns:common="clr-namespace:LowSharp.Client.Common"
     xmlns:converters="clr-namespace:LowSharp.Client.Lowering.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:LowSharp.Client.Lowering"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
@@ -135,7 +136,11 @@
             Foreground="{StaticResource White}"
             ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
             SyntaxHighlighting="{Binding SelectedInputLanguageIndex, Converter={converters:SelectedInputLanguageIndexToHighlightingConverter}}"
-            WordWrap="{Binding WordWrap.IsChecked}" />
+            WordWrap="{Binding WordWrap.IsChecked}">
+            <i:Interaction.Behaviors>
+                <common:AvalonEditBehaviour BindedText="{Binding InputCode, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+        </avalonEdit:TextEditor>
         <TextBlock
             Grid.Row="1"
             Grid.Column="0"
@@ -160,7 +165,12 @@
             IsReadOnly="True"
             ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
             SyntaxHighlighting="{Binding SelectedOutputTypeIndex, Converter={converters:SelectedOutputTypeIndexToHighlightingConverter}}"
-            WordWrap="{Binding WordWrap.IsChecked}" />
+            WordWrap="{Binding WordWrap.IsChecked}">
+            <i:Interaction.Behaviors>
+                <common:AvalonEditBehaviour BindedText="{Binding OutputCode}" />
+            </i:Interaction.Behaviors>
+        </avalonEdit:TextEditor>
+
         <TextBlock
             Grid.Row="1"
             Grid.Column="2"

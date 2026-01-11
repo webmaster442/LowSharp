@@ -51,7 +51,8 @@ internal sealed class AvalonEditBehaviour : Behavior<TextEditor>
         {
             var caretOffset = editor.CaretOffset;
             editor.Document.Text = dependencyPropertyChangedEventArgs.NewValue.ToString();
-            editor.CaretOffset = caretOffset;
+            if (editor.Document.TextLength >= caretOffset)
+                editor.CaretOffset = caretOffset;
         }
     }
 }
