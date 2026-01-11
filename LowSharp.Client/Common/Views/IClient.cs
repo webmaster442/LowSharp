@@ -24,16 +24,16 @@ internal interface IClient
 
     IAsyncEnumerable<FormattedText> SendReplInputAsync(Guid session, string input);
 
-    Task<string> RegexReplaceAsync(string input,
-                                   string replacement,
-                                   string pattern,
-                                   RegexOptions options);
+    Task<(string result, long time)> RegexReplaceAsync(string input,
+                                                       string replacement,
+                                                       string pattern,
+                                                       RegexOptions options);
 
     Task<RegexMatchResponse> RegexMatchAsync(string input,
                                              string pattern,
                                              RegexOptions options);
 
-    Task<IList<string>> RegexSplitAsync(string input,
-                                        string pattern,
-                                        RegexOptions options);
+    Task<(IList<string> results, long time)> RegexSplitAsync(string input,
+                                                             string pattern,
+                                                             RegexOptions options);
 }

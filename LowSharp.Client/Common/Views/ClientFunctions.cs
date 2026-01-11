@@ -183,10 +183,10 @@ internal class ClientFunctions : IClient
         }
     }
 
-    public async Task<string> RegexReplaceAsync(string input,
-                                                string replacement,
-                                                string pattern,
-                                                ApiV1.Regex.RegexOptions options)
+    public async Task<(string result, long time)> RegexReplaceAsync(string input,
+                                                                    string replacement,
+                                                                    string pattern,
+                                                                    ApiV1.Regex.RegexOptions options)
     {
         _clientViewModel.ThrowIfCantContinue();
         var client = new ApiV1.Regex.RegexTester.RegexTesterClient(_clientViewModel.Channel);
@@ -200,12 +200,18 @@ internal class ClientFunctions : IClient
                 Pattern = pattern,
                 Replacement = replacement,
             });
-            return result.Result;
+
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                return (result.ErrorMessage, result.ExtecutionTimeMs);
+            }
+
+            return (result.Result, result.ExtecutionTimeMs);
         }
         catch (Exception ex)
         {
             await _dialogs.Error("Server failed to reply", ex.Message);
-            return "";
+            return (ex.Message, 0);
         }
         finally
         {
@@ -213,9 +219,9 @@ internal class ClientFunctions : IClient
         }
     }
 
-    public async Task<IList<string>> RegexSplitAsync(string input,
-                                                     string pattern,
-                                                     ApiV1.Regex.RegexOptions options)
+    public async Task<(IList<string> results, long time)> RegexSplitAsync(string input,
+                                                                          string pattern,
+                                                                          ApiV1.Regex.RegexOptions options)
     {
         _clientViewModel.ThrowIfCantContinue();
         var client = new ApiV1.Regex.RegexTester.RegexTesterClient(_clientViewModel.Channel);
@@ -228,12 +234,18 @@ internal class ClientFunctions : IClient
                 Pattern = pattern,
                 Options = options,
             });
-            return result.Results;
+
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                return ([result.ErrorMessage], result.ExtecutionTimeMs);
+            }
+
+            return (result.Results, result.ExtecutionTimeMs);
         }
         catch (Exception ex)
         {
             await _dialogs.Error("Server failed to reply", ex.Message);
-            return [];
+            return ([ex.Message], 0);
         }
         finally
         {
