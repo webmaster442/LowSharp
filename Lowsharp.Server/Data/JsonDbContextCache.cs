@@ -3,6 +3,7 @@ using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 
 namespace Lowsharp.Server.Data;
 
@@ -52,7 +53,10 @@ internal sealed class JsonDbContextCache
             if (deserialized != null)
             {
                 _logger.LogInformation("Cache hit (database) for key {Key}", key);
-                _memoryCache.CreateEntry(key).SetSlidingExpiration(_memoryCacheDuration).SetValue(deserialized);
+                _memoryCache
+                    .CreateEntry(key)
+                    .SetSlidingExpiration(_memoryCacheDuration)
+                    .SetValue(deserialized);
                 return deserialized;
             }
         }
@@ -75,6 +79,16 @@ internal sealed class JsonDbContextCache
         _memoryCache.CreateEntry(key).SetSlidingExpiration(_memoryCacheDuration).SetValue(result);
 
         return result;
+    }
+
+    public async Task InvalidateAsync()
+    {
+        _logger.LogInformation("Invalidating entire cache");
+        if (_memoryCache is MemoryCache memCache)
+        {
+            memCache.Clear();
+        }
+        await _dbContext.CacheItems.ExecuteDeleteAsync();
     }
 
     public int CleanOldEntries()

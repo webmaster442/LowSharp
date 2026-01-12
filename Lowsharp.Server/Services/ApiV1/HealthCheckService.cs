@@ -2,12 +2,27 @@
 
 using Grpc.Core;
 
+using Lowsharp.Server.Data;
+
 using LowSharp.ApiV1.HealthCheck;
 
 namespace Lowsharp.Server.Services.ApiV1;
 
 internal sealed class HealthCheckService : Health.HealthBase
 {
+    private readonly JsonDbContextCache _jsonDbContextCache;
+
+    public HealthCheckService(JsonDbContextCache jsonDbContextCache)
+    {
+        _jsonDbContextCache = jsonDbContextCache;
+    }
+
+    public override async Task<Empty> InvalidateCache(Empty request, ServerCallContext context)
+    {
+        await _jsonDbContextCache.InvalidateAsync();
+        return new Empty();
+    }
+
     public override Task<HealthCheckResponse> Check(HealthCheckRequest request, ServerCallContext context)
     {
         var response = new HealthCheckResponse
@@ -17,7 +32,7 @@ internal sealed class HealthCheckService : Health.HealthBase
         return Task.FromResult(response);
     }
 
-    public override async Task<GetComponentVersionsRespnse> GetComponentVersions(GetComponentVersionsRequest request, ServerCallContext context)
+    public override async Task<GetComponentVersionsRespnse> GetComponentVersions(Empty request, ServerCallContext context)
     {
         var response = new GetComponentVersionsRespnse
         {

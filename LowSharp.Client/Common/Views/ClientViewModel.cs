@@ -204,6 +204,15 @@ internal sealed partial class ClientViewModel :
         await Connect();
     }
 
+    [RelayCommand]
+    public async Task InvalidateCache()
+    {
+        if (await _dialogs.Confirm("Confirm", "Invalidate server side cache?"))
+        {
+            await ApiClient.InvalidateCache();
+        }
+    }
+
     public void HideIsBusy()
     {
         IsBusy = false;

@@ -6,7 +6,8 @@ option csharp_namespace = "LowSharp.ApiV1.HealthCheck";
 
 service Health {
   rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
-  rpc GetComponentVersions(GetComponentVersionsRequest) returns (GetComponentVersionsRespnse);
+  rpc GetComponentVersions(Empty) returns (GetComponentVersionsRespnse);
+  rpc InvalidateCache(Empty) returns (Empty);
 }
 
 message HealthCheckRequest {
@@ -18,7 +19,7 @@ message HealthCheckResponse {
   int64 sum = 1;
 }
 
-message GetComponentVersionsRequest {
+message Empty {
 
 }
 
@@ -27,8 +28,7 @@ message ComponentVersion {
   string version_string = 2;
 }
 
-message GetComponentVersionsRespnse
-{
+message GetComponentVersionsRespnse {
   string operating_system = 1;
   string operating_system_version = 2;
   string runtime_version = 3;

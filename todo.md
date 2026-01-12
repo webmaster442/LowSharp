@@ -1,11 +1,19 @@
-# Todo
+# Milestone Server & Client
 
 - [x] Combined start & connect command
 - [x] Dracula theme port for syntax highlighting
-- [ ] Port unit tests
-- [ ] Client logging of issues
-- [ ] Client log viewer
-- [ ] Server-side logging of issues
-- [ ] Server-side log viewer
-- [ ] REPL service
-- [ ] REPL client
+- [x] REPL service
+- [x] REPL client
+- [ ] JSON syntax highlighting port
+- [ ] Assembly syntax highlighting port from ILSpy
+- [x] Add API endpoint for cache invalidation
+- [ ] Add command to show/hide server window
+- [ ] Add more code examples for C# and for Visual Basic
+- [ ] Design a proper start page
+- [ ] Add tooltips to buttons
+- [ ] Create a changelog file
+- [ ] Add changelog display to the application
+- [ ] Integrate auto updater
+- [ ] Do a release
+
+# After release

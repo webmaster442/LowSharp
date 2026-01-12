@@ -28,6 +28,16 @@ internal sealed class Dialogs : IDialogs
         });
     }
 
+    public async Task<bool> Confirm(string title, string message)
+    {
+        var result = await _mainWindow.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings
+        {
+            DefaultButtonFocus = MessageDialogResult.Negative,
+            ColorScheme = MetroDialogColorScheme.Theme,
+        });
+        return result == MessageDialogResult.Affirmative;
+    }
+
     public async Task Info(string title, string message)
     {
         await _mainWindow.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, new MetroDialogSettings

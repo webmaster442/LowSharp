@@ -13,6 +13,8 @@ internal interface IClient
 
     Task<bool> DoHealthCheckAsync();
 
+    Task InvalidateCache();
+
     Task<GetComponentVersionsRespnse> GetComponentVersionsAsync();
 
     Task<LoweringResponse> LowerCodeAsync(string code,

@@ -16,7 +16,6 @@ internal class ClientFunctions : IClient
     public async Task<bool> DoHealthCheckAsync()
     {
         _clientViewModel.ThrowIfCantContinue();
-
         var client = new ApiV1.HealthCheck.Health.HealthClient(_clientViewModel.Channel);
         try
         {
@@ -45,6 +44,25 @@ internal class ClientFunctions : IClient
         }
     }
 
+    public async Task InvalidateCache()
+    {
+        _clientViewModel.ThrowIfCantContinue();
+        var client = new ApiV1.HealthCheck.Health.HealthClient(_clientViewModel.Channel);
+        try
+        {
+            _clientViewModel.IsBusy = true;
+            await client.InvalidateCacheAsync(new ApiV1.HealthCheck.Empty());
+        }
+        catch (Exception ex)
+        {
+            await _dialogs.Error("Server failed to reply", ex.Message);
+        }
+        finally
+        {
+            _clientViewModel.IsBusy = false;
+        }
+    }
+
 
     public async Task<ApiV1.HealthCheck.GetComponentVersionsRespnse> GetComponentVersionsAsync()
     {
@@ -54,7 +72,7 @@ internal class ClientFunctions : IClient
         try
         {
             _clientViewModel.IsBusy = true;
-            return await client.GetComponentVersionsAsync(new ApiV1.HealthCheck.GetComponentVersionsRequest());
+            return await client.GetComponentVersionsAsync(new ApiV1.HealthCheck.Empty());
         }
         catch (Exception ex)
         {

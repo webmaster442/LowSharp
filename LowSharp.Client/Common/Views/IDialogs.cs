@@ -6,5 +6,6 @@ internal interface IDialogs
 {
     Task Error(string title, string message);
     Task Info(string title, string message);
+    Task<bool> Confirm(string title, string message);
     bool TryOpenCode(out (string filename, InputLanguage language) result);
 }
