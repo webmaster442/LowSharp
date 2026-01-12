@@ -4,8 +4,7 @@
 - [x] Dracula theme port for syntax highlighting
 - [x] REPL service
 - [x] REPL client
-- [ ] JSON syntax highlighting port
-- [ ] Assembly syntax highlighting port from ILSpy
+- [x] JSON syntax highlighting port
 - [x] Add API endpoint for cache invalidation
 - [ ] Add command to show/hide server window
 - [ ] Add more code examples for C# and for Visual Basic

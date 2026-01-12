@@ -23,6 +23,7 @@ internal sealed class SelectedOutputTypeIndexToHighlightingConverter
             0 => s_highlighters!["ILAsm"],
             1 => s_highlighters!["CsharpNext"],
             2 => s_highlighters!["x64"],
+            3 => s_highlighters!["JsonNext"],
             _ => null!
         };
     }

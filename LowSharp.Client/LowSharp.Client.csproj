@@ -19,9 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Common\Syntax\JsonNext.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Common\Syntax\CsharpNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\Fsharp.xshd" />
     <EmbeddedResource Include="Common\Syntax\ILAsm.xshd" />
+    <EmbeddedResource Include="Common\Syntax\JsonNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\VbNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\X64.xshd" />
     <EmbeddedResource Include="Lowering\Examples\Examples.txt" />
