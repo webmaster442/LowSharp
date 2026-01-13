@@ -21,6 +21,7 @@ internal sealed partial class NotificationsViewModel
             Interval = TimeSpan.FromSeconds(1),
         };
         _timer.Tick += RunTimer;
+        _timer.Start();
         Latest = string.Empty;
         WeakReferenceMessenger.Default.Register(this);
     }
@@ -49,7 +50,8 @@ internal sealed partial class NotificationsViewModel
                 _visibleTill = DateTime.UtcNow + nextMessage.Validity;
             }
         }
-        else if (DateTime.UtcNow >= _visibleTill)
+        else if (_visibleTill != null 
+                && DateTime.UtcNow >= _visibleTill)
         {
             _visibleTill = null;
             Latest = string.Empty;

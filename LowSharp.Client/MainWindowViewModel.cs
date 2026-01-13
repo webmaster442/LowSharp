@@ -34,6 +34,8 @@ internal sealed partial class MainWindowViewModel :
         WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContent>(this);
         WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTab>(this);
         WeakReferenceMessenger.Default.Register<Messages.IsConnectedChanged>(this);
+
+        _dialogs.Notify("Welcome to LowSharp! To Connect to a server click on the 'Disconnected item' on the left.", 20);
     }
 
     [MemberNotNull(nameof(ActualTabItem))]

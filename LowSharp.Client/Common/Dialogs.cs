@@ -1,5 +1,7 @@
 ﻿using System.Windows.Media;
 
+using CommunityToolkit.Mvvm.Messaging;
+
 using LowSharp.ApiV1.Lowering;
 using LowSharp.Client.Common.Views;
 
@@ -67,5 +69,10 @@ internal sealed class Dialogs : IDialogs
         }
         result = default;
         return false;
+    }
+
+    public void Notify(string message, int validityInSeconds)
+    {
+        WeakReferenceMessenger.Default.Send(new Messages.Notification(message, TimeSpan.FromSeconds(validityInSeconds)));
     }
 }

@@ -16,7 +16,6 @@
     <Window.Resources>
         <commonViews:MenuViewModelStyleSelector x:Key="MenuViewModelStyleSelector" />
     </Window.Resources>
-
     <Window.InputBindings>
         <KeyBinding
             Key="T"
@@ -64,7 +63,7 @@
             </StackPanel>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
-    <Grid ShowGridLines="true">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -276,10 +275,13 @@
                 Visibility="{Binding Client.IsBusy, Converter={common:VisibilityConverter}}" />
         </StatusBar>
         <TextBlock
+            VerticalAlignment="Center"
+            FontSize="16"
+            HorizontalAlignment="Right"
             x:Name="Notification"
             Grid.Row="1"
             Grid.Column="1"
-            Margin="5"
+            Margin="10,0"
             Text="{Binding Notifications.Latest}" />
     </Grid>
 </mah:MetroWindow>

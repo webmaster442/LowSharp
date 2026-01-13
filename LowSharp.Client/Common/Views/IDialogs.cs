@@ -8,4 +8,5 @@ internal interface IDialogs
     Task Info(string title, string message);
     Task<bool> Confirm(string title, string message);
     bool TryOpenCode(out (string filename, InputLanguage language) result);
+    void Notify(string message, int validityInSeconds);
 }
