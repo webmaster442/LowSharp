@@ -16,4 +16,6 @@ internal static class Messages
     public sealed record class AppendReplOutput(FormattedText Output);
 
     public sealed record class ClearReplOutput();
+
+    public sealed record class Notification(string Message, TimeSpan Validity);
 }

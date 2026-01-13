@@ -26,6 +26,7 @@ internal sealed partial class MainWindowViewModel :
     {
         _dialogs = dialogs;
         Client = new ClientViewModel(dialogs);
+        Notifications = new NotificationsViewModel();
         Tabs = new BindingList<TabViewModel>();
         ZoomLevels = new ObservableCollection<double>([0.2, 0.5, 0.7, 1.0, 1.2, 1.5, 2.0, 4.0]);
         ActualZoomLevel = 1.0;
@@ -51,6 +52,15 @@ internal sealed partial class MainWindowViewModel :
     private void CreateStartPage()
         => CreateTab("Start page", new StartPageViewModel(Client.ApiClient, _dialogs));
 
+    public void Dispose()
+    {
+        Client.Dispose();
+    }
+
+    public ClientViewModel Client { get; }
+
+    public NotificationsViewModel Notifications { get; }
+
     public BindingList<TabViewModel> Tabs { get; }
 
     [ObservableProperty]
@@ -66,13 +76,6 @@ internal sealed partial class MainWindowViewModel :
         double fontSize = BaseFontSize * value;
         Application.Current.Resources["EditorFontSize"] = fontSize;
     }
-
-    public void Dispose()
-    {
-        Client.Dispose();
-    }
-
-    public ClientViewModel Client { get; }
 
     [RelayCommand(CanExecute = nameof(CanNewTab))]
     public void NewTab()
