@@ -2,7 +2,7 @@
 
 using Grpc.Core;
 
-using Lowsharp.Server.Data;
+using Lowsharp.Server.Infrastructure;
 
 using LowSharp.ApiV1.HealthCheck;
 
@@ -10,16 +10,16 @@ namespace Lowsharp.Server.Services.ApiV1;
 
 internal sealed class HealthCheckService : Health.HealthBase
 {
-    private readonly JsonDbContextCache _jsonDbContextCache;
+    private readonly RequestCache _cache;
 
-    public HealthCheckService(JsonDbContextCache jsonDbContextCache)
+    public HealthCheckService(RequestCache cache)
     {
-        _jsonDbContextCache = jsonDbContextCache;
+        _cache = cache;
     }
 
     public override async Task<Empty> InvalidateCache(Empty request, ServerCallContext context)
     {
-        await _jsonDbContextCache.InvalidateAsync();
+        await _cache.InvalidateAsync();
         return new Empty();
     }
 

@@ -1,19 +1,21 @@
 ﻿using Grpc.Core;
 
-using Lowsharp.Server.Data;
+using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
 
 using LowSharp.ApiV1.Lowering;
+
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Lowsharp.Server.Services.ApiV1;
 
 internal class LowererService : Lowerer.LowererBase
 {
     private readonly LoweringEngine _engine;
-    private readonly JsonDbContextCache _cache;
+    private readonly RequestCache _cache;
     private readonly ILogger _logger;
 
-    public LowererService(LoweringEngine engine, JsonDbContextCache cache, ILoggerFactory loggerFactory)
+    public LowererService(LoweringEngine engine, RequestCache cache, ILoggerFactory loggerFactory)
     {
         _engine = engine;
         _cache = cache;
@@ -24,7 +26,7 @@ internal class LowererService : Lowerer.LowererBase
     {
         EngineInput engineInput = Mapper.Map(request);
 
-        return await _cache.TryGetOrCreate(engineInput, async input =>
+        return await _cache.GetOrCreateAsync(engineInput, async input =>
         {
             _logger.LogInformation("Lowering code for request: {Request}", input);
             EngineOutput output = await _engine.ToLowerCodeAsync(input, context.CancellationToken);
