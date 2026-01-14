@@ -1,7 +1,5 @@
 using Lowsharp.Server;
 using Lowsharp.Server.Data;
-using Lowsharp.Server.Interactive;
-using Lowsharp.Server.Interactive.Formating;
 using Lowsharp.Server.Lowering;
 using Lowsharp.Server.Services;
 
@@ -18,10 +16,7 @@ builder.Services.AddDbContext<ServerDbContext>(options =>
     options.UseSqlite($"Data Source={GetDatabasePath()}");
 });
 builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
-builder.Services.AddSingleton<SessionManager>();
-builder.Services.AddSingleton<TextWithFormatFactory>();
 builder.Services.AddScoped<LoweringEngine>();
-builder.Services.AddScoped<CsharpEvaluator>();
 builder.Services.AddScoped<JsonDbContextCache>(factory =>
 {
     return new JsonDbContextCache(
@@ -32,13 +27,11 @@ builder.Services.AddScoped<JsonDbContextCache>(factory =>
 });
 
 builder.Services.AddHostedService<CacheCleanupService>();
-builder.Services.AddHostedService<SessionCleanupService>();
 
 var app = builder.Build();
 
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.LowererService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.HealthCheckService>();
-app.MapGrpcService<Lowsharp.Server.Services.ApiV1.EvaluatorService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.RegexService>();
 
 // Configure the HTTP request pipeline.

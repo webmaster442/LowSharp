@@ -46,9 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Protobuff\EvaluatorApiV1.proto" GrpcServices="Client" Access="Internal">
-      <Link>EvaluatorApiV1.proto</Link>
-    </Protobuf>
     <Protobuf Include="..\Protobuff\HealthCheckApiV1.proto" GrpcServices="Client" Access="Internal">
       <Link>HealthCheckApiV1.proto</Link>
     </Protobuf>

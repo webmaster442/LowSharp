@@ -10,8 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Grpc.Net.Client;
 
-using LowSharp.ApiV1.Evaluate;
-
 namespace LowSharp.Client.Common.Views;
 
 internal sealed partial class ClientViewModel :

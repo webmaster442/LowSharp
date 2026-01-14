@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using LowSharp.Client.Lowering;
 using LowSharp.Client.RegexTesting;
-using LowSharp.Client.Repl;
 
 namespace LowSharp.Client.Common.Views;
 
@@ -25,14 +24,6 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
         var vm = new LoweringViewModel(_client, _dialogs);
         await vm.InitializeAsync();
         ReplaceContents("Lowering", vm);
-    }
-
-    [RelayCommand]
-    public async Task StartRepl()
-    {
-        var vm = new ReplViewModel(_client, _dialogs);
-        await vm.InitializeAsync();
-        ReplaceContents("REPL", vm);
     }
 
     [RelayCommand]

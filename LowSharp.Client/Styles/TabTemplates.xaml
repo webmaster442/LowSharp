@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:LowSharp.Client.Common.Views"
     xmlns:lowering="clr-namespace:LowSharp.Client.Lowering"
-    xmlns:repl="clr-namespace:LowSharp.Client.Repl"
     xmlns:regex="clr-namespace:LowSharp.Client.RegexTesting"
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
@@ -15,10 +14,6 @@
 
     <DataTemplate DataType="{x:Type lowering:LoweringViewModel}">
         <lowering:LoweringView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type repl:ReplViewModel}">
-        <repl:ReplView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type regex:RegexTestingViewModel}">

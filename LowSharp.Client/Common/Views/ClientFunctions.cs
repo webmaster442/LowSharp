@@ -88,28 +88,6 @@ internal class ClientFunctions : IClient
     public void HideIsBusy()
         => _clientViewModel.IsBusy = false;
 
-    public async Task<Guid> InitializeReplSessionAsync()
-    {
-        _clientViewModel.ThrowIfCantContinue();
-
-        var client = new ApiV1.Evaluate.Evaluator.EvaluatorClient(_clientViewModel.Channel);
-        try
-        {
-            _clientViewModel.IsBusy = true;
-            var result = await client.InitializeAsync(new ApiV1.Evaluate.InitializationRequest());
-            return Guid.Parse(result.Id);
-        }
-        catch (Exception ex)
-        {
-            await _dialogs.Error("Server failed to reply", ex.Message);
-            return Guid.Empty;
-        }
-        finally
-        {
-            _clientViewModel.IsBusy = false;
-        }
-    }
-
     public async Task<ApiV1.Lowering.LoweringResponse> LowerCodeAsync(string code,
                                                                       ApiV1.Lowering.InputLanguage inputLanguage,
                                                                       ApiV1.Lowering.Optimization optimization,
@@ -150,27 +128,6 @@ internal class ClientFunctions : IClient
         {
             _clientViewModel.IsBusy = false;
         }
-    }
-
-    public async IAsyncEnumerable<ApiV1.Evaluate.FormattedText> SendReplInputAsync(Guid session, string input)
-    {
-        _clientViewModel.ThrowIfCantContinue();
-
-        var client = new ApiV1.Evaluate.Evaluator.EvaluatorClient(_clientViewModel.Channel);
-        _clientViewModel.IsBusy = true;
-        var response = client.Evaluate(new ApiV1.Evaluate.EvaluationRequest
-        {
-            Id = session.ToString(),
-            UserInput = input,
-        });
-
-        while (await response.ResponseStream.MoveNext(CancellationToken.None))
-        {
-            var current = response.ResponseStream.Current;
-            yield return current;
-        }
-
-        _clientViewModel.IsBusy = false;
     }
 
     public async Task<ApiV1.Regex.RegexMatchResponse> RegexMatchAsync(string input,

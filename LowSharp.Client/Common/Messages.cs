@@ -1,5 +1,4 @@
-﻿using LowSharp.ApiV1.Evaluate;
-using LowSharp.Client.Common.Views;
+﻿using LowSharp.Client.Common.Views;
 
 namespace LowSharp.Client.Common;
 
@@ -12,8 +11,6 @@ internal static class Messages
     public sealed record class CloseCurrentTab(ViewModelWithMenus ViewModel);
 
     public sealed record class ReplaceTabContent(string TabTitle, ViewModelWithMenus ViewModel);
-
-    public sealed record class AppendReplOutput(FormattedText Output);
 
     public sealed record class ClearReplOutput();
 

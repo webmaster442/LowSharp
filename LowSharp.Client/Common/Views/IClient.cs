@@ -1,5 +1,4 @@
-﻿using LowSharp.ApiV1.Evaluate;
-using LowSharp.ApiV1.HealthCheck;
+﻿using LowSharp.ApiV1.HealthCheck;
 using LowSharp.ApiV1.Lowering;
 using LowSharp.ApiV1.Regex;
 
@@ -21,10 +20,6 @@ internal interface IClient
                                      InputLanguage inputLanguage,
                                      Optimization optimization,
                                      OutputCodeType outputCodeType);
-
-    Task<Guid> InitializeReplSessionAsync();
-
-    IAsyncEnumerable<FormattedText> SendReplInputAsync(Guid session, string input);
 
     Task<(string result, long time)> RegexReplaceAsync(string input,
                                                        string replacement,
