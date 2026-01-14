@@ -1,7 +1,7 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
+
 using System.Text.Json.Serialization;
-using System.Threading;
 
 using Lowsharp.Server.Lowering.Syntax;
 
@@ -13,10 +13,10 @@ namespace Lowsharp.Server.Lowering.Compilers;
 
 internal abstract class RoslynCompilerBase : ICompiler
 {
-    protected readonly IEnumerable<PortableExecutableReference> _references;
+    protected readonly IEnumerable<MetadataReference> _references;
     protected readonly EmitOptions _emitOptions;
 
-    protected RoslynCompilerBase(IEnumerable<PortableExecutableReference> references,
+    protected RoslynCompilerBase(IEnumerable<MetadataReference> references,
                                  EmitOptions emitOptions)
     {
         _references = references;

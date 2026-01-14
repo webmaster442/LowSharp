@@ -1,4 +1,6 @@
-﻿using Lowsharp.Server.Lowering;
+﻿using System.Collections.Immutable;
+
+using Lowsharp.Server.Lowering;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -10,8 +12,11 @@ namespace Lowsharp.Server.Lowering.Compilers;
 internal sealed class CsharpCompiler : RoslynCompilerBase
 {
     private readonly CSharpCompilationOptions _compilerOptions;
+    private readonly List<ISourceGenerator> _sourceGenerators;
 
-    public CsharpCompiler(IEnumerable<PortableExecutableReference> references, EmitOptions emitOptions) 
+    public CsharpCompiler(IEnumerable<MetadataReference> references,
+                          IEnumerable<IIncrementalGenerator> generators,
+                          EmitOptions emitOptions)
         : base(references, emitOptions)
     {
         _compilerOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
@@ -21,6 +26,8 @@ internal sealed class CsharpCompiler : RoslynCompilerBase
             .WithUsings("System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Threading", "System.Threading.Tasks")
             .WithConcurrentBuild(true)
             .WithDeterministic(true);
+
+        _sourceGenerators = generators.Select(g => g.AsSourceGenerator()).ToList();
     }
 
     public override async Task<CompilerOutput> CompileAsync(string code,
@@ -31,12 +38,24 @@ internal sealed class CsharpCompiler : RoslynCompilerBase
     {
         try
         {
-            SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree(code, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
+            var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
+
+            SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree(code, parseOptions);
 
             CSharpCompilation compilation = CSharpCompilation.Create("inMemory")
                 .WithOptions(_compilerOptions.WithOptimizationLevel(outputOptimizationLevel.ToOptimizationLevel()))
                 .AddReferences(_references)
                 .AddSyntaxTrees(syntaxTree);
+
+            // Run source generators
+            CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(_sourceGenerators, parseOptions: parseOptions);
+
+            driver = (CSharpGeneratorDriver)driver.RunGeneratorsAndUpdateCompilation(compilation,
+                                                                                     out Compilation? updatedCompilation,
+                                                                                     out ImmutableArray<Diagnostic> diagnostics,
+                                                                                     cancellationToken);
+            compilation = (CSharpCompilation)updatedCompilation;
+
 
             EmitResult result = compilation.Emit(assemblyStream, pdbStream, options: _emitOptions, cancellationToken: cancellationToken);
 

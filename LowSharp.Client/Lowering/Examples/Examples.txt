@@ -71,6 +71,45 @@ public class Patternmatch
         };
 }
 
+# Source genrator: Regex | Csharp
+using System.Text.RegularExpressions;
+
+namespace RegexExample;
+
+
+public partial class RegexGenerator
+{
+    [GeneratedRegex(@"\d{3}-\d{2}-\d{4}")]
+    public static partial Regex MyRegex { get; }
+}
+
+# Source genrator: LibraryImport | Csharp
+using System.Runtime.InteropServices;
+
+namespace LibInportGeneratorExample;
+
+public partial class LibInportGenerator
+{
+    [LibraryImport("user32.dll", EntryPoint = "MessageBoxW", StringMarshalling = StringMarshalling.Utf16)]
+    private static partial int MessageBox(IntPtr hWnd, string text, string caption, uint type);
+}
+
+# Source genrator: Json | Csharp
+using System.Text.Json.Serialization;
+
+namespace JsonSerializerContextExample;
+
+public class WeatherForecast
+{
+    public DateTime Date { get; set; }
+    public int TemperatureCelsius { get; set; }
+    public string? Summary { get; set; }
+}
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(WeatherForecast))]
+internal partial class SourceGenerationContext : JsonSerializerContext { }
+
 # Moodule example | FSharp
 namespace MyLib
 

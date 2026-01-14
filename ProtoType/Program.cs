@@ -1,11 +1,6 @@
-﻿using System.Reflection;
+﻿var provider = new ReferenceProvider();
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-
-namespace Lowsharp.Server.Lowering;
-
-internal sealed class ReferenceProvider
+public class ReferenceProvider
 {
     public ReferenceProvider()
     {
@@ -31,7 +26,7 @@ internal sealed class ReferenceProvider
         ReferenceAssemblies = Directory.GetFiles(referencePaths, "*.dll");
 
         var analyzerPath = Path.Combine(dotnetRoot, "packs", "Microsoft.NETCore.App.Ref", sdkVersionString, "analyzers", "dotnet", "cs");
-
+        
         if (Directory.Exists(analyzerPath))
         {
             AnalyzerAssemblies = Directory.GetFiles(analyzerPath, "*.dll");
@@ -40,39 +35,11 @@ internal sealed class ReferenceProvider
         {
             AnalyzerAssemblies = Array.Empty<string>();
         }
-
-        MetadataReferences = GetMetadataReferences().ToArray();
-        SourceGeneratgors = GetSourceGenerators();
     }
 
     public string[] ReferenceAssemblies { get; }
 
     public string[] AnalyzerAssemblies { get; }
-    public MetadataReference[] MetadataReferences { get; }
-    public IReadOnlyList<IIncrementalGenerator> SourceGeneratgors { get; }
-
-    public IEnumerable<MetadataReference> GetMetadataReferences()
-    {
-        return ReferenceAssemblies
-                .Select(p => MetadataReference.CreateFromFile(p));
-    }
-
-    public IReadOnlyList<IIncrementalGenerator> GetSourceGenerators()
-    {
-        List<IIncrementalGenerator> result = new();
-        foreach (var analyzerPath in AnalyzerAssemblies)
-        {
-            var assembly = Assembly.LoadFrom(analyzerPath);
-            var generatorTypes = assembly.GetTypes()
-                    .Where(t => typeof(IIncrementalGenerator).IsAssignableFrom(t) && !t.IsAbstract && t.IsPublic);
-            foreach (var generatorType in generatorTypes)
-            {
-                if (Activator.CreateInstance(generatorType) is IIncrementalGenerator generator)
-                {
-                    result.Add(generator);
-                }
-            }
-        }
-        return result;
-    }
 }
+
+

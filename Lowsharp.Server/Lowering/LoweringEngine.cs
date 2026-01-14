@@ -21,8 +21,8 @@ public sealed class LoweringEngine
 
         var emitOptions = new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb);
 
-        _csCompiler = new CsharpCompiler(_referenceProvider.References, emitOptions);
-        _vbCompiler = new VisualBasicCompiler(_referenceProvider.References, emitOptions);
+        _csCompiler = new CsharpCompiler(_referenceProvider.MetadataReferences, _referenceProvider.SourceGeneratgors, emitOptions);
+        _vbCompiler = new VisualBasicCompiler(_referenceProvider.MetadataReferences, emitOptions);
         _fsCompiler = new FsharpCompiler();
     }
 

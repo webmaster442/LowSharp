@@ -13,7 +13,7 @@ internal sealed class VisualBasicCompiler : RoslynCompilerBase
 {
     private readonly VisualBasicCompilationOptions _compilerOptions;
 
-    public VisualBasicCompiler(IEnumerable<PortableExecutableReference> references, EmitOptions emitOptions)
+    public VisualBasicCompiler(IEnumerable<MetadataReference> references, EmitOptions emitOptions)
         : base(references, emitOptions)
     {
         _compilerOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
