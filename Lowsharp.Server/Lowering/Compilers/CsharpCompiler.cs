@@ -13,6 +13,7 @@ internal sealed class CsharpCompiler : RoslynCompilerBase
 {
     private readonly CSharpCompilationOptions _compilerOptions;
     private readonly List<ISourceGenerator> _sourceGenerators;
+    private readonly string _globalUsings;
 
     public CsharpCompiler(IEnumerable<MetadataReference> references,
                           IEnumerable<IIncrementalGenerator> generators,
@@ -23,11 +24,20 @@ internal sealed class CsharpCompiler : RoslynCompilerBase
             .WithPlatform(Platform.AnyCpu)
             .WithAllowUnsafe(true)
             .WithNullableContextOptions(NullableContextOptions.Enable)
-            .WithUsings("System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Threading", "System.Threading.Tasks")
             .WithConcurrentBuild(true)
             .WithDeterministic(true);
 
         _sourceGenerators = generators.Select(g => g.AsSourceGenerator()).ToList();
+
+        _globalUsings = """
+            global using System;
+            global using System.Collections.Generic;
+            global using System.IO;
+            global using System.Linq;
+            global using System.Net.Http;
+            global using System.Threading;
+            global using System.Threading.Tasks;
+            """;
     }
 
     public override async Task<CompilerOutput> CompileAsync(string code,
@@ -41,11 +51,12 @@ internal sealed class CsharpCompiler : RoslynCompilerBase
             var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
 
             SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree(code, parseOptions);
+            SyntaxTree globalUsings = SyntaxFactory.ParseSyntaxTree(_globalUsings, parseOptions);
 
             CSharpCompilation compilation = CSharpCompilation.Create("inMemory")
                 .WithOptions(_compilerOptions.WithOptimizationLevel(outputOptimizationLevel.ToOptimizationLevel()))
                 .AddReferences(_references)
-                .AddSyntaxTrees(syntaxTree);
+                .AddSyntaxTrees(globalUsings, syntaxTree);
 
             // Run source generators
             CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(_sourceGenerators, parseOptions: parseOptions);

@@ -48,7 +48,9 @@ internal sealed class ReferenceProvider
     public string[] ReferenceAssemblies { get; }
 
     public string[] AnalyzerAssemblies { get; }
+
     public MetadataReference[] MetadataReferences { get; }
+
     public IReadOnlyList<IIncrementalGenerator> SourceGeneratgors { get; }
 
     public IEnumerable<MetadataReference> GetMetadataReferences()
