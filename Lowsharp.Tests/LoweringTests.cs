@@ -1,4 +1,4 @@
-﻿using Lowsharp.Server.Examples;
+﻿using Lowsharp.Server.CodeExamples;
 using Lowsharp.Server.Lowering;
 
 namespace Lowsharp.Tests;

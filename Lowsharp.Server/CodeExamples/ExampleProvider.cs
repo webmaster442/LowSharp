@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Xml.Serialization;
 
-namespace Lowsharp.Server.Examples;
+namespace Lowsharp.Server.CodeExamples;
 
 internal sealed class ExampleProvider : IEnumerable<Example>
 {
@@ -9,7 +9,7 @@ internal sealed class ExampleProvider : IEnumerable<Example>
 
     public ExampleProvider()
     {
-        using var stream = typeof(ExampleProvider).Assembly.GetManifestResourceStream("Lowsharp.Server.Examples.xml");
+        using var stream = typeof(ExampleProvider).Assembly.GetManifestResourceStream("Lowsharp.Server.CodeExamples.Examples.xml");
         if (stream is null)
         {
             throw new InvalidOperationException("Could not find embedded resource 'Lowsharp.Server.Examples.xml'.");

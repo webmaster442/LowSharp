@@ -10,7 +10,7 @@
 - [ ] Add more code examples for C# and for Visual Basic
 - [x] Design a proper start page
 - [ ] Add tooltips to buttons
-- [ ] Create a changelog file
+- [x] Create a changelog file
 - [ ] Add changelog display to the application
 - [ ] Integrate auto updater
 - [ ] Do a release

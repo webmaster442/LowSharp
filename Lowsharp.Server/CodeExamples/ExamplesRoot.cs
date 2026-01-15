@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace Lowsharp.Server.Examples;
+namespace Lowsharp.Server.CodeExamples;
 
 [XmlType(AnonymousType = true)]
 [XmlRoot(Namespace = "", ElementName ="examples", IsNullable = false)]

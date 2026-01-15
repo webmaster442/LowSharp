@@ -11,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Lowsharp.Tests"/>
+    <InternalsVisibleTo Include="Lowsharp.Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Examples.xml" />
+    <EmbeddedResource Include="CodeExamples\Examples.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +41,9 @@
 
 
   <ItemGroup>
+    <Protobuf Include="..\Protobuff\ExamplesApiV1.proto" GrpcServices="Server" Access="Internal">
+      <Link>ExamplesApiV1.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\Protobuff\HealthCheckApiV1.proto" GrpcServices="Server" Access="Internal">
       <Link>HealthCheckApiV1.proto</Link>
     </Protobuf>
