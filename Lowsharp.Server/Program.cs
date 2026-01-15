@@ -1,4 +1,4 @@
-using Lowsharp.Server;
+using Lowsharp.Server.Examples;
 using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
 
@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ExampleProvider>();
 builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
 builder.Services.AddSingleton<LoweringEngine>();
 builder.Services.AddSingleton<RequestCache>();

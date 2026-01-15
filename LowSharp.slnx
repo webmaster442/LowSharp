@@ -3,9 +3,11 @@
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
+    <File Path="changelog.md" />
     <File Path="readme.md" />
     <File Path="todo.md" />
   </Folder>
   <Project Path="LowSharp.Client/LowSharp.Client.csproj" />
   <Project Path="Lowsharp.Server/Lowsharp.Server.csproj" Id="bbebb716-02dc-4505-b244-fc113fa1f6eb" />
+  <Project Path="Lowsharp.Tests/Lowsharp.Tests.csproj" />
 </Solution>
