@@ -8,6 +8,7 @@
     <File Path="todo.md" />
   </Folder>
   <Project Path="LowSharp.Client/LowSharp.Client.csproj" />
+  <Project Path="LowSharp.ClientLib/LowSharp.ClientLib.csproj" />
   <Project Path="Lowsharp.Server/Lowsharp.Server.csproj" Id="bbebb716-02dc-4505-b244-fc113fa1f6eb" />
   <Project Path="Lowsharp.Tests/Lowsharp.Tests.csproj" />
 </Solution>
