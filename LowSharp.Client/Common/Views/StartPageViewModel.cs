@@ -2,8 +2,10 @@
 
 using CommunityToolkit.Mvvm.Input;
 
+using LowSharp.ApiV1.HealthCheck;
 using LowSharp.Client.Lowering;
 using LowSharp.Client.RegexTesting;
+using LowSharp.ClientLib;
 
 namespace LowSharp.Client.Common.Views;
 
@@ -29,7 +31,7 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartRegex()
     {
-        var vm = new RegexTestingViewModel(_client);
+        var vm = new RegexTestingViewModel(_client, _dialogs);
         await vm.InitializeAsync();
         ReplaceContents("Regex Testing", vm);
     }
@@ -37,13 +39,26 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartVersions()
     {
-        var result = await _client.GetComponentVersionsAsync();
+        var result = await _client.HealtCheck.GetComponentVersionsAsync();
+        
+        if (result.TryGetFailure(out Exception? ex))
+        {
+            await _dialogs.Error("Error Getting Versions", ex?.Message ?? "Unknown error");
+            return;
+        }
+
+        if (!result.TryGetSuccess(out GetComponentVersionsRespnse? response))
+        {
+            await _dialogs.Error("Error Getting Versions", "Unknown error");
+            return;
+        }
+
         StringBuilder resultText = new StringBuilder();
-        resultText.AppendLine($"Operating System: {result.OperatingSystem} {result.OperatingSystemVersion}");
-        resultText.AppendLine($"Runtime Version: {result.RuntimeVersion}");
+        resultText.AppendLine($"Operating System: {response.OperatingSystem} {response.OperatingSystemVersion}");
+        resultText.AppendLine($"Runtime Version: {response.RuntimeVersion}");
         resultText.AppendLine("-----------------------------------------");
         resultText.AppendLine("Component Versions:");
-        foreach (var component in result.ComponentVersions)
+        foreach (var component in response.ComponentVersions)
         {
             resultText.AppendLine($"{component.Name}: {component.VersionString}");
         }

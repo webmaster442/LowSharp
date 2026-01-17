@@ -63,7 +63,7 @@ internal sealed class HealtCheckClient : IHealtCheckClient
         }
     }
 
-    public async Task<Either<ComponentVersion[], Exception>> GetComponentVersionsAsync(CancellationToken cancellation = default)
+    public async Task<Either<GetComponentVersionsRespnse, Exception>> GetComponentVersionsAsync(CancellationToken cancellation = default)
     {
         try
         {
@@ -71,7 +71,7 @@ internal sealed class HealtCheckClient : IHealtCheckClient
             var response = await _client.GetComponentVersionsAsync(new Empty(), cancellationToken: cancellation)
                 .ConfigureAwait(false);
 
-            return response.ComponentVersions.ToArray();
+            return response;
         }
         catch (Exception ex)
         {

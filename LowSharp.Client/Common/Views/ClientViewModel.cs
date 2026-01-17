@@ -8,7 +8,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using Grpc.Net.Client;
+
+using LowSharp.ClientLib;
 
 namespace LowSharp.Client.Common.Views;
 
@@ -33,9 +34,7 @@ internal sealed partial class ClientViewModel :
     [ObservableProperty]
     public partial bool IsBusy { get; set; }
 
-    public GrpcChannel? Channel { get; private set; }
-
-    public IClient ApiClient { get; }
+    public IClient Client { get; }
 
     partial void OnIsBusyChanged(bool oldValue, bool newValue)
         => WeakReferenceMessenger.Default.Send(new Messages.IsBusyChanged(newValue));
@@ -50,16 +49,25 @@ internal sealed partial class ClientViewModel :
             Interval = TimeSpan.FromSeconds(2),
         };
         _checkTimer.Tick += CheckStatus;
-        ApiClient = new ClientFunctions(this, dialogs);
+        Client = new ClientLib.Client();
+        Client.IsBusyChanged += OnIsBusyChanged;
+        Client.IsConnactedChanged += OnIsConnectedChanged;
     }
+
+    private void OnIsConnectedChanged(object? sender, EventArgs e)
+        => IsConnected = Client.IsConnected;
+
+    private void OnIsBusyChanged(object? sender, EventArgs e)
+        => IsBusy = Client.IsBusy;
 
     public void Dispose()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        _checkTimer.Stop();
-        Channel?.Dispose();
-        Channel = null;
         Stop();
+        _checkTimer.Stop();
+        Client.IsBusyChanged -= OnIsBusyChanged;
+        Client.IsConnactedChanged -= OnIsConnectedChanged;
+        Client.Dispose();
         _disposed = true;
     }
 
@@ -75,8 +83,7 @@ internal sealed partial class ClientViewModel :
         if (!IsRunning)
         {
             IsConnected = false;
-            Channel?.Dispose();
-            Channel = null;
+            Client.CloseConnection();
             return;
         }
 
@@ -96,19 +103,6 @@ internal sealed partial class ClientViewModel :
             }
         }
         return false;
-    }
-
-    public void ThrowIfCantContinue()
-    {
-        ObjectDisposedException.ThrowIf(_disposed, this);
-        if (!IsRunning)
-        {
-            throw new InvalidOperationException("The server is not running");
-        }
-        if (Channel == null)
-        {
-            throw new InvalidOperationException("Not connected to the server");
-        }
     }
 
     private static async Task WaitTillStartedOrTimeout(string file, TimeSpan timeSpan)
@@ -163,10 +157,8 @@ internal sealed partial class ClientViewModel :
     [RelayCommand]
     public void Stop()
     {
-        Channel?.Dispose();
-        Channel = null;
-
         ObjectDisposedException.ThrowIf(_disposed, this);
+        Client.CloseConnection();
         if (!IsRunning)
             return;
 
@@ -181,17 +173,24 @@ internal sealed partial class ClientViewModel :
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (IsConnected || Channel != null)
+        if (IsConnected)
             return;
 
-        Channel = GrpcChannel.ForAddress($"http://localhost:{Port}", new GrpcChannelOptions
+        var result = await Client.Connect(new Uri($"http://localhost:{Port}"));
+
+        if (result.TryGetFailure(out Exception? ex))
         {
-            UnsafeUseInsecureChannelCallCredentials = true,
-        });
+            await _dialogs.Error("Connection failed", ex.Message);
+            return;
+        }
 
-        bool isOk = await ApiClient.DoHealthCheckAsync();
+        if (result.TryGetSuccess(out bool success) && !success)
+        {
+            await _dialogs.Error("Connection failed", "Unknown error");
+            return;
+        }
 
-        IsConnected = isOk;
+        IsConnected = success;
     }
 
     [RelayCommand]
@@ -207,7 +206,7 @@ internal sealed partial class ClientViewModel :
     {
         if (await _dialogs.Confirm("Confirm", "Invalidate server side cache?"))
         {
-            await ApiClient.InvalidateCache();
+            await Client.HealtCheck.InvalidateCacheAsync();
         }
     }
 

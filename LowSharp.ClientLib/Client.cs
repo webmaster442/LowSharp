@@ -44,9 +44,8 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         get => field;
         private set
         {
-            if (field != value)
-                IsConnactedChanged?.Invoke(this, EventArgs.Empty);
             field = value;
+            IsConnactedChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -55,9 +54,8 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         get => field;
         set
         {
-            if (field != value)
-                IsBusyChanged?.Invoke(this, EventArgs.Empty);
             field = value;
+            IsBusyChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -79,8 +77,16 @@ public sealed class Client : IDisposable, IClientRoot, IClient
 
             HealtCheck = new HealtCheckClient(_channel, this);
             Lowering = new LoweringClient(_channel, this);
+            Regex = new RegexClient(_channel, this);
+            Examples = new ExamplesClient(_channel, this);
 
-            return true;
+            IsConnected = true;
+
+            var healthCeckResult = await HealtCheck.DoHealthCheckAsync();
+
+            IsConnected = healthCeckResult.TryGetSuccess(out var success) && success;
+
+            return healthCeckResult;
         }
         catch (Exception ex)
         {
