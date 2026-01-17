@@ -5,12 +5,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
+using ControlzEx.Standard;
+
 using Google.Protobuf.Collections;
 
 using LowSharp.ApiV1.Lowering;
 using LowSharp.Client.Common;
 using LowSharp.Client.Common.Views;
 using LowSharp.Client.Lowering.Examples;
+using LowSharp.ClientLib;
 
 namespace LowSharp.Client.Lowering;
 
@@ -108,18 +111,29 @@ internal sealed partial class LoweringViewModel :
     [RelayCommand]
     public async Task Lower()
     {
-        LoweringResponse result = await _client.LowerCodeAsync(InputCode,
-                                                               InputLanguages[SelectedInputLanguageIndex],
-                                                               Optimizations[SelectedOptimizationIndex],
-                                                               OutputTypes[SelectedOutputTypeIndex]);
+        Either<LoweringResponse, Exception> response = await _client.Lowering.LowerCodeAsync(
+            InputCode,
+            InputLanguages[SelectedInputLanguageIndex],
+            Optimizations[SelectedOptimizationIndex],
+            OutputTypes[SelectedOutputTypeIndex]);
 
-        if (result.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
+        if (response.TryGetFailure(out Exception? failure))
         {
-            OutputCode = GetDiagnostics(result.Diagnostics);
+            await _dialogs.ClientError(failure);
             return;
         }
 
-        OutputCode = result.ResultCode;
+        if (response.TryGetSuccess(out LoweringResponse? result))
+        {
+            if (result.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
+            {
+                OutputCode = GetDiagnostics(result.Diagnostics);
+                return;
+            }
+
+            OutputCode = result.ResultCode;
+            return;
+        }
     }
 
     private static string GetDiagnostics(RepeatedField<Diagnostic> diagnostics)

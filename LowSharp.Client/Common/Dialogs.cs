@@ -21,6 +21,9 @@ internal sealed class Dialogs : IDialogs
         _mainWindow = mainWindow;
     }
 
+    public Task ClientError(Exception failure)
+        => Error("Client Error", failure.Message);
+
     public async Task Error(string title, string message)
     {
         await _mainWindow.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, new MetroDialogSettings

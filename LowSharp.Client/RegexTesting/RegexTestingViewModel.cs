@@ -5,14 +5,16 @@ using CommunityToolkit.Mvvm.Input;
 
 using LowSharp.ApiV1.Regex;
 using LowSharp.Client.Common.Views;
+using LowSharp.ClientLib;
 
 namespace LowSharp.Client.RegexTesting;
 
 internal sealed partial class RegexTestingViewModel : ViewModelWithMenus
 {
     private readonly IClient _client;
+    private readonly IDialogs _dialogs;
 
-    public RegexTestingViewModel(IClient client)
+    public RegexTestingViewModel(IClient client, IDialogs dialogs)
     {
         Options = new RegexOptionViewModel();
         IsMatchMode = true;
@@ -21,6 +23,7 @@ internal sealed partial class RegexTestingViewModel : ViewModelWithMenus
         Replacement = string.Empty;
         Result = string.Empty;
         _client = client;
+        _dialogs = dialogs;
     }
 
     [ObservableProperty]
@@ -52,33 +55,74 @@ internal sealed partial class RegexTestingViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task Execute()
     {
+        var options = Options.GetOptions();
         if (IsMatchMode)
         {
-            var results = await _client.RegexMatchAsync(Input, Pattern, Options.GetOptions());
-            Result = FormatResults(results);
-            ExecutionTimeInMs = results.ExtecutionTimeMs;
+            await DoMatch(Input, Pattern, options);
         }
         else if (IsReplaceMode)
         {
-            (string result, long time) = await _client.RegexReplaceAsync(Input, Pattern, Replacement, Options.GetOptions());
-            Result = result;
-            ExecutionTimeInMs = time;
+            await DoReplace(Input, Pattern, Replacement, options);
         }
         else if (IsSplitMode)
         {
-            (IList<string> results, long time) = await _client.RegexSplitAsync(Input, Pattern, Options.GetOptions());
-            Result = string.Join(Environment.NewLine, results);
-            ExecutionTimeInMs = time;
+            await DoSplit(Input, Pattern, options);
         }
     }
 
-    private string FormatResults(RegexMatchResponse results)
+    private async Task DoSplit(string input, string pattern, RegexOptions options)
     {
-        StringBuilder result = new();
-        foreach (var match in results.Matches)
+        var response = await _client.Regex.SplitAsync(input, pattern, options);
+
+        if (response.TryGetFailure(out Exception? failure))
         {
-            result.AppendLine($"Match Name: {match.Name}, Success?: {match.Success}, Value: {match.Value}, Index: {match.Index}, Length: {match.Length}");
+            await _dialogs.ClientError(failure);
+            return;
         }
-        return result.ToString();
+
+        if (response.TryGetSuccess(out var success))
+        {
+            Result = string.Join(Environment.NewLine, success.Results);
+            ExecutionTimeInMs = success.ExtecutionTimeMs;
+        }
+    }
+
+    private async Task DoReplace(string input, string pattern, string replacement, RegexOptions options)
+    {
+        var response = await _client.Regex.ReplaceAsync(input, replacement, pattern, options);
+
+        if (response.TryGetFailure(out Exception? failure))
+        {
+            await _dialogs.ClientError(failure);
+            return;
+        }
+
+        if (response.TryGetSuccess(out var success))
+        {
+            Result = success.Result;
+            ExecutionTimeInMs = success.ExtecutionTimeMs;
+        }
+    }
+
+    private async Task DoMatch(string input, string pattern, RegexOptions options)
+    {
+        var response = await _client.Regex.MatchAsync(input, pattern, options);
+
+        if (response.TryGetFailure(out Exception? failure))
+        {
+            await _dialogs.ClientError(failure);
+            return;
+        }
+
+        if (response.TryGetSuccess(out var success))
+        {
+            ExecutionTimeInMs = success.ExtecutionTimeMs;
+            StringBuilder result = new();
+            foreach (var match in success.Matches)
+            {
+                result.AppendLine($"Match Name: {match.Name}, Success?: {match.Success}, Value: {match.Value}, Index: {match.Index}, Length: {match.Length}");
+            }
+            Result = result.ToString();
+        }
     }
 }

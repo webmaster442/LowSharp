@@ -1,4 +1,5 @@
 ﻿
+
 namespace LowSharp.ClientLib;
 
 public interface IClient : IDisposable
@@ -14,4 +15,5 @@ public interface IClient : IDisposable
     event EventHandler? IsConnactedChanged;
 
     void CloseConnection();
+    Task<Either<bool, Exception>> Connect(Uri server);
 }

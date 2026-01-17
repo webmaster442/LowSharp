@@ -26,7 +26,7 @@ public sealed class Either<TSuccess, TFailure>
     public static implicit operator Either<TSuccess, TFailure>(TFailure failure)
         => new Either<TSuccess, TFailure>(failure);
 
-    public bool TyGetSuccess([NotNullWhen(true)] out TSuccess? success)
+    public bool TryGetSuccess([NotNullWhen(true)] out TSuccess? success)
     {
         success = _success!;
         return IsSuccess;
