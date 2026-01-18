@@ -6,13 +6,13 @@
 - [x] REPL client
 - [x] JSON syntax highlighting port
 - [x] Add API endpoint for cache invalidation
-- [ ] Add command to show/hide server window
 - [ ] Add more code examples for C# and for Visual Basic
 - [x] Design a proper start page
-- [ ] Add tooltips to buttons
+- [x] Add tooltips to buttons
 - [x] Create a changelog file
-- [ ] Add changelog display to the application
-- [ ] Integrate auto updater
+- [x] Add changelog display to the application
 - [ ] Do a release
 
 # After release
+
+- [ ] Integrate auto updater

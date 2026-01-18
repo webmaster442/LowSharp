@@ -11,4 +11,6 @@ internal interface IDialogs
     bool TryOpenCode(out (string filename, InputLanguage language) result);
     void Notify(string message, int validityInSeconds);
     Task ClientError(Exception failure);
+    void OpenUrl(string url);
+    Task ChangeLog();
 }

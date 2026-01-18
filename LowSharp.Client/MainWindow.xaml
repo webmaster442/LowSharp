@@ -46,6 +46,14 @@
                             Header="Exit"
                             InputGestureText="Alt+F4" />
                     </MenuItem>
+                    <MenuItem Header="Help">
+                        <MenuItem
+                            Command="{Binding ViewChangesCommand}"
+                            Header="View Changes..." />
+                        <MenuItem
+                            Command="{Binding VisitWebsiteCommand}"
+                            Header="Visit Website..." />
+                    </MenuItem>
                 </Menu>
                 <Menu
                     VerticalAlignment="Center"
@@ -275,13 +283,13 @@
                 Visibility="{Binding Client.IsBusy, Converter={common:VisibilityConverter}}" />
         </StatusBar>
         <TextBlock
-            VerticalAlignment="Center"
-            FontSize="16"
-            HorizontalAlignment="Right"
             x:Name="Notification"
             Grid.Row="1"
             Grid.Column="1"
             Margin="10,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            FontSize="16"
             Text="{Binding Notifications.Latest}" />
     </Grid>
 </mah:MetroWindow>

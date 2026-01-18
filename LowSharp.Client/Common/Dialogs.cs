@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.Messaging;
 
@@ -75,7 +77,20 @@ internal sealed class Dialogs : IDialogs
     }
 
     public void Notify(string message, int validityInSeconds)
+        => WeakReferenceMessenger.Default.Send(new Messages.Notification(message, TimeSpan.FromSeconds(validityInSeconds)));
+
+    public void OpenUrl(string url)
     {
-        WeakReferenceMessenger.Default.Send(new Messages.Notification(message, TimeSpan.FromSeconds(validityInSeconds)));
+        using var process = new Process();
+        process.StartInfo.FileName = url;
+        process.StartInfo.UseShellExecute = true;
+        process.Start();
+    }
+
+    public async Task ChangeLog()
+    {
+        using var stream = typeof(Dialogs).Assembly.GetManifestResourceStream("LowSharp.Client.changelog.md");
+        var content = new StreamReader(stream!).ReadToEnd();
+        await Info("Change Log", content);
     }
 }

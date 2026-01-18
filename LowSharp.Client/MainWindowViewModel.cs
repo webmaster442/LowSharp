@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
@@ -89,6 +90,14 @@ internal sealed partial class MainWindowViewModel :
     [RelayCommand]
     public void ExitApp()
         => Application.Current.Shutdown();
+
+    [RelayCommand]
+    public void VisitWebsite()
+        => _dialogs.OpenUrl("https://github.com/webmaster442/LowSharp");
+
+    [RelayCommand]
+    public async Task ViewChanges()
+        => await _dialogs.ChangeLog();
 
     void IRecipient<Messages.ReplaceTabContent>.Receive(Messages.ReplaceTabContent message)
     {
