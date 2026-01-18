@@ -22,4 +22,24 @@ app.MapGrpcService<Lowsharp.Server.Services.ApiV1.ExamplesService>();
 // Configure the HTTP request pipeline.
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
+if (!HasReferencePacks())
+{
+    Console.WriteLine("WARNING: .NET reference packs not found. Lowering will work correctly.");
+    Console.WriteLine("Please install .NET SDK instead of Runtime");
+    return;
+}
+
 app.Run();
+
+
+static bool HasReferencePacks()
+{
+    var dotnetRoot = Environment.GetEnvironmentVariable("DOTNET_ROOT")
+        ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+            "dotnet");
+
+    var packsPath = Path.Combine(dotnetRoot, "packs", "Microsoft.NETCore.App.Ref");
+
+    return Directory.Exists(packsPath);
+}
