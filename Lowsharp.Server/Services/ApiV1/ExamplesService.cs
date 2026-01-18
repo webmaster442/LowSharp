@@ -15,11 +15,11 @@ internal sealed class ExamplesService : Examples.ExamplesBase
         _exampleProvider = exampleProvider;
     }
 
-    public override async Task GetExamples(GetExamplesRequest request, IServerStreamWriter<Exampe> responseStream, ServerCallContext context)
+    public override async Task GetExamples(GetExamplesRequest request, IServerStreamWriter<LowSharp.ApiV1.Examples.Example> responseStream, ServerCallContext context)
     {
         foreach (var example in _exampleProvider)
         {
-            await responseStream.WriteAsync(new Exampe
+            await responseStream.WriteAsync(new LowSharp.ApiV1.Examples.Example
             {
                 Name = example.Name,
                 Language = example.Lang,

@@ -12,7 +12,7 @@ public interface IClient : IDisposable
     IRegexClient Regex { get; }
 
     event EventHandler? IsBusyChanged;
-    event EventHandler? IsConnactedChanged;
+    event EventHandler? IsConnectedChanged;
 
     void CloseConnection();
     Task<Either<bool, Exception>> Connect(Uri server);

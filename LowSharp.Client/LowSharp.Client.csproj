@@ -29,7 +29,6 @@
     <EmbeddedResource Include="Common\Syntax\JsonNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\VbNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\X64.xshd" />
-    <EmbeddedResource Include="Lowering\Examples\Examples.txt" />
   </ItemGroup>
 
   <ItemGroup>

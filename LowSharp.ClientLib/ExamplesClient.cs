@@ -15,14 +15,14 @@ internal sealed class ExamplesClient : IExamplesClient
         _root = root;
     }
 
-    public async Task<Either<List<Exampe>, Exception>> GetExamplesAsync(CancellationToken cancellation = default)
+    public async Task<Either<List<Example>, Exception>> GetExamplesAsync(CancellationToken cancellation = default)
     {
         _root.ThrowIfCantContinue();
         try
         {
             _root.IsBusy = true;
-            List<Exampe> results = new();
-            AsyncServerStreamingCall<Exampe> stream = _client.GetExamples(new GetExamplesRequest());
+            List<Example> results = new();
+            AsyncServerStreamingCall<Example> stream = _client.GetExamples(new GetExamplesRequest());
             return await stream.ResponseStream.ReadAllAsync(cancellation).ToListAsync(cancellation);
         }
         catch (Exception ex)

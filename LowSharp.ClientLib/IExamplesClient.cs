@@ -5,5 +5,5 @@ namespace LowSharp.ClientLib;
 
 public interface IExamplesClient
 {
-    Task<Either<List<Exampe>, Exception>> GetExamplesAsync(CancellationToken cancellation = default);
+    Task<Either<List<Example>, Exception>> GetExamplesAsync(CancellationToken cancellation = default);
 }

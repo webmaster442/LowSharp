@@ -45,7 +45,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         private set
         {
             field = value;
-            IsConnactedChanged?.Invoke(this, EventArgs.Empty);
+            IsConnectedChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -61,7 +61,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
 
     public event EventHandler? IsBusyChanged;
 
-    public event EventHandler? IsConnactedChanged;
+    public event EventHandler? IsConnectedChanged;
 
     public async Task<Either<bool, Exception>> Connect(Uri server)
     {

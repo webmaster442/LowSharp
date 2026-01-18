@@ -51,7 +51,7 @@ internal sealed partial class ClientViewModel :
         _checkTimer.Tick += CheckStatus;
         Client = new ClientLib.Client();
         Client.IsBusyChanged += OnIsBusyChanged;
-        Client.IsConnactedChanged += OnIsConnectedChanged;
+        Client.IsConnectedChanged += OnIsConnectedChanged;
     }
 
     private void OnIsConnectedChanged(object? sender, EventArgs e)
@@ -66,7 +66,7 @@ internal sealed partial class ClientViewModel :
         Stop();
         _checkTimer.Stop();
         Client.IsBusyChanged -= OnIsBusyChanged;
-        Client.IsConnactedChanged -= OnIsConnectedChanged;
+        Client.IsConnectedChanged -= OnIsConnectedChanged;
         Client.Dispose();
         _disposed = true;
     }

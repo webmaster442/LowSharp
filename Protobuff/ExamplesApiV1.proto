@@ -5,14 +5,14 @@ package lowsharp.apiv1.examples;
 option csharp_namespace = "LowSharp.ApiV1.Examples";
 
 service Examples {
-    rpc GetExamples(GetExamplesRequest) returns (stream Exampe);
+    rpc GetExamples(GetExamplesRequest) returns (stream Example);
 }
 
 message GetExamplesRequest {
     
 }
 
-message Exampe {
+message Example {
     string name = 1;
     string language = 2;
     string code = 3;
