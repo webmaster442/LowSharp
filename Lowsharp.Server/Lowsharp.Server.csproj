@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.33.3" />
+    <PackageReference Include="Google.Protobuf" Version="3.33.4" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
-    <PackageReference Include="FSharp.Compiler.Service" Version="43.10.101" />
-    <PackageReference Include="FSharp.Core" Version="10.0.101" />
+    <PackageReference Include="FSharp.Compiler.Service" Version="43.10.102" />
+    <PackageReference Include="FSharp.Core" Version="10.0.102" />
     <PackageReference Include="Iced" Version="1.21.0" />
     <PackageReference Include="ICSharpCode.Decompiler" Version="9.1.0.7988" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
@@ -36,7 +36,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.0.0" />
     <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.512801" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageReference Include="System.Runtime.Caching" Version="10.0.1" />
+    <PackageReference Include="System.Runtime.Caching" Version="10.0.2" />
   </ItemGroup>
 
 
