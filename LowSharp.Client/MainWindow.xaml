@@ -10,7 +10,9 @@
     Title="LowSharp"
     Width="{common:WindowSizeProvider Type=Width}"
     Height="{common:WindowSizeProvider Type=Height}"
+    SnapsToDevicePixels="True"
     TitleAlignment="Center"
+    Style="{DynamicResource MahApps.Styles.MetroWindow.VisualStudio}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
@@ -81,6 +83,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TabControl
+            SnapsToDevicePixels="True"
             Grid.Row="0"
             Grid.ColumnSpan="2"
             IsEnabled="{Binding Client.IsConnected}"
@@ -99,6 +102,7 @@
             </TabControl.ItemTemplate>
         </TabControl>
         <StatusBar
+            SnapsToDevicePixels="True"
             Grid.Row="1"
             Grid.ColumnSpan="1"
             Margin="5"

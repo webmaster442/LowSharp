@@ -6,9 +6,11 @@ option csharp_namespace = "LowSharp.ApiV1.Lowering";
 
 service Lowerer {
   rpc ToLowerCode(LoweringRequest) returns (LoweringResponse);
+  rpc RenderVisualization(RenderVisualizationRequest) returns (RenderVisualizationResponse);
 }
 
 // ToLowerCode types
+// --------------------------------------------------------------------------
 
 enum InputLanguage {
   INPUT_LANGUAGE_UNSPECIFIED = 0;
@@ -54,4 +56,23 @@ message LoweringRequest {
 message LoweringResponse {
   string result_code = 1;
   repeated Diagnostic diagnostics = 2;
+}
+
+// RenderVisualization types
+// --------------------------------------------------------------------------
+
+enum VisualType {
+    VISUAL_TYPE_UNSPECIFIED = 0;
+    VISUAL_TYPE_NOMNOML = 1;
+    VISUAL_TYPE_MERMAID = 2;
+}
+
+message RenderVisualizationRequest {
+  string inputCode = 1;
+  VisualType visualType = 2;
+  string serverUrl = 3;
+}
+
+message RenderVisualizationResponse {
+  string html = 1;
 }

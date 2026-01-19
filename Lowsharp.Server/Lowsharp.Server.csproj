@@ -11,11 +11,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Visualization\script\graphere.js" />
+    <None Remove="Visualization\script\nomnoml.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Lowsharp.Tests" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="CodeExamples\Examples.xml" />
+    <EmbeddedResource Include="Visualization\script\graphere.js" />
+    <EmbeddedResource Include="Visualization\script\nomnoml.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +45,6 @@
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageReference Include="System.Runtime.Caching" Version="10.0.2" />
   </ItemGroup>
-
 
   <ItemGroup>
     <Protobuf Include="..\Protobuff\ExamplesApiV1.proto" GrpcServices="Server" Access="Internal">
