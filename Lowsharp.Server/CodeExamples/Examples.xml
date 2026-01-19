@@ -120,6 +120,37 @@ public class WeatherForecast
 internal partial class SourceGenerationContext : JsonSerializerContext { }
 ]]></e>
 
+<e name="Async/await" lang="csharp"><![CDATA[
+class AsyncAwaitDemo 
+{
+	public async Task<int> Sum()
+	{
+		int sum = 0;
+		for (int i=0; i<10; i++)
+		{
+			sum += i;
+			await Task.Delay(1000);
+		}
+		return sum;
+	}
+}
+]]></e>
+
+<e name="IAsyncEnumeralbe" lang="csharp"><![CDATA[
+class AsyncEnumerable
+{
+	public async IAsyncEnumerable<int> Producer()
+	{
+		for (int i=0; i<100; i++)
+		{
+			await Task.Delay(100);
+			yield return i;
+		}
+	}
+}
+]]>
+</e>
+
 <e name="Moodule example" lang="fsharp"><![CDATA[
 namespace MyLib
 
@@ -141,5 +172,18 @@ type Greeter(name: string) =
         $"Hello, {this.Name}!"
 ]]></e>
 
+<e name="Sample Visual Basic" lang="vb"><![CDATA[
+Imports System
+Public Class C
+    Public Sub M()
+        Dim d = 43.0
+        Dim i = 11
+        Dim f = 42.0f
+        
+        Dim r = d * i * f 
+    End Sub
+End Class
+]]>    
+</e>
 
 </examples>
