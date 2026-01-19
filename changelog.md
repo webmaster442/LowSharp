@@ -4,6 +4,7 @@
 
 ## General
 + Server/Client architecture using gRPC
++ Regex tester
 
 ### C# compiler
 + Added support for running source generators
