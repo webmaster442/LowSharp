@@ -15,6 +15,31 @@ internal sealed class LoweringClient : ILoweringClient
         _root = root;
     }
 
+    public async Task<Either<string, Exception>> RenderVisualizationAsync(string code,
+                                                                          VisualType visualType,
+                                                                          CancellationToken cancellation = default)
+    {
+        try
+        {
+            _root.IsBusy = true;
+            var result = await _client.RenderVisualizationAsync(new RenderVisualizationRequest
+            {
+                InputCode = code,
+                ServerUrl = _root.HttpUrl,
+                VisualType = visualType,
+            });
+            return result.Html;
+        }
+        catch (Exception ex)
+        {
+            return ex;
+        }
+        finally
+        {
+            _root.IsBusy = false;
+        }
+    }
+
     public async Task<Either<LoweringResponse, Exception>> LowerCodeAsync(string code,
                                                                           InputLanguage inputLanguage,
                                                                           Optimization optimization,

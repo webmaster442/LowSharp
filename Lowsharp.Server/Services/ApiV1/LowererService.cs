@@ -2,22 +2,26 @@
 
 using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
+using Lowsharp.Server.Visualization;
 
 using LowSharp.ApiV1.Lowering;
-
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Lowsharp.Server.Services.ApiV1;
 
 internal class LowererService : Lowerer.LowererBase
 {
     private readonly LoweringEngine _engine;
+    private readonly RazorViewRenderer _renderer;
     private readonly RequestCache _cache;
     private readonly ILogger _logger;
 
-    public LowererService(LoweringEngine engine, RequestCache cache, ILoggerFactory loggerFactory)
+    public LowererService(LoweringEngine engine,
+                          RazorViewRenderer renderer,
+                          RequestCache cache,
+                          ILoggerFactory loggerFactory)
     {
         _engine = engine;
+        _renderer = renderer;
         _cache = cache;
         _logger = loggerFactory.CreateLogger<LowererService>();
     }
@@ -32,5 +36,17 @@ internal class LowererService : Lowerer.LowererBase
             EngineOutput output = await _engine.ToLowerCodeAsync(input, context.CancellationToken);
             return Mapper.Map(output);
         });
+    }
+
+    public override async Task<RenderVisualizationResponse> RenderVisualization(RenderVisualizationRequest request, ServerCallContext context)
+    {
+        var model = new NomnomlModel(request.ServerUrl, request.InputCode);
+
+        string result = await _renderer.Render("/Visualization/Nomnoml.cshtml", model);
+
+        return new RenderVisualizationResponse
+        {
+            Html = result
+        };
     }
 }

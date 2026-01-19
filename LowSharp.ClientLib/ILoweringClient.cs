@@ -9,4 +9,5 @@ public interface ILoweringClient
                                                              Optimization optimization,
                                                              OutputCodeType outputCodeType,
                                                              CancellationToken cancellation = default);
+    Task<Either<string, Exception>> RenderVisualizationAsync(string code, VisualType visualType, CancellationToken cancellation = default);
 }

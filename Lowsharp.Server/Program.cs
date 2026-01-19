@@ -1,7 +1,12 @@
+using System;
+
+using Lowsharp.Server;
 using Lowsharp.Server.CodeExamples;
 using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
-using Lowsharp.Server;
+using Lowsharp.Server.Visualization;
+
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +14,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddMemoryCache();
+builder.Services.AddControllersWithViews();
+
 builder.Services.AddSingleton<ExampleProvider>();
 builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
 builder.Services.AddSingleton<LoweringEngine>();
 builder.Services.AddSingleton<RequestCache>();
+builder.Services.AddScoped<RazorViewRenderer>();
+
+var gRpcConfig = builder.Configuration.GetSection("Kestrel:Endpoints:Grpc");
+Uri gRpcUrl = gRpcConfig.GetValue<Uri>("Url") ?? throw new Exception("Invalid configuration");
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(gRpcUrl.Port + 1, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1;
+    });
+});
 
 var app = builder.Build();
 
@@ -23,10 +42,9 @@ app.MapGrpcService<Lowsharp.Server.Services.ApiV1.ExamplesService>();
 
 // Configure the HTTP request pipeline.
 var contentTypeProvider = new FileExtensionContentTypeProvider();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+app.MapGet("/", () => "LowSharp Server");
 app.MapEmbeddedFile("script/graphere.js", "Lowsharp.Server.Visualization.script.graphere.js", contentTypeProvider);
 app.MapEmbeddedFile("script/nomnoml.js", "Lowsharp.Server.Visualization.script.nomnoml.js", contentTypeProvider);
-
 
 if (!HasReferencePacks())
 {
