@@ -96,8 +96,13 @@ internal sealed class Dialogs : IDialogs
 
     public void OpenWebView(string title, string htmlContent)
     {
-        var window = new WebViewWindow();
-        window.Title = title;
+        var window = new WebViewWindow
+        {
+            Owner = _mainWindow,
+            Title = title,
+            Width = 0.8 * _mainWindow.ActualWidth,
+            Height = 0.8 * _mainWindow.ActualHeight
+        };
         window.ShowFromHtml(htmlContent);
     }
 }

@@ -22,29 +22,12 @@ builder.Services.AddSingleton<LoweringEngine>();
 builder.Services.AddSingleton<RequestCache>();
 builder.Services.AddScoped<RazorViewRenderer>();
 
-var gRpcConfig = builder.Configuration.GetSection("Kestrel:Endpoints:Grpc");
-Uri gRpcUrl = gRpcConfig.GetValue<Uri>("Url") ?? throw new Exception("Invalid configuration");
-
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(gRpcUrl.Port + 1, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1;
-    });
-});
-
 var app = builder.Build();
 
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.LowererService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.HealthCheckService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.RegexService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.ExamplesService>();
-
-// Configure the HTTP request pipeline.
-var contentTypeProvider = new FileExtensionContentTypeProvider();
-app.MapGet("/", () => "LowSharp Server");
-app.MapEmbeddedFile("static/graphere.js", "Lowsharp.Server.Visualization.static.graphere.js", contentTypeProvider);
-app.MapEmbeddedFile("static/nomnoml.js", "Lowsharp.Server.Visualization.static.nomnoml.js", contentTypeProvider);
 
 if (!HasReferencePacks())
 {
@@ -54,7 +37,6 @@ if (!HasReferencePacks())
 }
 
 app.Run();
-
 
 static bool HasReferencePacks()
 {

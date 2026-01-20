@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script type="text/javascript" src="@GraphereUrl"></script>
-    <script type="text/javascript" src="@NomnomlUrl"></script>
+    <script type="text/javascript">@((MarkupString)GraphereScript)</script>
+    <script type="text/javascript">@((MarkupString)NomnomlScript)</script>
 </head>
 <body>
     <canvas id="target-canvas"></canvas>
+    <textarea id="code" style="visibility: collapse">@((MarkupString)Code)</textarea>
     <script type="text/javascript">
-        let canvas = document.getElementById('target-canvas')
-        let source = '@Code'
+        let canvas = document.getElementById('target-canvas');
+        let source = document.getElementById('code').value;
         nomnoml.draw(canvas, source);
     </script>
 </body>
@@ -19,11 +20,11 @@
 
 @code {
     [Parameter]
-    public string? GraphereUrl { get; set; }
+    public string GraphereScript { get; set; } = "";
 
     [Parameter]
-    public string? NomnomlUrl { get; set; }
+    public string NomnomlScript { get; set; } = "";
 
     [Parameter]
-    public string? Code { get; set; }
+    public string Code { get; set; } = "";
 }

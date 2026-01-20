@@ -1,4 +1,7 @@
-﻿using Grpc.Core;
+﻿
+using System.Text.Encodings.Web;
+
+using Grpc.Core;
 
 using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
@@ -6,7 +9,7 @@ using Lowsharp.Server.Visualization;
 
 using LowSharp.ApiV1.Lowering;
 
-using Microsoft.CodeAnalysis.Scripting;
+using static Microsoft.FSharp.Core.ByRefKinds;
 
 namespace Lowsharp.Server.Services.ApiV1;
 
@@ -44,9 +47,9 @@ internal class LowererService : Lowerer.LowererBase
     {
         var result = await _renderer.Render<Nomnoml>(new Dictionary<string, object?>()
         {
-            { "GraphereUrl", $"{request.ServerUrl}static/graphere.js" },
-            { "NomnomlUrl", $"{request.ServerUrl}static/nomnoml.js" },
-            { "Code", request.InputCode }
+            { "Code", request.InputCode },
+            { "GraphereScript", Embedded.GetAsString("graphere.js") },
+            { "NomnomlScript", Embedded.GetAsString("nomnoml.js") }
         });
 
         return new RenderVisualizationResponse

@@ -25,7 +25,6 @@ internal sealed class LoweringClient : ILoweringClient
             var result = await _client.RenderVisualizationAsync(new RenderVisualizationRequest
             {
                 InputCode = code,
-                ServerUrl = _root.HttpUrl,
                 VisualType = visualType,
             });
             return result.Html;

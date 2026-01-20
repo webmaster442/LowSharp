@@ -70,7 +70,6 @@ enum VisualType {
 message RenderVisualizationRequest {
   string inputCode = 1;
   VisualType visualType = 2;
-  string serverUrl = 3;
 }
 
 message RenderVisualizationResponse {

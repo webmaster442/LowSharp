@@ -13,7 +13,6 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         Lowering = null!;
         Regex = null!;
         Examples = null!;
-        HttpUrl = "http://localhost";
     }
 
     public IHealtCheckClient HealtCheck
@@ -59,11 +58,6 @@ public sealed class Client : IDisposable, IClientRoot, IClient
             IsBusyChanged?.Invoke(this, EventArgs.Empty);
         }
     }
-
-    public string HttpUrl
-    {
-        get; private set;
-    }
  
     public event EventHandler? IsBusyChanged;
 
@@ -71,10 +65,6 @@ public sealed class Client : IDisposable, IClientRoot, IClient
 
     public async Task<Either<bool, Exception>> Connect(Uri server)
     {
-        UriBuilder builder = new(server);
-        builder.Port = server.Port + 1;
-        HttpUrl = builder.Uri.ToString();
-
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (IsConnected)
             throw new InvalidOperationException("Client is already connected.");
