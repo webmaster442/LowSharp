@@ -37,4 +37,20 @@ public sealed class Either<TSuccess, TFailure>
         failure = _failure!;
         return !IsSuccess;
     }
+
+    public void Map(Action<TSuccess> success, Action<TFailure> failure)
+    {
+        if (IsSuccess)
+            success(_success!);
+        else
+            failure(_failure!);
+    }
+
+    public async Task MapAsync(Func<TSuccess, Task> success, Func<TFailure, Task> failure)
+    {
+        if (IsSuccess)
+            await success(_success!);
+        else
+            await failure(_failure!);
+    }
 }

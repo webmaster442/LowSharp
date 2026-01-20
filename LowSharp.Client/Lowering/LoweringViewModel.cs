@@ -182,23 +182,35 @@ internal sealed partial class LoweringViewModel :
             Optimizations[SelectedOptimizationIndex],
             OutputTypes[SelectedOutputTypeIndex]);
 
-        if (response.TryGetFailure(out Exception? failure))
+        await response.MapAsync(success =>
+        {
+            if (success.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
+            {
+                OutputCode = GetDiagnostics(success.Diagnostics);
+                return Task.CompletedTask;
+            }
+            OutputCode = success.ResultCode;
+            return Task.CompletedTask;
+        },
+        async failure =>
         {
             await _dialogs.ClientError(failure);
-            return;
-        }
+        });
+    }
 
-        if (response.TryGetSuccess(out LoweringResponse? result))
+    [RelayCommand]
+    public async Task Preview()
+    {
+        Either<string, Exception> response = await _client.Lowering.RenderVisualizationAsync(OutputCode, VisualType.Nomnoml);
+
+        await response.MapAsync(async succes =>
         {
-            if (result.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
-            {
-                OutputCode = GetDiagnostics(result.Diagnostics);
-                return;
-            }
-
-            OutputCode = result.ResultCode;
-            return;
-        }
+            await _dialogs.OpenWebView("Nomnoml Previrew", succes);
+        },
+        async failure =>
+        {
+            await _dialogs.ClientError(failure);
+        });
     }
 
     private static string GetDiagnostics(RepeatedField<Diagnostic> diagnostics)

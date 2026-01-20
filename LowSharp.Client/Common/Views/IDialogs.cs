@@ -13,4 +13,5 @@ internal interface IDialogs
     Task ClientError(Exception failure);
     void OpenUrl(string url);
     Task ChangeLog();
+    Task OpenWebView(string title, string htmlContent);
 }

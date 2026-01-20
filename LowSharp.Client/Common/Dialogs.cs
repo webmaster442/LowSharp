@@ -9,6 +9,7 @@ using LowSharp.Client.Common.Views;
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.SimpleChildWindow;
 
 using Microsoft.Win32;
 
@@ -92,5 +93,13 @@ internal sealed class Dialogs : IDialogs
         using var stream = typeof(Dialogs).Assembly.GetManifestResourceStream("LowSharp.Client.changelog.md");
         var content = new StreamReader(stream!).ReadToEnd();
         await Info("Change Log", content);
+    }
+
+    public async Task OpenWebView(string title, string htmlContent)
+    {
+        var webViewWindow = new WebViewWindow();
+        webViewWindow.Title = title;
+        webViewWindow.WebView.NavigateToString(htmlContent);
+        await _mainWindow.ShowChildWindowAsync(webViewWindow);
     }
 }

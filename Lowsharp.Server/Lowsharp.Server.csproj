@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Visualization\script\graphere.js" />
-    <None Remove="Visualization\script\nomnoml.js" />
+    <None Remove="Visualization\static\graphere.js" />
+    <None Remove="Visualization\static\nomnoml.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,8 +21,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="CodeExamples\Examples.xml" />
-    <EmbeddedResource Include="Visualization\script\graphere.js" />
-    <EmbeddedResource Include="Visualization\script\nomnoml.js" />
+    <EmbeddedResource Include="Visualization\static\graphere.js" />
+    <EmbeddedResource Include="Visualization\static\nomnoml.js" />
   </ItemGroup>
 
   <ItemGroup>
