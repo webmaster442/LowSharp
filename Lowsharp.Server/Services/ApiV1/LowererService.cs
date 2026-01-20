@@ -6,6 +6,8 @@ using Lowsharp.Server.Visualization;
 
 using LowSharp.ApiV1.Lowering;
 
+using Microsoft.CodeAnalysis.Scripting;
+
 namespace Lowsharp.Server.Services.ApiV1;
 
 internal class LowererService : Lowerer.LowererBase
@@ -40,9 +42,12 @@ internal class LowererService : Lowerer.LowererBase
 
     public override async Task<RenderVisualizationResponse> RenderVisualization(RenderVisualizationRequest request, ServerCallContext context)
     {
-        var model = new NomnomlModel(request.ServerUrl, request.InputCode);
-
-        string result = await _renderer.Render("/Visualization/Nomnoml.cshtml", model);
+        var result = await _renderer.Render<Nomnoml>(new Dictionary<string, object?>()
+        {
+            { "GraphereUrl", $"{request.ServerUrl}static/graphere.js" },
+            { "NomnomlUrl", $"{request.ServerUrl}static/nomnoml.js" },
+            { "Code", request.InputCode }
+        });
 
         return new RenderVisualizationResponse
         {

@@ -1,21 +1,29 @@
-﻿@using Lowsharp.Server.Visualization;
-@model NomnomlModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script type="text/javascript" src="@Model.GraphereUrl"></script>
-    <script type="text/javascript" src="@Model.NomnomlUrl"></script>
+    <script type="text/javascript" src="@GraphereUrl"></script>
+    <script type="text/javascript" src="@NomnomlUrl"></script>
 </head>
 <body>
     <canvas id="target-canvas"></canvas>
     <script type="text/javascript">
         let canvas = document.getElementById('target-canvas')
-        let source = '@Model.Code'
+        let source = '@Code'
         nomnoml.draw(canvas, source);
     </script>
 </body>
 </html>
+
+@code {
+    [Parameter]
+    public string? GraphereUrl { get; set; }
+
+    [Parameter]
+    public string? NomnomlUrl { get; set; }
+
+    [Parameter]
+    public string? Code { get; set; }
+}

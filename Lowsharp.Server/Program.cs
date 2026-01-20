@@ -43,8 +43,8 @@ app.MapGrpcService<Lowsharp.Server.Services.ApiV1.ExamplesService>();
 // Configure the HTTP request pipeline.
 var contentTypeProvider = new FileExtensionContentTypeProvider();
 app.MapGet("/", () => "LowSharp Server");
-app.MapEmbeddedFile("script/graphere.js", "Lowsharp.Server.Visualization.static.graphere.js", contentTypeProvider);
-app.MapEmbeddedFile("script/nomnoml.js", "Lowsharp.Server.Visualization.static.nomnoml.js", contentTypeProvider);
+app.MapEmbeddedFile("static/graphere.js", "Lowsharp.Server.Visualization.static.graphere.js", contentTypeProvider);
+app.MapEmbeddedFile("static/nomnoml.js", "Lowsharp.Server.Visualization.static.nomnoml.js", contentTypeProvider);
 
 if (!HasReferencePacks())
 {

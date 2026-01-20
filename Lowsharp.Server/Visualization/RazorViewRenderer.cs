@@ -1,62 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Web.HtmlRendering;
 
 namespace Lowsharp.Server.Visualization;
 
-internal sealed class RazorViewRenderer
+internal sealed class RazorViewRenderer : IDisposable
 {
-    private readonly IRazorViewEngine _viewEngine;
-    private readonly ITempDataProvider _tempDataProvider;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly HtmlRenderer _htmlRenderer;
+    private bool _disposed;
 
-    public RazorViewRenderer(IRazorViewEngine viewEngine,
-                    ITempDataProvider tempDataProvider,
-                    IServiceProvider serviceProvider)
+    public RazorViewRenderer(IServiceProvider services, ILoggerFactory loggerFactory)
     {
-        _viewEngine = viewEngine;
-        _tempDataProvider = tempDataProvider;
-        _serviceProvider = serviceProvider;
+        _htmlRenderer = new HtmlRenderer(services, loggerFactory);
     }
 
-    public async Task<string> Render<TModel>(string viewName, TModel model)
+    public void Dispose()
     {
-        var httpContext = new DefaultHttpContext
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        _htmlRenderer.Dispose();
+        _disposed = true;
+    }
+
+    public async Task<string> Render<TComponent>(IDictionary<string, object?>? parameters = null)
+        where TComponent : IComponent
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        string html = await _htmlRenderer.Dispatcher.InvokeAsync(async () =>
         {
-            RequestServices = _serviceProvider
-        };
+            ParameterView mappedParams = parameters == null
+                ? ParameterView.Empty
+                : ParameterView.FromDictionary(parameters);
 
-        var actionContext = new ActionContext(httpContext,
-                                              new RouteData(),
-                                              new ActionDescriptor());
+            HtmlRootComponent output = await _htmlRenderer.RenderComponentAsync<TComponent>(mappedParams);
 
-        using var sw = new StringWriter();
+            return output.ToHtmlString();
+        });
 
-        ViewEngineResult viewResult = _viewEngine.FindView(actionContext, viewName, isMainPage: false);
-        if (!viewResult.Success)
-        {
-            throw new InvalidOperationException($"View '{viewName}' not found.");
-        }
-
-        var viewDictionary = new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(),
-                                                            new ModelStateDictionary())
-        {
-            Model = model
-        };
-
-        var viewContext = new ViewContext(actionContext,
-                                          viewResult.View,
-                                          viewDictionary,
-                                          new TempDataDictionary(httpContext, _tempDataProvider),
-                                          sw,
-                                          new HtmlHelperOptions());
-
-        await viewResult.View.RenderAsync(viewContext);
-
-        return sw.ToString();
+        return html;
     }
 }

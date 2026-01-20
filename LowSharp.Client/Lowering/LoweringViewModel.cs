@@ -205,7 +205,7 @@ internal sealed partial class LoweringViewModel :
 
         await response.MapAsync(async succes =>
         {
-            await _dialogs.OpenWebView("Nomnoml Previrew", succes);
+            _dialogs.OpenWebView("Nomnoml Previrew", succes);
         },
         async failure =>
         {

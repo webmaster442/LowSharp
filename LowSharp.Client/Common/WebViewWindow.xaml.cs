@@ -1,34 +1,43 @@
-﻿
-
-using MahApps.Metro.SimpleChildWindow;
+﻿using System.Diagnostics;
+using System.Windows;
 
 using Microsoft.Web.WebView2.Core;
 
 namespace LowSharp.Client.Common;
 /// <summary>
-/// Interaction logic for DiagramPreviewWindow.xaml
+/// Interaction logic for WebViewWindow.xaml
 /// </summary>
-public partial class WebViewWindow : ChildWindow
+public partial class WebViewWindow : Window
 {
+    private string _html;
+
     public WebViewWindow()
     {
+        _html = string.Empty;
         InitializeComponent();
-        InitializeAsync();
-        WebView.NavigationStarting += OnNavigationStart;
     }
 
-    private void OnNavigationStart(object? sender, CoreWebView2NavigationStartingEventArgs e)
+    public bool? ShowFromHtml(string html)
     {
-        WebView.CoreWebView2.ExecuteScriptAsync($"alert('Navigation is disabled')");
-        // Prevent navigation to other pages
-        e.Cancel = true;
+        _html = html;
+        return ShowDialog();
     }
 
-    private async void InitializeAsync()
-        => await WebView.EnsureCoreWebView2Async(null);
-
-    private void BtnClose_Click(object sender, System.Windows.RoutedEventArgs e)
+    protected override async void OnContentRendered(EventArgs e)
     {
-        Close();
+        base.OnContentRendered(e);
+        try
+        {
+            var webView2Environment = await CoreWebView2Environment.CreateAsync();
+            await webView.EnsureCoreWebView2Async(webView2Environment);
+
+            if (!string.IsNullOrEmpty(_html))
+                webView.NavigateToString(_html);
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception);
+        }
     }
+
 }
