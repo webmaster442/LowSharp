@@ -41,6 +41,9 @@ internal sealed partial class LoweringViewModel :
     [ObservableProperty]
     public partial int SelectedOutputTypeIndex { get; set; }
 
+    partial void OnSelectedOutputTypeIndexChanged(int value)
+        => IsValidLowering = false;
+
     public ObservableCollection<Optimization> Optimizations { get; }
 
     [ObservableProperty]
@@ -49,8 +52,15 @@ internal sealed partial class LoweringViewModel :
     [ObservableProperty]
     public partial string InputCode { get; set; }
 
+    partial void OnInputCodeChanged(string value)
+        => IsValidLowering = false;
+
+
     [ObservableProperty]
     public partial string OutputCode { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsValidLowering { get; set; }
 
     public LoweringViewModel(IClient client, IDialogs dialogs)
     {
@@ -187,13 +197,16 @@ internal sealed partial class LoweringViewModel :
             if (success.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
             {
                 OutputCode = GetDiagnostics(success.Diagnostics);
+                IsValidLowering = false;
                 return Task.CompletedTask;
             }
             OutputCode = success.ResultCode;
+            IsValidLowering = true;
             return Task.CompletedTask;
         },
         async failure =>
         {
+            IsValidLowering = false;
             await _dialogs.ClientError(failure);
         });
     }

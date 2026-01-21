@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Windows;
+
+using MahApps.Metro.Controls;
 
 using Microsoft.Web.WebView2.Core;
 
@@ -7,7 +8,7 @@ namespace LowSharp.Client.Common;
 /// <summary>
 /// Interaction logic for WebViewWindow.xaml
 /// </summary>
-public partial class WebViewWindow : Window
+public partial class WebViewWindow : MetroWindow
 {
     private string _html;
 

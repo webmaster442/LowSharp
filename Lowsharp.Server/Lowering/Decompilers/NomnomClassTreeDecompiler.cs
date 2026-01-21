@@ -11,19 +11,25 @@ internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
     {
         private static string Escape(string str)
         {
-            if (str.Contains('['))
+            var builder = new StringBuilder(str.Length + 10);
+            foreach (char c in str)
             {
-                str = str.Replace("[", "\\[");
+                switch (c)
+                {
+                    case '<':
+                    case '>':
+                    case '[':
+                    case ']':
+                    case ';':
+                        builder.Append('\\');
+                        builder.Append(c);
+                        break;
+                    default:
+                        builder.Append(c);
+                        break;
+                }
             }
-            if (str.Contains(']'))
-            {
-                str = str.Replace("]", "\\]");
-            }
-            if (str.Contains(';'))
-            {
-                str = str.Replace(";", "\\;");
-            }
-            return str;
+            return builder.ToString();
         }
 
         private static string Symbol(Relation relation)

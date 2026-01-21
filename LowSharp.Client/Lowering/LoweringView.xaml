@@ -127,7 +127,16 @@
                 Command="{Binding PreviewCommand}"
                 Content="Preview"
                 Style="{StaticResource MahApps.Styles.Button.VisualStudio}"
-                Visibility="{Binding SelectedOutputTypeIndex, Converter={converters:PreviewButtonVisibilityConverter}}" />
+                Visibility="{Binding SelectedOutputTypeIndex, Converter={converters:PreviewButtonVisibilityConverter}}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{common:AndConverter}">
+                        <Binding
+                            Converter="{common:NegateConverter}"
+                            Path="IsBusy" />
+                        <Binding Path="IsValidLowering" />
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>
             <Button
                 Grid.Column="10"
                 Height="30"
@@ -135,6 +144,7 @@
                 Margin="10,5,5,5"
                 Command="{Binding LowerCommand}"
                 Content="Lower (F5)"
+                IsEnabled="{Binding IsBusy, Converter={common:NegateConverter}}"
                 Style="{StaticResource MahApps.Styles.Button.VisualStudio}" />
         </Grid>
         <avalonEdit:TextEditor
