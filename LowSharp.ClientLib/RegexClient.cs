@@ -1,4 +1,6 @@
-﻿using Grpc.Net.Client;
+﻿using System.Net.WebSockets;
+
+using Grpc.Net.Client;
 
 using LowSharp.ApiV1.Regex;
 
@@ -85,6 +87,33 @@ internal sealed class RegexClient : IRegexClient
                 Options = options,
             }, cancellationToken: cancellation).ConfigureAwait(false);
             return result;
+        }
+        catch (Exception ex)
+        {
+            return ex;
+        }
+        finally
+        {
+            _root.IsBusy = false;
+        }
+    }
+
+    public async Task<Either<string, Exception>> GenerateCodeAsync(string input,
+                                                                   string pattern,
+                                                                   RegexOptions options,
+                                                                   CancellationToken cancellation = default)
+    {
+        try
+        {
+            _root.IsBusy = true;
+            var result = await _client.GenerateCodeAsync(new RegexRequest
+            {
+                Input = input,
+                Pattern = pattern,
+                Options = options,
+            }, cancellationToken: cancellation).ConfigureAwait(false);
+
+            return result.ResultCode;
         }
         catch (Exception ex)
         {

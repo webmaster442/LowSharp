@@ -8,6 +8,7 @@ service RegexTester {
   rpc Match (RegexRequest) returns (RegexMatchResponse);
   rpc Replace (RegexReplaceRequest) returns (RegexReplaceResponse);
   rpc Split (RegexRequest) returns (RegexSplitResponse);
+  rpc GenerateCode(RegexRequest) returns (RegexCodeResponse);
 }
 
 message RegexOptions {
@@ -34,6 +35,10 @@ message RegexRequest {
   string pattern = 1;
   string input = 2;
   RegexOptions options = 3;
+}
+
+message RegexCodeResponse {
+    string resultCode = 1;
 }
 
 message RegexReplaceRequest {

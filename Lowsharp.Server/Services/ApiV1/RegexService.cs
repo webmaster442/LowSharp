@@ -1,4 +1,6 @@
-﻿using Grpc.Core;
+﻿using System.Text;
+
+using Grpc.Core;
 
 using LowSharp.ApiV1.Regex;
 
@@ -61,6 +63,68 @@ internal sealed class RegexService : RegexTester.RegexTesterBase
         {
             ExtecutionTimeMs = stopwatch.ElapsedMilliseconds,
             Result = replaced
+        };
+
+        return Task.FromResult(response);
+    }
+
+    public override Task<RegexCodeResponse> GenerateCode(RegexRequest request, ServerCallContext context)
+    {
+        List<string> optionList = new();
+        if (request.Options.IgnoreCase)
+            optionList.Add("RegexOptions.IgnoreCase");
+        if (request.Options.Multiline)
+            optionList.Add("RegexOptions.Multiline");
+        if (request.Options.ExplicitCapture)
+            optionList.Add("RegexOptions.ExplicitCapture");
+        if (request.Options.Compiled)
+            optionList.Add("RegexOptions.Compiled");
+        if (request.Options.Singleline)
+            optionList.Add("RegexOptions.Singleline");
+        if (request.Options.IgnorePatternWhitespace)
+            optionList.Add("RegexOptions.IgnorePatternWhitespace");
+        if (request.Options.RightToLeft)
+            optionList.Add("RegexOptions.RightToLeft");
+        if (request.Options.EcmaScript)
+            optionList.Add("RegexOptions.ECMAScript");
+        if (request.Options.CultureInvariant)
+            optionList.Add("RegexOptions.CultureInvariant");
+        if (request.Options.NonBackTracking)
+            optionList.Add("RegexOptions.NonBacktracking");
+
+        var output = new StringBuilder();
+        output
+            .Append("var myRegex = new Regex(")
+            .Append($"@\"{request.Pattern}\", ");
+        if (optionList.Count > 0)
+            output.Append(string.Join(" | ", optionList));
+        else
+            output.Append("RegexOptions.None");
+        
+        output.Append($", TimeSpan.FromMilliseconds({request.Options.TimeoutMilliseconds}));");
+
+        output.AppendLine("//as generated regex use this:");
+        output
+            .AppendLine("internal partial class CompilerGenerated")
+            .AppendLine("{")
+            .Append("    [")
+            .Append("GeneratedRegex(")
+            .Append($"@\"{request.Pattern}\", ");
+
+        if (optionList.Count > 0)
+            output.Append(string.Join(" | ", optionList));
+        else
+            output.Append("RegexOptions.None");
+
+        output.AppendLine($", {request.Options.TimeoutMilliseconds})]");
+
+        output
+            .AppendLine("    internal partial Regex MyRegex { get; }")
+            .AppendLine("}");
+
+        var response = new RegexCodeResponse
+        {
+            ResultCode = output.ToString()
         };
 
         return Task.FromResult(response);

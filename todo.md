@@ -20,6 +20,6 @@
 - [ ] Integrate auto updater
 - [ ] Regex code generator
 - [ ] JSONSchema code generator
-- [ ] Nomnoml visualizer
+- [x] Nomnoml visualizer
 - [ ] Mermaid renderer
 - [ ] Mermaid visualizer

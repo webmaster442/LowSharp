@@ -5,6 +5,10 @@ namespace LowSharp.ClientLib;
 
 public interface IRegexClient
 {
+    Task<Either<string, Exception>> GenerateCodeAsync(string input,
+                                                      string pattern,
+                                                      RegexOptions options,
+                                                      CancellationToken cancellation = default);
     Task<Either<RegexMatchResponse, Exception>> MatchAsync(string input,
                                                            string pattern,
                                                            RegexOptions options,
