@@ -24,7 +24,6 @@ internal sealed class HttpHandler
         _application.MapGet("/static/graphere.js", async (HttpContext ctx) => await ServeEmbedded("graphere.js", ctx));
         _application.MapGet("/static/nomnoml.js", async (HttpContext ctx) => await ServeEmbedded("nomnoml.js", ctx));
         _application.MapGet("/static/mermaid.min.js", async (HttpContext ctx) => await ServeEmbedded("mermaid.min.js", ctx));
-
         _application.MapGet("/dynamic/{id}", (Guid id) => ServeDynamicByID(id));
     }
 

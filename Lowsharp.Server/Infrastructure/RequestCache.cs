@@ -6,6 +6,9 @@ internal sealed class RequestCache
 {
     private readonly ILogger<RequestCache> _logger;
     private readonly IMemoryCache _cache;
+
+    public Guid InstanceId { get; }
+
     private readonly TimeSpan _cacheValidity = TimeSpan.FromMinutes(10);
     private readonly TimeSpan _dynamicValidity = TimeSpan.FromMinutes(2);
 
@@ -13,13 +16,15 @@ internal sealed class RequestCache
     {
         _logger = loggerFactory.CreateLogger<RequestCache>();
         _cache = cache;
+        InstanceId = Guid.NewGuid();
     }
 
     public void StoreDynamicHtml(Guid id, string content)
     {
-        _cache.CreateEntry($"dynamic_{id}")
-            .SetSlidingExpiration(_dynamicValidity)
-            .SetValue(content);
+        _cache.Set($"dynamic_{id}", content, new MemoryCacheEntryOptions
+        {
+            SlidingExpiration = _dynamicValidity
+        });
     }
 
     public string? GetDynamicHtml(Guid id)
@@ -48,9 +53,10 @@ internal sealed class RequestCache
         _logger.LogInformation("Cache miss for key {Key}", request);
         TResult result = await factory(request);
 
-        _cache.CreateEntry(request)
-            .SetSlidingExpiration(_cacheValidity)
-            .SetValue(result);
+        _cache.Set(request, result, new MemoryCacheEntryOptions
+        {
+            SlidingExpiration = _cacheValidity
+        });
 
         return result;
     }

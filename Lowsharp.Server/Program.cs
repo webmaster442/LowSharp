@@ -15,7 +15,7 @@ builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
 builder.Services.AddSingleton<LoweringEngine>();
 builder.Services.AddSingleton<RequestCache>();
 builder.Services.AddSingleton<EmbeddedFiles>();
-builder.Services.AddSingleton<RazorViewRenderer>();
+builder.Services.AddScoped<RazorViewRenderer>();
 
 var app = builder.Build();
 
@@ -24,14 +24,15 @@ app.MapGrpcService<Lowsharp.Server.Services.ApiV1.HealthCheckService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.RegexService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.ExamplesService>();
 
+HttpHandler handler = new HttpHandler(app);
+
 if (!HasReferencePacks())
 {
-    Console.WriteLine("WARNING: .NET reference packs not found. Lowering will work correctly.");
+    Console.WriteLine("WARNING: .NET reference packs not found. Lowering will not work correctly.");
     Console.WriteLine("Please install .NET SDK instead of Runtime");
     return;
 }
 
-HttpHandler handler = new HttpHandler(app);
 app.Run();
 
 static bool HasReferencePacks()
