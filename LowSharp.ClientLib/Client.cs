@@ -6,6 +6,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
 {
     private GrpcChannel? _channel;
     private bool _disposed;
+    private Uri? _http;
 
     public Client()
     {
@@ -63,14 +64,27 @@ public sealed class Client : IDisposable, IClientRoot, IClient
 
     public event EventHandler? IsConnectedChanged;
 
-    public async Task<Either<bool, Exception>> Connect(Uri server)
+    public Uri GetHttpUrl(string path)
     {
+        ThrowIfCantContinue();
+        UriBuilder builder = new UriBuilder(_http!)
+        {
+            Path = path
+        };
+        return builder.Uri;
+    }
+
+    public async Task<Either<bool, Exception>> Connect(string serverUriWithoutPort, int gcpPort, int httpPort)
+    {
+        Uri gRpc = GetUri(serverUriWithoutPort, gcpPort);
+        _http = GetUri(serverUriWithoutPort, httpPort);
+
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (IsConnected)
             throw new InvalidOperationException("Client is already connected.");
         try
         {
-            _channel = GrpcChannel.ForAddress(server, new GrpcChannelOptions
+            _channel = GrpcChannel.ForAddress(gRpc, new GrpcChannelOptions
             {
                 UnsafeUseInsecureChannelCallCredentials = true,
             });
@@ -94,10 +108,19 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         }
     }
 
+    private static Uri GetUri(string serverUriWithoutPort, int port)
+    {
+        UriBuilder builder = new UriBuilder(serverUriWithoutPort)
+        {
+            Port = port
+        };
+        return builder.Uri;
+    }
+
     public void ThrowIfCantContinue()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        if (!IsConnected)
+        if (!IsConnected || _http == null)
             throw new InvalidOperationException("Client is not connected.");
     }
 

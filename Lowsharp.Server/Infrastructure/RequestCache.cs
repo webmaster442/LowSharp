@@ -7,11 +7,31 @@ internal sealed class RequestCache
     private readonly ILogger<RequestCache> _logger;
     private readonly IMemoryCache _cache;
     private readonly TimeSpan _cacheValidity = TimeSpan.FromMinutes(10);
+    private readonly TimeSpan _dynamicValidity = TimeSpan.FromMinutes(2);
 
     public RequestCache(IMemoryCache cache, ILoggerFactory loggerFactory)
     {
         _logger = loggerFactory.CreateLogger<RequestCache>();
         _cache = cache;
+    }
+
+    public void StoreDynamicHtml(Guid id, string content)
+    {
+        _cache.CreateEntry($"dynamic_{id}")
+            .SetSlidingExpiration(_dynamicValidity)
+            .SetValue(content);
+    }
+
+    public string? GetDynamicHtml(Guid id)
+    {
+        if (_cache.TryGetValue<string>($"dynamic_{id}", out string? cachedContent)
+            && cachedContent != null)
+        {
+            _logger.LogInformation("Dynamic HTML cache hit for id {Id}", id);
+            return cachedContent;
+        }
+        _logger.LogInformation("Dynamic HTML cache miss for id {Id}", id);
+        return null;
     }
 
     public async ValueTask<TResult> GetOrCreateAsync<TResult, TRequest>(TRequest request, Func<TRequest, Task<TResult>> factory)

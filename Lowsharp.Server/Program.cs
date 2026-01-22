@@ -1,13 +1,7 @@
-using System;
-
-using Lowsharp.Server;
 using Lowsharp.Server.CodeExamples;
+using Lowsharp.Server.Http;
 using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
-using Lowsharp.Server.Visualization;
-
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +14,8 @@ builder.Services.AddSingleton<ExampleProvider>();
 builder.Services.AddSingleton<TimeProvider>((services) => TimeProvider.System);
 builder.Services.AddSingleton<LoweringEngine>();
 builder.Services.AddSingleton<RequestCache>();
-builder.Services.AddScoped<RazorViewRenderer>();
+builder.Services.AddSingleton<EmbeddedFiles>();
+builder.Services.AddSingleton<RazorViewRenderer>();
 
 var app = builder.Build();
 
@@ -36,6 +31,7 @@ if (!HasReferencePacks())
     return;
 }
 
+HttpHandler handler = new HttpHandler(app);
 app.Run();
 
 static bool HasReferencePacks()

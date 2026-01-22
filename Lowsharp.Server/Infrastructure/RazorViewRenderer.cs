@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.HtmlRendering;
 
-namespace Lowsharp.Server.Visualization;
+namespace Lowsharp.Server.Infrastructure;
 
 internal sealed class RazorViewRenderer : IDisposable
 {

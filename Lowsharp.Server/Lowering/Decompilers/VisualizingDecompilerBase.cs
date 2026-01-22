@@ -38,14 +38,6 @@ internal abstract class VisualizingDecompilerBase : IDecompiler
 
     internal sealed record class Relation(Item Base, Item Derived, bool AreInSameNamespace);
 
-
-    private class CustomLoadContext : AssemblyLoadContext
-    {
-        public CustomLoadContext() : base(isCollectible: true)
-        {
-        }
-    }
-
     protected abstract RendererBase CreateRenderer();
 
     public bool TryDecompile(RecyclableMemoryStream assemblyStream,
@@ -54,26 +46,27 @@ internal abstract class VisualizingDecompilerBase : IDecompiler
     {
         try
         {
-            CustomLoadContext customLoadContext = new CustomLoadContext();
-
-            Assembly assembly = customLoadContext.LoadFromStream(assemblyStream);
-
-            var renderer = CreateRenderer();
-
-            var types = assembly.GetTypes();
-            foreach (var type in types)
+            using (var customLoadContext = new DisposableAssemblyLoadContext())
             {
-                renderer.AddType(type);
+                Assembly assembly = customLoadContext.LoadFromStream(assemblyStream);
 
-                Type[] implementations = type.GetInterfaces();
-                Type? baseClass = type.BaseType;
-                WalkBaseClass(type, baseClass, renderer);
-                foreach (var implementation in implementations)
+                var renderer = CreateRenderer();
+
+                var types = assembly.GetTypes();
+                foreach (var type in types)
                 {
-                    renderer.AddRelation(implementation, type);
+                    renderer.AddType(type);
+
+                    Type[] implementations = type.GetInterfaces();
+                    Type? baseClass = type.BaseType;
+                    WalkBaseClass(type, baseClass, renderer);
+                    foreach (var implementation in implementations)
+                    {
+                        renderer.AddRelation(implementation, type);
+                    }
                 }
+                result = renderer.Render();
             }
-            result = renderer.Render();
             return true;
         }
         catch (Exception ex)

@@ -2,7 +2,7 @@
 
 namespace LowSharp.ClientLib;
 
-public interface IClient : IDisposable
+public interface IClient : IDisposable, IClientCommon
 {
     IExamplesClient Examples { get; }
     IHealtCheckClient HealtCheck { get; }
@@ -15,5 +15,5 @@ public interface IClient : IDisposable
     event EventHandler? IsConnectedChanged;
 
     void CloseConnection();
-    Task<Either<bool, Exception>> Connect(Uri server);
+    Task<Either<bool, Exception>> Connect(string serverUriWithoutPort, int gcpPort, int httpPort);
 }

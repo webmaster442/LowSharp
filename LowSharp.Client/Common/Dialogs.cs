@@ -94,7 +94,7 @@ internal sealed class Dialogs : IDialogs
         await Info("Change Log", content);
     }
 
-    public void OpenWebView(string title, string htmlContent)
+    public void OpenWebView(string title, Uri url)
     {
         var window = new WebViewWindow
         {
@@ -103,6 +103,7 @@ internal sealed class Dialogs : IDialogs
             Width = 0.8 * _mainWindow.ActualWidth,
             Height = 0.8 * _mainWindow.ActualHeight
         };
-        window.ShowFromHtml(htmlContent);
+        window.ShowAndNavigateTo(url);
+        //window.ShowFromHtml(htmlContent);
     }
 }

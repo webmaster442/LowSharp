@@ -73,5 +73,5 @@ message RenderVisualizationRequest {
 }
 
 message RenderVisualizationResponse {
-  string html = 1;
+  string visualPathOnHttp = 1;
 }

@@ -72,6 +72,7 @@ internal sealed partial class ClientViewModel :
     }
 
     private const int Port = 11483;
+    private const int HttpPort = 11484;
 
     private void CheckStatus(object? sender, EventArgs e)
     {
@@ -176,7 +177,7 @@ internal sealed partial class ClientViewModel :
         if (IsConnected)
             return;
 
-        var result = await Client.Connect(new Uri($"http://localhost:{Port}"));
+        var result = await Client.Connect("http://localhost", Port, HttpPort);
 
         if (result.TryGetFailure(out Exception? ex))
         {

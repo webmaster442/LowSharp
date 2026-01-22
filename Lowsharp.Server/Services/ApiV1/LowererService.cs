@@ -1,15 +1,10 @@
-﻿
-using System.Text.Encodings.Web;
-
-using Grpc.Core;
+﻿using Grpc.Core;
 
 using Lowsharp.Server.Infrastructure;
 using Lowsharp.Server.Lowering;
-using Lowsharp.Server.Visualization;
+using Lowsharp.Server.Razor;
 
 using LowSharp.ApiV1.Lowering;
-
-using static Microsoft.FSharp.Core.ByRefKinds;
 
 namespace Lowsharp.Server.Services.ApiV1;
 
@@ -45,16 +40,17 @@ internal class LowererService : Lowerer.LowererBase
 
     public override async Task<RenderVisualizationResponse> RenderVisualization(RenderVisualizationRequest request, ServerCallContext context)
     {
-        var result = await _renderer.Render<Nomnoml>(new Dictionary<string, object?>()
+        var render = await _renderer.Render<Nomnoml>(new Dictionary<string, object?>()
         {
-            { "Code", request.InputCode },
-            { "GraphereScript", Embedded.GetAsString("graphere.js") },
-            { "NomnomlScript", Embedded.GetAsString("nomnoml.js") }
+            { "Code", request.InputCode  }
         });
+
+        Guid id = Guid.CreateVersion7();
+        _cache.StoreDynamicHtml(id, render);
 
         return new RenderVisualizationResponse
         {
-            Html = result
+            VisualPathOnHttp = $"dynamic/{id}"
         };
     }
 }

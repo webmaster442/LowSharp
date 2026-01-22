@@ -11,6 +11,7 @@ namespace LowSharp.Client.Common;
 public partial class WebViewWindow : MetroWindow
 {
     private string _html;
+    private Uri? _url;
 
     public WebViewWindow()
     {
@@ -18,10 +19,16 @@ public partial class WebViewWindow : MetroWindow
         InitializeComponent();
     }
 
-    public bool? ShowFromHtml(string html)
+    public void ShowFromHtml(string html)
     {
         _html = html;
-        return ShowDialog();
+        Show();
+    }
+
+    public void ShowAndNavigateTo(Uri url)
+    {
+        _url = url;
+        Show();
     }
 
     protected override async void OnContentRendered(EventArgs e)
@@ -32,8 +39,16 @@ public partial class WebViewWindow : MetroWindow
             var webView2Environment = await CoreWebView2Environment.CreateAsync();
             await webView.EnsureCoreWebView2Async(webView2Environment);
 
+            if (_url != null)
+            {
+                webView.Source = _url;
+                return;
+            }
+
             if (!string.IsNullOrEmpty(_html))
+            {
                 webView.NavigateToString(_html);
+            }
         }
         catch (Exception exception)
         {

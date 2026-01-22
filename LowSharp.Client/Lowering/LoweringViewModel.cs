@@ -214,7 +214,7 @@ internal sealed partial class LoweringViewModel :
     [RelayCommand]
     public async Task Preview()
     {
-        Either<string, Exception> response = await _client.Lowering.RenderVisualizationAsync(OutputCode, VisualType.Nomnoml);
+        Either<Uri, Exception> response = await _client.Lowering.RenderVisualizationAsync(OutputCode, VisualType.Nomnoml);
 
         await response.MapAsync(async succes =>
         {

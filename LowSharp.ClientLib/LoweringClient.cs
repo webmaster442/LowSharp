@@ -9,15 +9,18 @@ internal sealed class LoweringClient : ILoweringClient
     private readonly Lowerer.LowererClient _client;
     private readonly IClientRoot _root;
 
-    public LoweringClient(GrpcChannel channel, IClientRoot root)
+    public IClientCommon Common { get; }
+
+    public LoweringClient(GrpcChannel channel, Client root)
     {
         _client = new Lowerer.LowererClient(channel);
         _root = root;
+        Common = root;
     }
 
-    public async Task<Either<string, Exception>> RenderVisualizationAsync(string code,
-                                                                          VisualType visualType,
-                                                                          CancellationToken cancellation = default)
+    public async Task<Either<Uri, Exception>> RenderVisualizationAsync(string code,
+                                                                       VisualType visualType,
+                                                                       CancellationToken cancellation = default)
     {
         try
         {
@@ -27,7 +30,7 @@ internal sealed class LoweringClient : ILoweringClient
                 InputCode = code,
                 VisualType = visualType,
             });
-            return result.Html;
+            return Common.GetHttpUrl(result.VisualPathOnHttp);
         }
         catch (Exception ex)
         {

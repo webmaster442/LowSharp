@@ -29,38 +29,31 @@ internal sealed class JitDecompiler : IDecompiler
         };
     }
 
-    private class CustomLoadContext : AssemblyLoadContext
-    {
-        public CustomLoadContext() : base(isCollectible: true)
-        {
-        }
-    }
-
     public bool TryDecompile(RecyclableMemoryStream assemblyStream, RecyclableMemoryStream pdbStream, out string result)
     {
         try
         {
-            CustomLoadContext customLoadContext = new CustomLoadContext();
-
-            Assembly assembly = customLoadContext.LoadFromStream(assemblyStream);
-
-            var types = assembly.GetTypes();
-            _buffer.Clear();
-
-            foreach (var type in types)
+            using (var customLoadContext = new DisposableAssemblyLoadContext())
             {
-                foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+
+                Assembly assembly = customLoadContext.LoadFromStream(assemblyStream);
+
+                var types = assembly.GetTypes();
+                _buffer.Clear();
+
+                foreach (var type in types)
                 {
-                    _buffer.AppendLine($"// Method: {type.FullName}.{method.Name}");
-                    method.ToAsm(_buffer, _formatter);
-                    _buffer.AppendLine();
+                    foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+                    {
+                        _buffer.AppendLine($"// Method: {type.FullName}.{method.Name}");
+                        method.ToAsm(_buffer, _formatter);
+                        _buffer.AppendLine();
+                    }
                 }
+
+                result = _buffer.ToString();
+                _buffer.Clear();
             }
-
-            result = _buffer.ToString();
-            _buffer.Clear();
-            customLoadContext.Unload();
-
             return true;
         }
         catch (Exception ex)

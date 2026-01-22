@@ -10,6 +10,7 @@
 # The above will handle all files NOT found below
 #
 
+*.sh     text eol=lf diff=sh
 *.cs     text diff=csharp
 *.cshtml text diff=html
 *.csx    text diff=csharp
@@ -108,4 +109,4 @@
 
 ## Linguist
 
-Lowsharp.Server/Visualization/static/* linguist-vendored 
+Lowsharp.Server/Http/static/* linguist-vendored 
