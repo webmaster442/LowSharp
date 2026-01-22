@@ -16,7 +16,7 @@
 # Milestone Next
 
 - [ ] Ceritificate based authentication (optional)
-- [ ] Docker container for server
+- [x] Docker container for server
 - [ ] Integrate auto updater
 - [ ] Regex code generator
 - [ ] JSONSchema code generator
