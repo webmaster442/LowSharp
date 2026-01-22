@@ -2,7 +2,7 @@
 
 namespace Lowsharp.Server.Lowering.Decompilers;
 
-internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
+internal sealed class NomnomClassTreeDecompiler : VisualizingDecompilerBase
 {
     protected override RendererBase CreateRenderer()
         => new NomnomRenderer();
@@ -34,11 +34,9 @@ internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
 
         private static string Symbol(Relation relation)
         {
-            if (relation.Base.IsInterface)
-            {
-                return "<:--";
-            }
-            return "<:-";
+            return relation.Base.IsInterface
+                ? "<:--" 
+                : "<:-";
         }
 
         public override string Render()
@@ -97,7 +95,7 @@ internal class NomnomClassTreeDecompiler : VisualizingDecompilerBase
             return buffer.ToString();
         }
 
-        private void RenderItemContents(StringBuilder buffer, Item item)
+        private static void RenderItemContents(StringBuilder buffer, Item item)
         {
             foreach (var field in item.Fields)
             {

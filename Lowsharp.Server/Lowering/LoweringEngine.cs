@@ -34,6 +34,7 @@ public sealed class LoweringEngine
             OutputLanguage.IL => new ILDecompiler(),
             OutputLanguage.JitAsm => new JitDecompiler(),
             OutputLanguage.NomnommlClassTree => new NomnomClassTreeDecompiler(),
+            OutputLanguage.MermaidClassTree => new MermaidClassTreeDecompiler(),
             _ => throw new NotSupportedException("Unsupported output type."),
         };
     }

@@ -7,4 +7,5 @@ public enum OutputLanguage
     JitAsm = 2,
     SyntaxTreeJson = 3,
     NomnommlClassTree = 4,
+    MermaidClassTree = 5,
 }

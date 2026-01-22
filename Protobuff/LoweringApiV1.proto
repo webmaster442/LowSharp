@@ -32,6 +32,7 @@ enum OutputCodeType {
   OUTPUT_CODE_TYPE_JITASM = 3;
   OUTPUT_CODE_TYPE_SYNTAXTREEJSON = 4;
   OUTPUT_CODE_TYPE_NONMOML = 5;
+  OUTPUT_CODE_TYPE_MERMAID = 6;
 }
 
 enum DiagnosticSeverity {
