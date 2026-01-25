@@ -21,5 +21,5 @@
 - [ ] Regex code generator
 - [ ] JSONSchema code generator
 - [x] Nomnoml visualizer
-- [ ] Mermaid renderer
-- [ ] Mermaid visualizer
+- [x] Mermaid renderer
+- [x] Mermaid visualizer

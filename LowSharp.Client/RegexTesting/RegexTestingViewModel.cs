@@ -70,51 +70,47 @@ internal sealed partial class RegexTestingViewModel : ViewModelWithMenus
         }
     }
 
+    [RelayCommand]
+    public async Task GenerateCode()
+    {
+        var options = Options.GetOptions();
+        var result = await _client.Regex.GenerateCodeAsync(Input, Pattern, options);
+
+    }
+
     private async Task DoSplit(string input, string pattern, RegexOptions options)
     {
         var response = await _client.Regex.SplitAsync(input, pattern, options);
 
-        if (response.TryGetFailure(out Exception? failure))
-        {
-            await _dialogs.ClientError(failure);
-            return;
-        }
-
-        if (response.TryGetSuccess(out var success))
+        await response.MapAsync(async success =>
         {
             Result = string.Join(Environment.NewLine, success.Results);
             ExecutionTimeInMs = success.ExtecutionTimeMs;
-        }
+        }, async failure =>
+        {
+            await _dialogs.ClientError(failure);
+        });
     }
 
     private async Task DoReplace(string input, string pattern, string replacement, RegexOptions options)
     {
         var response = await _client.Regex.ReplaceAsync(input, replacement, pattern, options);
 
-        if (response.TryGetFailure(out Exception? failure))
-        {
-            await _dialogs.ClientError(failure);
-            return;
-        }
-
-        if (response.TryGetSuccess(out var success))
+        await response.MapAsync(async success =>
         {
             Result = success.Result;
             ExecutionTimeInMs = success.ExtecutionTimeMs;
-        }
+        }, async failure =>
+        {
+            await _dialogs.ClientError(failure);
+        });
     }
 
     private async Task DoMatch(string input, string pattern, RegexOptions options)
     {
         var response = await _client.Regex.MatchAsync(input, pattern, options);
 
-        if (response.TryGetFailure(out Exception? failure))
-        {
-            await _dialogs.ClientError(failure);
-            return;
-        }
-
-        if (response.TryGetSuccess(out var success))
+        await response.MapAsync(async success =>
         {
             ExecutionTimeInMs = success.ExtecutionTimeMs;
             StringBuilder result = new();
@@ -123,6 +119,9 @@ internal sealed partial class RegexTestingViewModel : ViewModelWithMenus
                 result.AppendLine($"Match Name: {match.Name}, Success?: {match.Success}, Value: {match.Value}, Index: {match.Index}, Length: {match.Length}");
             }
             Result = result.ToString();
-        }
+        }, async failure =>
+        {
+            await _dialogs.ClientError(failure);
+        });
     }
 }
