@@ -16,6 +16,7 @@ internal sealed class OutputCodeTypeToStringConverter : OneWayConverterBase<Outp
             OutputCodeType.Jitasm => "JIT ASM",
             OutputCodeType.Syntaxtreejson => "Syntax Tree (JSON)",
             OutputCodeType.Nonmoml => "Nomnoml",
+            OutputCodeType.Mermaid => "Mermaid",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
     }

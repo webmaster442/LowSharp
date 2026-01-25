@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="/static/mermaid.min.js"></script>
+    <base href="/" />
+</head>
+<body style="background: #fdf6e3;">
+    <div id="target"></div>
+    <textarea id="code" style="visibility: collapse">@((MarkupString)Code)</textarea>
+    <script type="text/javascript">
+        mermaidAPI.initialize({startOnLoad: false});
+        let code = document.getElementById("code");
+        let output = document.getElementById("target");
+        mermaidAPI.render('theGraph', code.value, function(svgCode) {
+            output.innerHTML = svgCode;
+        });
+    </script>
+</body>
+</html>
+
+@code {
+    [Parameter]
+    public string Code { get; set; } = "";
+}

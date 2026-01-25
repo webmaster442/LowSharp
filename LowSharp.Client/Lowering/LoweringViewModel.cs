@@ -214,11 +214,18 @@ internal sealed partial class LoweringViewModel :
     [RelayCommand]
     public async Task Preview()
     {
-        Either<Uri, Exception> response = await _client.Lowering.RenderVisualizationAsync(OutputCode, VisualType.Nomnoml);
+        VisualType visualType = OutputTypes[SelectedOutputTypeIndex] switch
+        {
+            OutputCodeType.Nonmoml => VisualType.Nomnoml,
+            OutputCodeType.Mermaid => VisualType.Mermaid,
+            _ => throw new InvalidOperationException("Unknown visual type"),
+        };
+
+        Either<Uri, Exception> response = await _client.Lowering.RenderVisualizationAsync(OutputCode, visualType);
 
         await response.MapAsync(async succes =>
         {
-            _dialogs.OpenWebView("Nomnoml Previrew", succes);
+            _dialogs.OpenWebView("Diagram Previrew", succes);
         },
         async failure =>
         {

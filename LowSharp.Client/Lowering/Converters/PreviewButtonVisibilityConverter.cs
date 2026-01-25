@@ -13,6 +13,7 @@ internal class PreviewButtonVisibilityConverter : OneWayConverterBase<int, Visib
         return value switch
         {
             4 => Visibility.Visible,
+            5 => Visibility.Visible,
             _ => Visibility.Collapsed,
         };
     }

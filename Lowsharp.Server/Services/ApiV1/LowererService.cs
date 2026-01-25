@@ -40,10 +40,17 @@ internal class LowererService : Lowerer.LowererBase
 
     public override async Task<RenderVisualizationResponse> RenderVisualization(RenderVisualizationRequest request, ServerCallContext context)
     {
-        var render = await _renderer.Render<Nomnoml>(new Dictionary<string, object?>()
+        var parameters = new Dictionary<string, object?>()
         {
             { "Code", request.InputCode  }
-        });
+        };
+
+        string render = request.VisualType switch
+        {
+            VisualType.Nomnoml => await _renderer.Render<Nomnoml>(parameters),
+            VisualType.Mermaid => await _renderer.Render<Mermaid>(parameters),
+            _ => throw new ArgumentOutOfRangeException(nameof(request.VisualType), "Unsupported visualization type")
+        };
 
         Guid id = Guid.CreateVersion7();
         _cache.StoreDynamicHtml(id, render);
