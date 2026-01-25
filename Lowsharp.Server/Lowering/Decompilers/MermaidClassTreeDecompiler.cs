@@ -11,54 +11,54 @@ internal sealed class MermaidClassTreeDecompiler : VisualizingDecompilerBase
     {
         private static string Escape(string str)
         {
-            if (str.Contains('<'))
+            var builder = new StringBuilder(str.Length + 10);
+            foreach (char c in str)
             {
-                str = str.Replace('<', '~');
+                switch (c)
+                {
+                    case '<':
+                    case '>':
+                        builder.Append('~');
+                        break;
+                    case '{':
+                        builder.Append('(');
+                        break;
+                    case '}':
+                        builder.Append(')');
+                        break;
+                    default:
+                        builder.Append(c);
+                        break;
+                }
+
             }
-            if (str.Contains('>'))
-            {
-                str = str.Replace('>', '~');
-            }
-            return str;
+            return builder.ToString();
         }
 
         private static string Symbol(Relation relation)
         {
-            if (relation.Base.IsInterface)
-            {
-                if (relation.AreInSameNamespace)
-                    return "<|..";
-                else
-                    return "()--";
-            }
-            return "<|--";
+            return relation.Base.IsInterface
+                ? "<|.."
+                : "<|--";
         }
 
         public override string Render()
         {
             StringBuilder buffer = new StringBuilder();
             buffer.AppendLine("classDiagram");
-
-            foreach (var item in Items)
+            foreach (Item item in Items)
             {
-                if (item.IsInterface)
-                {
-                    buffer.Append($"  class {Escape(item.Name)}").Append("{ <<Interface>> }");
-                }
-                else if (item.IsAbstract)
-                {
-                    buffer.Append($"  class {Escape(item.Name)}").Append("{ <<Abstract>> }");
-                }
-                else
-                {
-                    buffer.Append($"  class {Escape(item.Name)}").Append("{ }");
-                }
+
+                buffer.AppendLine($"class {Escape(item.Name)} {{");
+                RenderItemContents(buffer, item);
+                buffer.AppendLine("}");
             }
+
+            buffer.AppendLine();
 
             foreach (var relation in Relations)
             {
                 buffer
-                    .Append("  ")
                     .Append(Escape(relation.Base.Name))
                     .Append(' ')
                     .Append(Symbol(relation))
@@ -67,6 +67,24 @@ internal sealed class MermaidClassTreeDecompiler : VisualizingDecompilerBase
             }
 
             return buffer.ToString();
+        }
+
+        private static void RenderItemContents(StringBuilder buffer, Item item)
+        {
+            foreach (var field in item.Fields)
+            {
+                buffer.AppendLine($"  + {Escape(field)}");
+            }
+
+            foreach (var property in item.Properties)
+            {
+                buffer.AppendLine($"  + {Escape(property)}");
+            }
+
+            foreach (var method in item.Methods)
+            {
+                buffer.AppendLine($"  + {Escape(method)}");
+            }
         }
     }
 }
