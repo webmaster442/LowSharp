@@ -22,6 +22,7 @@
   <ItemGroup>
     <EmbeddedResource Include="CodeExamples\Examples.xml" />
     <EmbeddedResource Include="Http\static\graphere.js" />
+    <EmbeddedResource Include="Http\static\mermaid.js" />
     <EmbeddedResource Include="Http\static\nomnoml.js" />
   </ItemGroup>
 
