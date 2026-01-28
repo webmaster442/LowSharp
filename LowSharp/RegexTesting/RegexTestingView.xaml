@@ -1,0 +1,221 @@
+﻿<UserControl
+    x:Class="LowSharp.RegexTesting.RegexTestingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:converters="clr-namespace:LowSharp.Common.Conveters"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:common="clr-namespace:LowSharp.Common"
+    d:DesignHeight="720"
+    d:DesignWidth="1280"
+    mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="F5"
+            Command="{Binding ExecuteCommand}" />
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Header="Options">
+            <StackPanel>
+                <CheckBox
+                    Margin="5"
+                    Content="Ignore Case"
+                    IsChecked="{Binding Options.IgnoreCase}"
+                    ToolTip="Use case-insensitive matching." />
+                <CheckBox
+                    Margin="5"
+                    Content="Multiline"
+                    IsChecked="{Binding Options.Multiline}"
+                    ToolTip="Use multiline mode, where ^ and $ match the beginning and end of each line (instead of the beginning and end of the input string)." />
+                <CheckBox
+                    Margin="5"
+                    Content="Explicit Capture"
+                    IsChecked="{Binding Options.ExplicitCapture}"
+                    ToolTip="Do not capture unnamed groups. The only valid captures are explicitly named or numbered groups of the form (?&lt;name&gt; subexpression)." />
+                <CheckBox
+                    Margin="5"
+                    Content="Compiled"
+                    IsChecked="{Binding Options.Compiled}"
+                    ToolTip="Compile the regular expression to Microsoft intermediate language (MSIL)." />
+                <CheckBox
+                    Margin="5"
+                    Content="Singleline"
+                    IsChecked="{Binding Options.Singleline}"
+                    ToolTip="Use singleline mode, where the dot (.) matches every character (instead of every character except \n)." />
+                <CheckBox
+                    Margin="5"
+                    Content="Ignore Pattern Whitespace"
+                    IsChecked="{Binding Options.IgnorePatternWhitespace}"
+                    ToolTip="Exclude unescaped white space from the pattern, and enable comments after a number sign (#)." />
+                <CheckBox
+                    Margin="5"
+                    Content="Right To Left"
+                    IsChecked="{Binding Options.RightToLeft}"
+                    ToolTip="Change the search direction. Search moves from right to left instead of from left to right." />
+                <CheckBox
+                    Margin="5"
+                    Content="ECMAScript"
+                    IsChecked="{Binding Options.ECMAScript}"
+                    ToolTip="Enable ECMAScript-compliant behavior for the expression." />
+                <CheckBox
+                    Margin="5"
+                    Content="Culture Invariant"
+                    IsChecked="{Binding Options.CultureInvariant}"
+                    ToolTip="Ignore cultural differences in language." />
+                <CheckBox
+                    Margin="5"
+                    Content="Non-Backtracking"
+                    IsChecked="{Binding Options.NonBacktracking}"
+                    ToolTip="Certain features aren't available when this option is set, including balancing groups, backreferences, positive and negative lookaheads and lookbehinds, and atomic groups. Capture groups are also ignored, such that the only capture available is that for the top-level match." />
+                <TextBlock
+                    Margin="5"
+                    Text="Match timeout:" />
+                <TextBox
+                    Margin="5,10"
+                    Text="{Binding Options.TimeoutMilliseconds}" />
+                <Button
+                    Margin="5"
+                    Command="{Binding Options.ResetOptionsCommand}"
+                    Content="Reset to Defaults" />
+                <Button
+                    Margin="5,10"
+                    Command="{Binding ExecuteCommand}"
+                    Content="Execute (F5)" />
+
+                <Button
+                    Margin="5,10"
+                    Command="{Binding GenerateCodeCommand}"
+                    Content="Generate Code..." />
+
+                <TextBlock
+                    Margin="5"
+                    Text="Last execution time (ms):" />
+                <TextBlock
+                    Margin="5,0"
+                    Text="{Binding ExecutionTimeInMs}" />
+            </StackPanel>
+        </GroupBox>
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Orientation="Horizontal">
+            <RadioButton
+                Width="80"
+                Height="30"
+                Margin="5"
+                Content="Match"
+                IsChecked="{Binding IsMatchMode}"
+                Style="{StaticResource {x:Type ToggleButton}}" />
+            <RadioButton
+                Width="80"
+                Height="30"
+                Margin="5"
+                Content="Replace"
+                IsChecked="{Binding IsReplaceMode}"
+                Style="{StaticResource {x:Type ToggleButton}}" />
+            <RadioButton
+                Width="80"
+                Height="30"
+                Margin="5"
+                Content="Split"
+                IsChecked="{Binding IsSplitMode}"
+                Style="{StaticResource {x:Type ToggleButton}}" />
+        </StackPanel>
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding ElementName=RegexExpander, Path=IsExpanded, Converter={converters:BooleanToGridLengthConverter}}" />
+                <RowDefinition Height="{Binding ElementName=TargetExpander, Path=IsExpanded, Converter={converters:BooleanToGridLengthConverter}}" />
+                <RowDefinition>
+                    <RowDefinition.Height>
+                        <MultiBinding Converter="{converters:BooleanToGridLengthConverter}">
+                            <Binding
+                                ElementName="ReplacementExpander"
+                                Path="IsExpanded" />
+                            <Binding
+                                ElementName="ReplacementExpander"
+                                Path="Visibility" />
+                        </MultiBinding>
+                    </RowDefinition.Height>
+                </RowDefinition>
+                <RowDefinition Height="{Binding ElementName=ResultsExpander, Path=IsExpanded, Converter={converters:BooleanToGridLengthConverter}}" />
+            </Grid.RowDefinitions>
+            <Expander
+                x:Name="RegexExpander"
+                Grid.Row="0"
+                Header="Regex"
+                IsExpanded="True">
+                <avalon:TextEditor
+                    FontFamily="Cascadia Code"
+                    FontSize="{DynamicResource EditorFontSize}"
+                    ShowLineNumbers="True"
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Pattern, Mode=TwoWay}" />
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
+            </Expander>
+            <Expander
+                x:Name="TargetExpander"
+                Grid.Row="1"
+                Header="Target string"
+                IsExpanded="True">
+                <avalon:TextEditor
+                    FontFamily="Cascadia Code"
+                    FontSize="{DynamicResource EditorFontSize}"
+                    ShowLineNumbers="True"
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Input, Mode=TwoWay}" />
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
+            </Expander>
+            <Expander
+                x:Name="ReplacementExpander"
+                Grid.Row="2"
+                Header="Replacement string"
+                IsExpanded="True"
+                Visibility="{Binding IsReplaceMode, Converter={converters:VisibilityConverter}}">
+                <avalon:TextEditor
+                    FontFamily="Cascadia Code"
+                    FontSize="{DynamicResource EditorFontSize}"
+                    ShowLineNumbers="True"
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Replacement, Mode=TwoWay}" />
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
+            </Expander>
+            <Expander
+                x:Name="ResultsExpander"
+                Grid.Row="3"
+                Header="Results"
+                IsExpanded="True">
+                <avalon:TextEditor
+                    FontFamily="Cascadia Code"
+                    FontSize="{DynamicResource EditorFontSize}"
+                    IsReadOnly="True"
+                    ShowLineNumbers="True"
+                    WordWrap="True">
+                    <i:Interaction.Behaviors>
+                        <common:AvalonEditBehaviour BindedText="{Binding Result}" />
+                    </i:Interaction.Behaviors>
+                </avalon:TextEditor>
+            </Expander>
+        </Grid>
+    </Grid>
+</UserControl>
