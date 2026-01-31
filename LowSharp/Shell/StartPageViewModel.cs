@@ -6,6 +6,7 @@ using LowSharp.ApiV1.HealthCheck;
 using LowSharp.ClientLib;
 using LowSharp.Common;
 using LowSharp.Common.ViewModels;
+using LowSharp.RegexTesting;
 
 namespace LowSharp.Shell;
 
@@ -32,11 +33,9 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartRegex()
     {
-        throw new NotImplementedException();
-        /*
         var vm = new RegexTestingViewModel(_client, _dialogs);
         await vm.InitializeAsync();
-        ReplaceContents("Regex Testing", vm);*/
+        ReplaceContents("Regex Testing", vm);
     }
 
     [RelayCommand]
