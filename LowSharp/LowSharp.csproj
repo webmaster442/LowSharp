@@ -7,13 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
+    <ApplicationIcon>../Icons/icon.ico</ApplicationIcon>
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Common\Syntax\Nomnoml.xshd" />
-    <None Remove="Common\Syntax\Regex.xshd" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Common\Syntax\CsharpNext.xshd" />

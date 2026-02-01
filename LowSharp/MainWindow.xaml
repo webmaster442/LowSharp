@@ -12,9 +12,87 @@
     Height="{common:WindowSizeProvider Type=Height}"
     SnapsToDevicePixels="True"
     WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
     <Window.Resources>
         <common:MenuViewModelStyleSelector x:Key="MenuViewModelStyleSelector" />
+
+        <Style
+            x:Key="BorderlessButtonStyle"
+            TargetType="Button">
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Border.CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="EnclosingBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding Border.CornerRadius}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlAltFillColorTertiaryBrush}" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ControlAltFillColorQuarternaryBrush}" />
+                </Trigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=(SystemParameters.HighContrast)}" Value="True" />
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource SystemColorHighlightColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource SystemColorHighlightTextColorBrush}" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="TitleBarDefaultButtonStyle"
+            BasedOn="{StaticResource BorderlessButtonStyle}"
+            TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+            <Setter Property="Border.CornerRadius" Value="0" />
+        </Style>
+
+        <Style
+            x:Key="TitleBarDefaultCloseButtonStyle"
+            BasedOn="{StaticResource TitleBarDefaultButtonStyle}"
+            TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C42B1C" />
+                    <Setter Property="Foreground" Value="White" />
+                </Trigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=(SystemParameters.HighContrast)}" Value="True" />
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource SystemColorHighlightColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource SystemColorHighlightTextColorBrush}" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding
@@ -32,12 +110,19 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel
-            Grid.Row="0"
-            Orientation="Horizontal">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" />
             <Menu
-                Grid.Row="0"
-                Grid.Column="0"
+                Grid.Column="1"
                 Margin="0,0,0,0"
                 VerticalAlignment="Center"
                 Background="Transparent">
@@ -62,6 +147,7 @@
                 </MenuItem>
             </Menu>
             <Menu
+                Grid.Column="2"
                 VerticalAlignment="Center"
                 Background="Transparent"
                 ItemContainerStyleSelector="{StaticResource MenuViewModelStyleSelector}"
@@ -74,7 +160,36 @@
                     </HierarchicalDataTemplate>
                 </Menu.ItemTemplate>
             </Menu>
-        </StackPanel>
+            <Border
+                Grid.Column="3"
+                Background="Transparent"
+                MouseDown="Border_MouseDown">
+                <TextBlock
+                    Margin="8"
+                    VerticalAlignment="Top"
+                    FontSize="14"
+                    Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Title}"
+                    TextAlignment="Center" />
+            </Border>
+            <Button
+                x:Name="MinimizeButton"
+                Grid.Column="4"
+                Click="MinimizeButton_Click"
+                Content="&#xE921;"
+                Style="{StaticResource TitleBarDefaultButtonStyle}" />
+            <Button
+                x:Name="MaximizeButton"
+                Grid.Column="5"
+                Click="MaximizeButton_Click"
+                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=WindowState, Converter={converters:WindowStateButtonContentConverter}}"
+                Style="{StaticResource TitleBarDefaultButtonStyle}" />
+            <Button
+                x:Name="CloseButton"
+                Grid.Column="6"
+                Click="CloseButton_Click"
+                Content="&#xE8BB;"
+                Style="{StaticResource TitleBarDefaultCloseButtonStyle}" />
+        </Grid>
         <TabControl
             x:Name="MainTabControl"
             Grid.Row="1"
@@ -96,18 +211,9 @@
                             Text="{Binding TabTitle}" />
                         <Button
                             BorderThickness="0"
-                            Click="TabCloseClick">
-                            <Canvas
-                                Width="24"
-                                Height="24">
-                                <Canvas.LayoutTransform>
-                                    <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
-                                </Canvas.LayoutTransform>
-                                <Path
-                                    Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                                    Fill="Red" />
-                            </Canvas>
-                        </Button>
+                            Click="TabCloseClick"
+                            Content="&#xE8BB;"
+                            Style="{StaticResource TitleBarDefaultCloseButtonStyle}" />
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
