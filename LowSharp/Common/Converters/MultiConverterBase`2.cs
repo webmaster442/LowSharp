@@ -7,11 +7,24 @@ namespace LowSharp.Common.Converters;
 internal abstract class MultiConverterBase<TFrom, TTo> : MarkupExtension, IMultiValueConverter
     where TFrom : notnull where TTo : notnull
 {
+    private static TFrom[] SafeCast(object[] values)
+    {
+        TFrom[] results = new TFrom[values.Length];
+        for (int i=0; i<values.Length; i++)
+        {
+            if (values[i] is TFrom casted)
+                results[i] = casted;
+            else
+                results[i] = default(TFrom)!;
+        }
+        return results;
+    }
+
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values != null && values.Length > 0)
         {
-            var converted = values.Cast<TFrom>().ToArray();
+            var converted = SafeCast(values);
             return ConvertFrom(converted, culture);
         }
         return Binding.DoNothing;

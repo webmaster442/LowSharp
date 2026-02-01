@@ -76,6 +76,7 @@
             </Menu>
         </StackPanel>
         <TabControl
+            x:Name="MainTabControl"
             Grid.Row="1"
             IsEnabled="{Binding Client.IsConnected}"
             ItemsSource="{Binding Tabs}"
@@ -88,13 +89,32 @@
             </TabControl.ContentTemplate>
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding TabTitle}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding TabTitle}" />
+                        <Button
+                            BorderThickness="0"
+                            Click="TabCloseClick">
+                            <Canvas
+                                Width="24"
+                                Height="24">
+                                <Canvas.LayoutTransform>
+                                    <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                                </Canvas.LayoutTransform>
+                                <Path
+                                    Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                    Fill="Red" />
+                            </Canvas>
+                        </Button>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
         </TabControl>
         <Border
-            Background="{StaticResource SolidBackgroundFillColorBaseBrush}"
             Grid.Row="2"
+            Background="{StaticResource SolidBackgroundFillColorBaseBrush}"
             SnapsToDevicePixels="True">
             <StackPanel Orientation="Horizontal">
                 <Menu>

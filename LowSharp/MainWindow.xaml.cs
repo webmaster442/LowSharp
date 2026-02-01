@@ -1,6 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
+using CommunityToolkit.Mvvm.Messaging;
+
+using LowSharp.Common;
+
 
 namespace LowSharp;
 
@@ -22,5 +26,11 @@ public partial class MainWindow : Window
         {
             disposable.Dispose();
         }
+    }
+
+    private void TabCloseClick(object sender, RoutedEventArgs e)
+    {
+        var index = MainTabControl.SelectedIndex;
+        WeakReferenceMessenger.Default.Send(new Messages.CloseTabAtIndex(index));
     }
 }

@@ -6,17 +6,17 @@
 <!-- Updated 2010 by Siegfried Oleg Pammer for VB.NET 9 and 10 -->
 <!-- Updated 2011 by Siegfried Oleg Pammer for VB 11 CTP -->
 <SyntaxDefinition name="VBNext" extensions=".vb" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-  <Color name="Comment" foreground="#50FA7B" exampleText="' comment" />
+  <Color name="Comment" foreground="Green" exampleText="' comment" />
   <Color name="String" exampleText="text = &quot;Hello, World!&quot;" />
 
-  <Color name="DateLiteral" foreground="#BD93F9" exampleText="endOfWorld = #2012-12-21#" />
-  <Color name="Preprocessor" foreground="#FF5555" exampleText="#Region &quot;Title&quot;" />
-  <Color name="DataTypes" foreground="#FF79C6" exampleText="Dim b As Boolean = True" />
-  <Color name="Operators" foreground="#FF6E6E" exampleText="If a OrElse b Then"/>
-  <Color name="Constants" foreground="#BD93F9" exampleText="b = False" />
-  <Color name="Keywords" foreground="#BD93F9" exampleText="If a OrElse b Then" />
-  <Color name="FunctionKeywords" foreground="#BD93F9" exampleText="CInt(a)" />
-  <Color name="ContextKeywords" foreground="#BD93F9" exampleText="Declare Unicode Sub SomeMethod" />
+  <Color name="DateLiteral" foreground="Blue" exampleText="endOfWorld = #2012-12-21#" />
+  <Color name="Preprocessor" foreground="Maroon" exampleText="#Region &quot;Title&quot;" />
+  <Color name="DataTypes" foreground="#FF6F002F" exampleText="Dim b As Boolean = True" />
+  <Color name="Operators" foreground="#FF8515EA" exampleText="If a OrElse b Then"/>
+  <Color name="Constants" foreground="Blue" exampleText="b = False" />
+  <Color name="Keywords" foreground="Blue" exampleText="If a OrElse b Then" />
+  <Color name="FunctionKeywords" foreground="Blue" exampleText="CInt(a)" />
+  <Color name="ContextKeywords" foreground="Blue" exampleText="Declare Unicode Sub SomeMethod" />
 
   <Property name="DocCommentMarker" value="'''" />
 

@@ -19,7 +19,8 @@ internal sealed partial class MainWindowViewModel :
     IDisposable,
     IRecipient<Messages.ReplaceTabContent>,
     IRecipient<Messages.CloseCurrentTab>,
-    IRecipient<Messages.IsConnectedChanged>
+    IRecipient<Messages.IsConnectedChanged>,
+    IRecipient<Messages.CloseTabAtIndex>
 {
     private const int BaseFontSize = 16;
     private readonly IDialogs _dialogs;
@@ -35,6 +36,7 @@ internal sealed partial class MainWindowViewModel :
         WeakReferenceMessenger.Default.Register<Messages.ReplaceTabContent>(this);
         WeakReferenceMessenger.Default.Register<Messages.CloseCurrentTab>(this);
         WeakReferenceMessenger.Default.Register<Messages.IsConnectedChanged>(this);
+        WeakReferenceMessenger.Default.Register<Messages.CloseTabAtIndex>(this);
     }
 
     [MemberNotNull(nameof(ActualTabItem))]
@@ -127,4 +129,10 @@ internal sealed partial class MainWindowViewModel :
 
     void IRecipient<Messages.IsConnectedChanged>.Receive(Messages.IsConnectedChanged message)
         => NewTabCommand.NotifyCanExecuteChanged();
+
+    void IRecipient<Messages.CloseTabAtIndex>.Receive(Messages.CloseTabAtIndex message)
+    {
+        if (message.Index >= 0 && message.Index < Tabs.Count)
+            Tabs.RemoveAt(message.Index);
+    }
 }
