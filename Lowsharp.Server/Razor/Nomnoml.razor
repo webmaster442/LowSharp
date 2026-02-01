@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
     <script type="text/javascript" src="/static/graphere.js"></script>
     <script type="text/javascript" src="/static/nomnoml.js"></script>
     <base href="/" />
 </head>
-<body style="background: #fdf6e3;">
+<body>
     <canvas id="target-canvas"></canvas>
-    <textarea id="code" style="visibility: collapse">@((MarkupString)Code)</textarea>
+    <textarea id="code" style="visibility: collapse">
+#fill: #ffffff
+#font: Segoe UI Variable
+@((MarkupString)Code)
+    </textarea>
     <script type="text/javascript">
         let canvas = document.getElementById('target-canvas');
         let source = document.getElementById('code').value;

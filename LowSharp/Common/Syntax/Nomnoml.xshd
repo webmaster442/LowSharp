@@ -5,15 +5,30 @@
 
   <RuleSet>
     <Keywords color="Keywords">
+      <Word>&lt;abstract&gt;</Word>
       <Word>&lt;actor&gt;</Word>
-      <Word>&lt;usecase&gt;</Word>
-      <Word>&lt;note&gt;</Word>
-      <Word>&lt;label&gt;</Word>
-      <Word>&lt;hidden&gt;</Word>
+      <Word>&lt;choice&gt;</Word>
       <Word>&lt;database&gt;</Word>
+      <Word>&lt;end&gt;</Word>
+      <Word>&lt;frame&gt;</Word>
+      <Word>&lt;hidden&gt;</Word>
+      <Word>&lt;input&gt;</Word>
+      <Word>&lt;instance&gt;</Word>
+      <Word>&lt;label&gt;</Word>
+      <Word>&lt;lollipop&gt;</Word>
+      <Word>&lt;note&gt;</Word>
+      <Word>&lt;package&gt;</Word>
       <Word>&lt;pipe&gt;</Word>
-      <Word>&lt;table&gt;</Word>
+      <Word>&lt;receiver&gt;</Word>
       <Word>&lt;reference&gt;</Word>
+      <Word>&lt;sender&gt;</Word>
+      <Word>&lt;socket&gt;</Word>
+      <Word>&lt;start&gt;</Word>
+      <Word>&lt;state&gt;</Word>
+      <Word>&lt;sync&gt;</Word>
+      <Word>&lt;table&gt;</Word>
+      <Word>&lt;transceiver&gt;</Word>
+      <Word>&lt;usecase&gt;</Word>
     </Keywords>
 
     <Keywords color="arrows">

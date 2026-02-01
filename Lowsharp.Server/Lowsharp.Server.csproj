@@ -11,11 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Http\static\graphere.js" />
-    <None Remove="Http\static\nomnoml.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Lowsharp.Tests" />
   </ItemGroup>
 
@@ -24,6 +19,7 @@
     <EmbeddedResource Include="Http\static\graphere.js" />
     <EmbeddedResource Include="Http\static\mermaid.js" />
     <EmbeddedResource Include="Http\static\nomnoml.js" />
+    <EmbeddedResource Include="Http\static\style.css" />
   </ItemGroup>
 
   <ItemGroup>

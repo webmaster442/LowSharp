@@ -18,15 +18,25 @@ public partial class WebViewWindow : Window
         InitializeComponent();
     }
 
-    public void ShowFromHtml(string html)
+    private void SetPosition(Window owner)
+    {
+        Width = owner.ActualWidth * 0.8;
+        Height = owner.ActualHeight * 0.8;
+        Top = (owner.Top + (owner.ActualHeight - Height) / 2);
+        Left = (owner.Left + (owner.ActualWidth - Width) / 2);
+    }
+
+    public void ShowFromHtml(Window owner, string html)
     {
         _html = html;
+        SetPosition(owner);
         Show();
     }
 
-    public void ShowAndNavigateTo(Uri url)
+    public void ShowAndNavigateTo(Window owner, Uri url)
     {
         _url = url;
+        SetPosition(owner);
         Show();
     }
 

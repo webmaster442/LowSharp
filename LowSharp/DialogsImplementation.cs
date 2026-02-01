@@ -42,7 +42,7 @@ internal sealed class DialogsImplementation : IDialogs
     {
         var webWindow = new WebViewWindow();
         webWindow.Title = title;
-        webWindow.ShowAndNavigateTo(url);
+        webWindow.ShowAndNavigateTo(_mainWindow, url);
     }
 
     public bool TryOpenCode(out (string filename, InputLanguage language) result)
