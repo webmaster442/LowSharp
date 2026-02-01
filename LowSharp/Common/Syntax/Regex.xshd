@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="regex" extensions="regex" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="&lt;actor&gt;"/>
+
+  <RuleSet>
+    <Keywords color="Keywords">
+      <Word>.</Word>
+      <Word>*</Word>
+      <Word>+</Word>
+      <Word>?</Word>
+      <Word>^</Word>
+      <Word>$</Word>
+      <Word>|</Word>
+      <Word>\</Word>
+      <Word>[</Word>
+      <Word>]</Word>
+      <Word>{</Word>
+      <Word>}</Word>
+      <Word>(</Word>
+      <Word>)</Word>
+      <Word>&lt;</Word>
+      <Word>&gt;</Word>
+      <Word>/</Word>
+      <Word>-</Word>
+      <Word>&amp;</Word>
+      <Word>!</Word>
+      <Word>=</Word>
+      <Word>:</Word>
+    </Keywords>
+  </RuleSet>
+</SyntaxDefinition>

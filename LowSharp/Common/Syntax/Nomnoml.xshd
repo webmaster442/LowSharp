@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SyntaxDefinition name="nomnoml" extensions=".nomnoml" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="&lt;actor&gt;"/>
+  <Color name="arrows" foreground="green" exampleText="-"/>
+
+  <RuleSet>
+    <Keywords color="Keywords">
+      <Word>&lt;actor&gt;</Word>
+      <Word>&lt;usecase&gt;</Word>
+      <Word>&lt;note&gt;</Word>
+      <Word>&lt;label&gt;</Word>
+      <Word>&lt;hidden&gt;</Word>
+      <Word>&lt;database&gt;</Word>
+      <Word>&lt;pipe&gt;</Word>
+      <Word>&lt;table&gt;</Word>
+      <Word>&lt;reference&gt;</Word>
+    </Keywords>
+
+    <Keywords color="arrows">
+      <Word>-</Word>
+      <Word>-&gt;</Word>
+      <Word>&lt;-</Word>
+      <Word>&lt;-&gt;</Word>
+      <Word>--&gt;</Word>
+      <Word>&lt;--</Word>
+      <Word>&lt;--&gt;</Word>
+      <Word>-:&gt;</Word>
+      <Word>--:&gt;</Word>
+      <Word>&lt;:-</Word>
+      <Word>&lt;:--</Word>
+      <Word>+-</Word>
+      <Word>+-&gt;</Word>
+      <Word>o-</Word>
+      <Word>o-&gt;</Word>
+      <Word>-o)</Word>
+      <Word>o&lt;-)</Word>
+      <Word>-/-</Word>
+    </Keywords>
+  </RuleSet>
+
+</SyntaxDefinition>

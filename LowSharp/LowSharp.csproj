@@ -11,10 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Common\Syntax\Nomnoml.xshd" />
+    <None Remove="Common\Syntax\Regex.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Common\Syntax\CsharpNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\Fsharp.xshd" />
     <EmbeddedResource Include="Common\Syntax\ILAsm.xshd" />
     <EmbeddedResource Include="Common\Syntax\JsonNext.xshd" />
+    <EmbeddedResource Include="Common\Syntax\Nomnoml.xshd" />
+    <EmbeddedResource Include="Common\Syntax\Regex.xshd" />
     <EmbeddedResource Include="Common\Syntax\VbNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\X64.xshd" />
   </ItemGroup>
