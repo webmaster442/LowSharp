@@ -4,11 +4,17 @@
     xmlns:local="clr-namespace:LowSharp.Common.Controls">
 
 
-    <Style TargetType="local:EnumComboBox">
+    <Style TargetType="{x:Type local:EnumComboBox}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:EnumComboBox">
+                <ControlTemplate TargetType="{x:Type local:EnumComboBox}">
                     <ComboBox
+                        Width="{TemplateBinding Width}"
+                        MinWidth="{TemplateBinding MinWidth}"
+                        Height="{TemplateBinding Height}"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EnumComboBox}, Path=Enum.Items}"
                         SelectedIndex="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EnumComboBox}, Path=Enum.SelectedIndex}">
                         <ComboBox.ItemTemplate>
@@ -34,6 +40,11 @@
         TargetType="MenuItem">
         <Setter Property="Command" Value="{Binding Command}" />
         <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="Watwermark">
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="Opacity" Value="0.6"/>
     </Style>
 
 </ResourceDictionary>

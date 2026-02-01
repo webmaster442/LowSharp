@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace LowSharp.Common.Conveters;
+namespace LowSharp.Common.Converters;
 
 internal sealed class BooleanToGridLengthConverter : OneWayConverterBase<bool, GridLength>, IMultiValueConverter
 {

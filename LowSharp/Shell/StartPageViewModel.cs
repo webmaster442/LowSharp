@@ -6,6 +6,7 @@ using LowSharp.ApiV1.HealthCheck;
 using LowSharp.ClientLib;
 using LowSharp.Common;
 using LowSharp.Common.ViewModels;
+using LowSharp.Lowering;
 using LowSharp.RegexTesting;
 
 namespace LowSharp.Shell;
@@ -24,10 +25,9 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
     [RelayCommand]
     public async Task StartLowering()
     {
-        throw new NotImplementedException();
-        /*var vm = new LoweringViewModel(_client, _dialogs);
+        var vm = new LoweringViewModel(_client, _dialogs);
         await vm.InitializeAsync();
-        ReplaceContents("Lowering", vm);*/
+        ReplaceContents("Lowering", vm);
     }
 
     [RelayCommand]

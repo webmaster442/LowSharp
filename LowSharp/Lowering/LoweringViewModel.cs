@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,11 +10,12 @@ using Google.Protobuf.Collections;
 
 using LowSharp.ApiV1.Examples;
 using LowSharp.ApiV1.Lowering;
-using LowSharp.Client.Common;
-using LowSharp.Client.Common.Views;
 using LowSharp.ClientLib;
+using LowSharp.Common;
+using LowSharp.Common.Controls;
+using LowSharp.Common.ViewModels;
 
-namespace LowSharp.Client.Lowering;
+namespace LowSharp.Lowering;
 
 internal sealed partial class LoweringViewModel :
     ViewModelWithMenus,
@@ -31,23 +33,11 @@ internal sealed partial class LoweringViewModel :
 
     public MenuCheckableViewModel WordWrap { get; }
 
-    public ObservableCollection<InputLanguage> InputLanguages { get; }
+    public EnumViewModel<InputLanguage> InputLanguages { get; }
 
-    [ObservableProperty]
-    public partial int SelectedInputLanguageIndex { get; set; }
+    public EnumViewModel<OutputCodeType> OutputTypes { get; }
 
-    public ObservableCollection<OutputCodeType> OutputTypes { get; }
-
-    [ObservableProperty]
-    public partial int SelectedOutputTypeIndex { get; set; }
-
-    partial void OnSelectedOutputTypeIndexChanged(int value)
-        => IsValidLowering = false;
-
-    public ObservableCollection<Optimization> Optimizations { get; }
-
-    [ObservableProperty]
-    public partial int SelectedOptimizationIndex { get; set; }
+    public EnumViewModel<Optimization> Optimizations { get; }
 
     [ObservableProperty]
     public partial string InputCode { get; set; }
@@ -93,26 +83,27 @@ internal sealed partial class LoweringViewModel :
             }
         });
 
-        InputLanguages = Fill<InputLanguage>();
-        OutputTypes = Fill<OutputCodeType>();
-        Optimizations = Fill<Optimization>();
-        SelectedInputLanguageIndex = 0;
-        SelectedOutputTypeIndex = OutputTypes.IndexOf(OutputCodeType.Loweredcsharp);
-        SelectedOptimizationIndex = 0;
+        InputLanguages = new EnumViewModel<InputLanguage>(EnumMapper.ToString, InputLanguage.Csharp);
+        OutputTypes = new EnumViewModel<OutputCodeType>(EnumMapper.ToString, OutputCodeType.Loweredcsharp);
+        Optimizations = new EnumViewModel<Optimization>(EnumMapper.ToString, Optimization.Debug);
+        OutputTypes.PropertyChanged += OnOutputTypeChanged;
     }
+
+    private void OnOutputTypeChanged(object? sender, PropertyChangedEventArgs e)
+        => IsValidLowering = false;
 
     public override async Task InitializeAsync()
     {
         Either<List<Example>, Exception> examples = await _client.Examples.GetExamplesAsync();
         if (examples.TryGetFailure(out Exception? failure))
         {
-            await _dialogs.ClientError(failure);
+            _dialogs.ClientError(failure);
             return;
         }
 
         if (examples.TryGetSuccess(out List<Example>? result))
         {
-            _exampleList  = result;
+            _exampleList = result;
 
             var exampleMenu = new MenuViewModel { Header = "Examples" };
             var csharpMenuItem = new MenuViewModel { Header = "C#" };
@@ -146,28 +137,11 @@ internal sealed partial class LoweringViewModel :
 
     }
 
-    private int GetLanguageIndex(string language)
-    {
-        if (language.Contains("cs", StringComparison.OrdinalIgnoreCase))
-        {
-            return InputLanguages.IndexOf(InputLanguage.Csharp);
-        }
-        else if (language.Contains("v", StringComparison.OrdinalIgnoreCase))
-        {
-            return InputLanguages.IndexOf(InputLanguage.Visualbasic);
-        }
-        else if (language.Contains("fs", StringComparison.OrdinalIgnoreCase))
-        {
-            return InputLanguages.IndexOf(InputLanguage.Fsharp);
-        }
-        throw new ArgumentException($"Unknown language: {language}", nameof(language));
-    }
-
     [RelayCommand]
     public void LoadExample(Example example)
     {
-       InputCode = example.Code;
-       SelectedInputLanguageIndex = GetLanguageIndex(example.Language);
+        InputCode = example.Code;
+        InputLanguages.SelectValueByStringName(example.Language);
     }
 
 
@@ -176,9 +150,9 @@ internal sealed partial class LoweringViewModel :
     {
         if (_dialogs.TryOpenCode(out var result))
         {
-            var code = System.IO.File.ReadAllText(result.filename);
+            string code = System.IO.File.ReadAllText(result.filename);
             InputCode = code;
-            SelectedInputLanguageIndex = InputLanguages.IndexOf(result.language);
+            InputLanguages.SelectValue(result.language);
         }
     }
 
@@ -188,33 +162,31 @@ internal sealed partial class LoweringViewModel :
     {
         Either<LoweringResponse, Exception> response = await _client.Lowering.LowerCodeAsync(
             InputCode,
-            InputLanguages[SelectedInputLanguageIndex],
-            Optimizations[SelectedOptimizationIndex],
-            OutputTypes[SelectedOutputTypeIndex]);
+            InputLanguages.SelectedValue,
+            Optimizations.SelectedValue,
+            OutputTypes.SelectedValue);
 
-        await response.MapAsync(success =>
+        response.Map(success =>
         {
             if (success.Diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
             {
                 OutputCode = GetDiagnostics(success.Diagnostics);
                 IsValidLowering = false;
-                return Task.CompletedTask;
             }
             OutputCode = success.ResultCode;
             IsValidLowering = true;
-            return Task.CompletedTask;
         },
-        async failure =>
+        failure =>
         {
             IsValidLowering = false;
-            await _dialogs.ClientError(failure);
+            _dialogs.ClientError(failure);
         });
     }
 
     [RelayCommand]
     public async Task Preview()
     {
-        VisualType visualType = OutputTypes[SelectedOutputTypeIndex] switch
+        VisualType visualType = OutputTypes.SelectedValue switch
         {
             OutputCodeType.Nonmoml => VisualType.Nomnoml,
             OutputCodeType.Mermaid => VisualType.Mermaid,
@@ -223,13 +195,13 @@ internal sealed partial class LoweringViewModel :
 
         Either<Uri, Exception> response = await _client.Lowering.RenderVisualizationAsync(OutputCode, visualType);
 
-        await response.MapAsync(async succes =>
+        response.Map(succes =>
         {
             _dialogs.OpenWebView("Diagram Previrew", succes);
         },
-        async failure =>
+        failure =>
         {
-            await _dialogs.ClientError(failure);
+            _dialogs.ClientError(failure);
         });
     }
 

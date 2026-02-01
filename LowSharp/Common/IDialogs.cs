@@ -1,5 +1,7 @@
 ﻿
 
+using LowSharp.ApiV1.Lowering;
+
 namespace LowSharp.Common;
 
 internal interface IDialogs
@@ -9,4 +11,6 @@ internal interface IDialogs
     void Error(string title, string message);
     void Info(string title, string message);
     void OpenUrl(string url);
+    void OpenWebView(string title, Uri url);
+    bool TryOpenCode(out (string filename, InputLanguage language) result);
 }

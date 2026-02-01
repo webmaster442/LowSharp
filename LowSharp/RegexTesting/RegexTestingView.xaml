@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:common="clr-namespace:LowSharp.Common"
-    xmlns:converters="clr-namespace:LowSharp.Common.Conveters"
+    xmlns:converters="clr-namespace:LowSharp.Common.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"

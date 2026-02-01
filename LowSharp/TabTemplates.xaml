@@ -2,6 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shell="clr-namespace:LowSharp.Shell"
+    xmlns:lowering="clr-namespace:LowSharp.Lowering"
     xmlns:regex="clr-namespace:LowSharp.RegexTesting">
 
     <DataTemplate DataType="{x:Type shell:StartPageViewModel}">
@@ -10,6 +11,10 @@
 
     <DataTemplate DataType="{x:Type regex:RegexTestingViewModel}">
         <regex:RegexTestingView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type lowering:LoweringViewModel}">
+        <lowering:LoweringView/>
     </DataTemplate>
 
 </ResourceDictionary>

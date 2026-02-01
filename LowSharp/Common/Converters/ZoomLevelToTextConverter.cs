@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace LowSharp.Common.Conveters;
+namespace LowSharp.Common.Converters;
 
 internal sealed class ZoomLevelToTextConverter : OneWayConverterBase<double, string>
 {

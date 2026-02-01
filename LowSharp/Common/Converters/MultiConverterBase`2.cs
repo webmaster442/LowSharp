@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace LowSharp.Common.Conveters;
+namespace LowSharp.Common.Converters;
 
 internal abstract class MultiConverterBase<TFrom, TTo> : MarkupExtension, IMultiValueConverter
     where TFrom : notnull where TTo : notnull

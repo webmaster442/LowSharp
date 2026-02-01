@@ -31,8 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Lowering\" />
     <Folder Include="Shell\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\changelog.md" Link="changelog.md" />
   </ItemGroup>
 
 </Project>

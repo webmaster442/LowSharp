@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
 
+using LowSharp.ApiV1.Lowering;
 using LowSharp.Common;
 using LowSharp.Common.Dialogs;
+
+using Microsoft.Win32;
 
 namespace LowSharp;
 
@@ -33,5 +36,34 @@ internal sealed class DialogsImplementation : IDialogs
             FileName = url,
             UseShellExecute = true
         });
+    }
+
+    public void OpenWebView(string title, Uri url)
+    {
+        var webWindow = new WebViewWindow();
+        webWindow.Title = title;
+        webWindow.ShowAndNavigateTo(url);
+    }
+
+    public bool TryOpenCode(out (string filename, InputLanguage language) result)
+    {
+        OpenFileDialog openFileDialog = new()
+        {
+            Filter = "All supported (*cs;*.vb;*.fs)|*.cs;*.vb;*.fs|C# Files (*.cs)|*.cs|VB Files (*.vb)|*.vb|F# files (*.fs)|*.fs",
+            Title = "Open Code File",
+        };
+        if (openFileDialog.ShowDialog() == true)
+        {
+            string filename = openFileDialog.FileName;
+            InputLanguage language = filename.EndsWith(".vb", StringComparison.OrdinalIgnoreCase)
+                ? InputLanguage.Visualbasic
+                : filename.EndsWith(".fs", StringComparison.OrdinalIgnoreCase)
+                    ? InputLanguage.Fsharp
+                    : InputLanguage.Csharp;
+            result = (filename, language);
+            return true;
+        }
+        result = default;
+        return false;
     }
 }

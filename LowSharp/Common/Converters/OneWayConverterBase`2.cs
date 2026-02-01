@@ -2,9 +2,9 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace LowSharp.Common.Conveters;
+namespace LowSharp.Common.Converters;
 
-internal abstract class TwoWayConverterBase<TFrom, TTo> : MarkupExtension, IValueConverter
+internal abstract class OneWayConverterBase<TFrom, TTo> : MarkupExtension, IValueConverter
     where TFrom : notnull where TTo : notnull
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -14,16 +14,10 @@ internal abstract class TwoWayConverterBase<TFrom, TTo> : MarkupExtension, IValu
             : Binding.DoNothing;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        return value is TTo toValue
-            ? ConvertToBack(toValue, parameter, culture)
-            : Binding.DoNothing;
-    }
-
     protected abstract TTo ConvertFrom(TFrom value, object parameter, CultureInfo culture);
 
-    protected abstract TFrom ConvertToBack(TTo value, object parameter, CultureInfo culture);
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
 
     public override object ProvideValue(IServiceProvider serviceProvider)
         => this;

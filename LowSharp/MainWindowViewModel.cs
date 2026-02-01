@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Windows;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,7 +11,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using LowSharp.Common;
 using LowSharp.Common.ViewModels;
 using LowSharp.Shell;
-
 
 namespace LowSharp;
 
@@ -94,7 +94,9 @@ internal sealed partial class MainWindowViewModel :
     [RelayCommand]
     public async Task ViewChanges()
     {
-        throw new NotImplementedException();
+        using var stream = typeof(MainWindowViewModel).Assembly.GetManifestResourceStream("LowSharp.changelog.md");
+        var content = new StreamReader(stream!).ReadToEnd();
+        _dialogs.Info("Change log", content);
     }
 
     void IRecipient<Messages.ReplaceTabContent>.Receive(Messages.ReplaceTabContent message)

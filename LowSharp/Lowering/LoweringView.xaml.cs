@@ -1,7 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace LowSharp.Client.Lowering;
-
+namespace LowSharp.Lowering;
 /// <summary>
 /// Interaction logic for LoweringView.xaml
 /// </summary>

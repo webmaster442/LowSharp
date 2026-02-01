@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 
-namespace LowSharp.Common.Conveters;
+namespace LowSharp.Common.Converters;
 
 internal sealed class VisibilityConverter : TwoWayConverterBase<bool, Visibility>
 {
