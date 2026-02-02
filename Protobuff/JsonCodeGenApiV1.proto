@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package lowsharp.apiv1.schemacodegen;
+
+option csharp_namespace = "LowSharp.ApiV1.SchemaCodeGen";
+
+service SchemaToCode {
+    rpc JsonSchemaToCsharp(JsonSchemaToCsharpRequest) returns (JsonSchemaToCsharpResponse);
+}
+
+enum TimeType {
+    TIME_TYPE_UNKNOWN = 0;
+    TIME_TYPE_TIMESPAN = 1;
+    TIME_TYPE_TIMEONLY = 2;
+}
+
+enum DateType {
+    DATE_TYPE_UNKNOWN = 0;
+    DATE_TYPE_DATEONLY = 1;
+    DATE_TYPE_DATETIME = 2;
+    DATE_TYPE_DATETIMEOFFSET = 3;
+}
+
+enum DateTimeType {
+    DATE_TIME_TYPE_UNKNOWN = 0;
+    DATE_TIME_TYPE_DATETIME = 1;
+    DATE_TIME_TYPE_DATETIMEOFFSET = 2;
+}
+
+enum JsonLibary {
+    JSON_LIBARY_UNKNOWN = 0;
+    JSON_LIBARY_NEWTONSOFT = 1;
+    JSON_LIBARY_SYSTEMTEXT = 2;
+}
+
+enum ClassStyle {
+    CLASS_STYLE_UNKNOWN = 0;
+    CLASS_STYLE_POCO = 1;
+    CLASS_STYLE_RECORD = 2;
+}
+
+enum AccessModifier {
+    ACCESS_MODIFIER_UNKNOWN = 0;
+    ACCESS_MODIFIER_INTERNAL = 1;
+    ACCESS_MODIFIER_PUBLIC = 2;
+}
+
+message JsonSchemaToCsharpOptions {
+    string namespace = 2;
+    DateType date_type = 3;
+    TimeType time_type = 4;
+    DateTimeType date_time_type = 5;
+    ClassStyle class_style = 6;
+    AccessModifier access_modifier = 7;
+    JsonLibary json_libary = 8;
+    bool nullable = 9;
+    bool use_required = 10;
+}
+
+message JsonSchemaToCsharpRequest {
+    string json_schema = 1;
+    JsonSchemaToCsharpOptions options = 2;
+}
+
+message JsonSchemaToCsharpResponse {
+    string generated_code = 1;
+}

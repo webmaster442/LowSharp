@@ -38,7 +38,7 @@ message RegexRequest {
 }
 
 message RegexCodeResponse {
-    string resultCode = 1;
+    string result_code = 1;
 }
 
 message RegexReplaceRequest {

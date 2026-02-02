@@ -69,10 +69,10 @@ enum VisualType {
 }
 
 message RenderVisualizationRequest {
-  string inputCode = 1;
-  VisualType visualType = 2;
+  string input_code = 1;
+  VisualType visual_type = 2;
 }
 
 message RenderVisualizationResponse {
-  string visualPathOnHttp = 1;
+  string visual_path_on_Http = 1;
 }

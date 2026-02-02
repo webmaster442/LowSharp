@@ -40,6 +40,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.0.0" />
     <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="3.1.512801" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
+    <PackageReference Include="NJsonSchema" Version="11.5.2" />
+    <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="11.5.2" />
     <PackageReference Include="System.Runtime.Caching" Version="10.0.2" />
   </ItemGroup>
 
@@ -49,6 +51,9 @@
     </Protobuf>
     <Protobuf Include="..\Protobuff\HealthCheckApiV1.proto" GrpcServices="Server" Access="Internal">
       <Link>HealthCheckApiV1.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\Protobuff\JsonCodeGenApiV1.proto" GrpcServices="Server" Access="Internal">
+      <Link>JsonCodeGenApiV1.proto</Link>
     </Protobuf>
     <Protobuf Include="..\Protobuff\LoweringApiV1.proto" GrpcServices="Server" Access="Internal">
       <Link>LoweringApiV1.proto</Link>
