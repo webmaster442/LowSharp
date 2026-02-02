@@ -6,11 +6,12 @@ public interface IClient : IDisposable, IClientCommon
 {
     IExamplesClient Examples { get; }
     IHealtCheckClient HealtCheck { get; }
-    bool IsBusy { get; set; }
-    bool IsConnected { get; }
     ILoweringClient Lowering { get; }
     IRegexClient Regex { get; }
+    ISchemaToCodeClient SchemaToCode { get; }
 
+    bool IsBusy { get; set; }
+    bool IsConnected { get; }
     event EventHandler? IsBusyChanged;
     event EventHandler? IsConnectedChanged;
 

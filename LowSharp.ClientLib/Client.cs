@@ -14,6 +14,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         Lowering = null!;
         Regex = null!;
         Examples = null!;
+        SchemaToCode = null!;
     }
 
     public IHealtCheckClient HealtCheck
@@ -40,6 +41,12 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         private set => field = value;
     }
 
+    public ISchemaToCodeClient SchemaToCode
+    {
+        get => IsConnected ? field : throw new InvalidOperationException("Client is not connected.");
+        private set => field = value;
+    }
+
     public bool IsConnected
     {
         get => field;
@@ -59,7 +66,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
             IsBusyChanged?.Invoke(this, EventArgs.Empty);
         }
     }
- 
+
     public event EventHandler? IsBusyChanged;
 
     public event EventHandler? IsConnectedChanged;
@@ -93,6 +100,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
             Lowering = new LoweringClient(_channel, this);
             Regex = new RegexClient(_channel, this);
             Examples = new ExamplesClient(_channel, this);
+            SchemaToCode = new SchemaToCodeClient(_channel, this);
 
             IsConnected = true;
 

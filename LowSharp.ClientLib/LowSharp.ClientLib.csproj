@@ -26,6 +26,9 @@
     <Protobuf Include="..\Protobuff\HealthCheckApiV1.proto" GrpcServices="Client">
       <Link>Proto\HealthCheckApiV1.proto</Link>
     </Protobuf>
+    <Protobuf Include="..\Protobuff\JsonCodeGenApiV1.proto" GrpcServices="Client" Access="Public">
+      <Link>Proto\JsonCodeGenApiV1.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\Protobuff\LoweringApiV1.proto" GrpcServices="Client">
       <Link>Proto\LoweringApiV1.proto</Link>
     </Protobuf>
