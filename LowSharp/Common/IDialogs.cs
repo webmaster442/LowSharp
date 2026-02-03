@@ -13,4 +13,6 @@ internal interface IDialogs
     void OpenUrl(string url);
     void OpenWebView(string title, Uri url);
     bool TryOpenCode(out (string filename, InputLanguage language) result);
+    bool TryOpen(string title, string filter, out string filename);
+    bool TrySave(string title, string filter, out string filename);
 }

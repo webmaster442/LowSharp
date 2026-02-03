@@ -17,8 +17,9 @@
             <ColumnDefinition
                 Width="Auto"
                 MinWidth="200" />
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition MinWidth="300" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition MinWidth="300" />
         </Grid.ColumnDefinitions>
         <GroupBox
             Grid.Column="0"
@@ -89,32 +90,54 @@
                     Content="Generate" />
             </StackPanel>
         </GroupBox>
-        <GroupBox
+
+        <avalon:TextEditor
             Grid.Column="1"
-            Header="Json">
-            <avalon:TextEditor
-                FontFamily="Cascadia Code"
-                FontSize="{DynamicResource EditorFontSize}"
-                ShowLineNumbers="True"
-                WordWrap="True">
-                <i:Interaction.Behaviors>
-                    <common:AvalonEditBehaviour BindedText="{Binding Json, Mode=TwoWay}" />
-                </i:Interaction.Behaviors>
-            </avalon:TextEditor>
-        </GroupBox>
-        <GroupBox
+            FontFamily="Cascadia Code"
+            FontSize="{DynamicResource EditorFontSize}"
+            ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+            SyntaxHighlighting="{common:SyntaxHighlightingProvider Language=JsonNext}"
+            WordWrap="{Binding WordWrap.IsChecked}">
+            <i:Interaction.Behaviors>
+                <common:AvalonEditBehaviour BindedText="{Binding Json, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+        </avalon:TextEditor>
+
+        <TextBlock
+            Grid.Column="1"
+            Margin="0,0,30,0"
+            HorizontalAlignment="Right"
+            FontSize="18"
+            Style="{StaticResource Watwermark}"
+            Text="Json" />
+
+
+        <GridSplitter
             Grid.Column="2"
-            Header="C#">
-            <avalon:TextEditor
-                FontFamily="Cascadia Code"
-                FontSize="{DynamicResource EditorFontSize}"
-                IsReadOnly="True"
-                ShowLineNumbers="True"
-                WordWrap="True">
-                <i:Interaction.Behaviors>
-                    <common:AvalonEditBehaviour BindedText="{Binding CsharpCode, Mode=TwoWay}" />
-                </i:Interaction.Behaviors>
-            </avalon:TextEditor>
-        </GroupBox>
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{StaticResource SolidBackgroundFillColorBaseBrush}" />
+
+        <avalon:TextEditor
+            Grid.Column="3"
+            FontFamily="Cascadia Code"
+            FontSize="{DynamicResource EditorFontSize}"
+            IsReadOnly="True"
+            ShowLineNumbers="{Binding ShowLineNumbers.IsChecked}"
+            SyntaxHighlighting="{common:SyntaxHighlightingProvider Language=CsharpNext}"
+            WordWrap="{Binding WordWrap.IsChecked}">
+            <i:Interaction.Behaviors>
+                <common:AvalonEditBehaviour BindedText="{Binding CsharpCode, Mode=TwoWay}" />
+            </i:Interaction.Behaviors>
+        </avalon:TextEditor>
+
+        <TextBlock
+            Grid.Column="3"
+            Margin="0,0,30,0"
+            HorizontalAlignment="Right"
+            FontSize="18"
+            Style="{StaticResource Watwermark}"
+            Text="Generated Code" />
+
     </Grid>
 </UserControl>

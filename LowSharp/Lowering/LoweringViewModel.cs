@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -83,6 +84,24 @@ internal sealed partial class LoweringViewModel :
             }
         });
 
+        Menus.Add(new MenuViewModel
+        {
+            Header = "Import/Export",
+            Children =
+            {
+                new MenuCommandViewModel
+                {
+                    Header = "Open Code...",
+                    Command = OpenCodeCommand
+                },
+                new MenuCommandViewModel
+                {
+                    Header = "Save lowerered...",
+                    Command = SaveCodeCommand
+                }
+            }
+        });
+
         InputLanguages = new EnumViewModel<InputLanguage>(EnumMapper.ToString, InputLanguage.Csharp);
         OutputTypes = new EnumViewModel<OutputCodeType>(EnumMapper.ToString, OutputCodeType.Loweredcsharp);
         Optimizations = new EnumViewModel<Optimization>(EnumMapper.ToString, Optimization.Debug);
@@ -153,6 +172,15 @@ internal sealed partial class LoweringViewModel :
             string code = System.IO.File.ReadAllText(result.filename);
             InputCode = code;
             InputLanguages.SelectValue(result.language);
+        }
+    }
+
+    [RelayCommand]
+    public void SaveCode()
+    {
+        if (_dialogs.TrySave("Save lowering result", "Text file|*.txt", out string fileName))
+        {
+            File.WriteAllText(fileName, OutputCode);
         }
     }
 

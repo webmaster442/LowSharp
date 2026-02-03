@@ -23,6 +23,7 @@ app.MapGrpcService<Lowsharp.Server.Services.ApiV1.LowererService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.HealthCheckService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.RegexService>();
 app.MapGrpcService<Lowsharp.Server.Services.ApiV1.ExamplesService>();
+app.MapGrpcService<Lowsharp.Server.Services.ApiV1.SchemaToCodeService>();
 
 HttpHandler handler = new HttpHandler(app);
 

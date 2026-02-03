@@ -45,6 +45,7 @@ internal sealed class DialogsImplementation : IDialogs
         webWindow.ShowAndNavigateTo(_mainWindow, url);
     }
 
+
     public bool TryOpenCode(out (string filename, InputLanguage language) result)
     {
         OpenFileDialog openFileDialog = new()
@@ -64,6 +65,42 @@ internal sealed class DialogsImplementation : IDialogs
             return true;
         }
         result = default;
+        return false;
+    }
+
+    public bool TryOpen(string title, string filter, out string filename)
+    {
+        OpenFileDialog openFileDialog = new()
+        {
+            Filter = filter,
+            Title = title,
+        };
+
+        if (openFileDialog.ShowDialog() == true)
+        {
+            filename = openFileDialog.FileName;
+            return true;
+        }
+
+        filename = string.Empty;
+        return false;
+    }
+
+    public bool TrySave(string title, string filter, out string filename)
+    {
+        SaveFileDialog saveFileDialog = new()
+        {
+            Filter = filter,
+            Title = title,
+        };
+
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            filename = saveFileDialog.FileName;
+            return true;
+        }
+
+        filename = string.Empty;
         return false;
     }
 }
