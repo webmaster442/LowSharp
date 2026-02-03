@@ -120,7 +120,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" />
+            <Image
+                Grid.Column="0"
+                Width="24"
+                Margin="8,0"
+                Source="/android-chrome-192x192.png" />
             <Menu
                 Grid.Column="1"
                 Margin="0,0,0,0"

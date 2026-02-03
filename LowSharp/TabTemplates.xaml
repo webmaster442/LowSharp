@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shell="clr-namespace:LowSharp.Shell"
     xmlns:lowering="clr-namespace:LowSharp.Lowering"
+    xmlns:schema="clr-namespace:LowSharp.Schema"
     xmlns:regex="clr-namespace:LowSharp.RegexTesting">
 
     <DataTemplate DataType="{x:Type shell:StartPageViewModel}">
@@ -15,6 +16,10 @@
 
     <DataTemplate DataType="{x:Type lowering:LoweringViewModel}">
         <lowering:LoweringView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type schema:JsonSchemaToCsharpViewModel}">
+        <schema:JsonSchemaToCsharpView/>
     </DataTemplate>
 
 </ResourceDictionary>

@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="..\Icons\android-chrome-192x192.png" Link="android-chrome-192x192.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Common\Syntax\CsharpNext.xshd" />
     <EmbeddedResource Include="Common\Syntax\Fsharp.xshd" />
     <EmbeddedResource Include="Common\Syntax\ILAsm.xshd" />
@@ -32,10 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LowSharp.ClientLib\LowSharp.ClientLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Shell\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,4 @@
-﻿using Google.Protobuf.WellKnownTypes;
-
-namespace LowSharp.Common;
+﻿namespace LowSharp.Common;
 
 internal static class EnumMapper
 {

@@ -6,6 +6,14 @@ internal class EnumViewModel<T> : EnumViewModel where T : struct, Enum
 {
     private readonly Func<T, string?> _descriptionProvider;
 
+    private static string DefaultMapper(T value) 
+        => value.ToString();
+
+    public EnumViewModel(T selectedValue) : this(DefaultMapper, selectedValue)
+    {
+
+    }
+
     public EnumViewModel(Func<T, string?> descriptionProvider, T selectedValue)
     {
         _descriptionProvider = descriptionProvider;

@@ -8,6 +8,7 @@ using LowSharp.Common;
 using LowSharp.Common.ViewModels;
 using LowSharp.Lowering;
 using LowSharp.RegexTesting;
+using LowSharp.Schema;
 
 namespace LowSharp.Shell;
 
@@ -36,6 +37,14 @@ internal sealed partial class StartPageViewModel : ViewModelWithMenus
         var vm = new RegexTestingViewModel(_client, _dialogs);
         await vm.InitializeAsync();
         ReplaceContents("Regex Testing", vm);
+    }
+
+    [RelayCommand]
+    public async Task StartJsonToCsharp()
+    {
+        var vm = new JsonSchemaToCsharpViewModel(_client, _dialogs);
+        await vm.InitializeAsync();
+        ReplaceContents("JSON to C#", vm);
     }
 
     [RelayCommand]
