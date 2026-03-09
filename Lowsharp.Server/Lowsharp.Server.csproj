@@ -42,6 +42,7 @@
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageReference Include="NJsonSchema" Version="11.5.2" />
     <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="11.5.2" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.3" />
     <PackageReference Include="System.Runtime.Caching" Version="10.0.3" />
   </ItemGroup>
 

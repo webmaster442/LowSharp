@@ -4,6 +4,11 @@ namespace Lowsharp.Server.Lowering.Decompilers;
 
 internal sealed class MermaidClassTreeDecompiler : VisualizingDecompilerBase
 {
+    public MermaidClassTreeDecompiler(ReferenceProvider referenceProvider)
+        : base(referenceProvider)
+    {
+    }
+
     protected override RendererBase CreateRenderer()
         => new MermaidRenderer();
 
