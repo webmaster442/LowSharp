@@ -5,7 +5,7 @@ namespace LowSharp.ClientLib;
 public interface IClient : IDisposable, IClientCommon
 {
     IExamplesClient Examples { get; }
-    IHealtCheckClient HealtCheck { get; }
+    IHealthCheckClient HealtCheck { get; }
     ILoweringClient Lowering { get; }
     IRegexClient Regex { get; }
     ISchemaToCodeClient SchemaToCode { get; }

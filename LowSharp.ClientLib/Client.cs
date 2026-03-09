@@ -17,7 +17,7 @@ public sealed class Client : IDisposable, IClientRoot, IClient
         SchemaToCode = null!;
     }
 
-    public IHealtCheckClient HealtCheck
+    public IHealthCheckClient HealtCheck
     {
         get => IsConnected ? field : throw new InvalidOperationException("Client is not connected.");
         private set => field = value;

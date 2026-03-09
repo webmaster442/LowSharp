@@ -4,7 +4,7 @@ using LowSharp.ApiV1.HealthCheck;
 
 namespace LowSharp.ClientLib;
 
-internal sealed class HealtCheckClient : IHealtCheckClient
+internal sealed class HealtCheckClient : IHealthCheckClient
 {
     private readonly Health.HealthClient _client;
     private readonly IClientRoot _root;
