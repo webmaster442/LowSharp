@@ -16,7 +16,8 @@ internal sealed class SelectedOutputTypeToHighlightingConverter
         {
             OutputCodeType.Il => App.CustomHighlightings["ILAsm"],
             OutputCodeType.Loweredcsharp => App.CustomHighlightings["CsharpNext"],
-            OutputCodeType.Jitasm => App.CustomHighlightings["x64"],
+            OutputCodeType.JitasmIntel => App.CustomHighlightings["x64"],
+            OutputCodeType.JitasmAtnt => App.CustomHighlightings["x64"],
             OutputCodeType.Syntaxtreejson => App.CustomHighlightings["JsonNext"],
             OutputCodeType.Nonmoml => App.CustomHighlightings["nomnoml"],
             _ => null!,

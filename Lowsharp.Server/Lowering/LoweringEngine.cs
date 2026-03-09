@@ -32,7 +32,8 @@ public sealed class LoweringEngine
         {
             OutputLanguage.Csharp => new CsharpDecompiler(),
             OutputLanguage.IL => new ILDecompiler(),
-            OutputLanguage.JitAsm => new JitDecompiler(),
+            OutputLanguage.JitAsmIntel => new JitDecompiler(useAtntSyntax: false),
+            OutputLanguage.JitAsmAtnt => new JitDecompiler(useAtntSyntax: true),
             OutputLanguage.NomnommlClassTree => new NomnomClassTreeDecompiler(),
             OutputLanguage.MermaidClassTree => new MermaidClassTreeDecompiler(),
             _ => throw new NotSupportedException("Unsupported output type."),

@@ -19,7 +19,8 @@ internal static class EnumMapper
         {
             ApiV1.Lowering.OutputCodeType.Il => "IL",
             ApiV1.Lowering.OutputCodeType.Loweredcsharp => "Lowered C#",
-            ApiV1.Lowering.OutputCodeType.Jitasm => "JIT ASM",
+            ApiV1.Lowering.OutputCodeType.JitasmIntel => "JIT ASM (Intel syntax)",
+            ApiV1.Lowering.OutputCodeType.JitasmAtnt => "JIT ASM (AT&T syntax)",
             ApiV1.Lowering.OutputCodeType.Syntaxtreejson => "Syntax Tree (JSON)",
             ApiV1.Lowering.OutputCodeType.Nonmoml => "Nonmoml Diagram",
             ApiV1.Lowering.OutputCodeType.Mermaid => "Mermaid Diagram",
