@@ -8,12 +8,16 @@
     Title="MessageDialog"
     Width="800"
     Height="400"
+    BorderBrush="{StaticResource SurfaceStrokeColorDefaultBrush}"
+    BorderThickness="1"
+    ResizeMode="NoResize"
     ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
     SnapsToDevicePixels="True"
-    WindowStyle="None"
     WindowStartupLocation="CenterOwner"
+    WindowStyle="None"
     mc:Ignorable="d">
-    <Grid>
+    <Grid MinWidth="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -33,21 +37,23 @@
         <Border
             Grid.Row="2"
             Background="{DynamicResource SubtleFillColorTransparentBrush}">
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-            <Button
-                Width="100"
-                Margin="0,24,16,24"
+            <StackPanel
                 HorizontalAlignment="Right"
-                Click="BtnOk_Click"
-                x:Name="BtnOk"
-                Content="Ok"
-                Style="{DynamicResource AccentButtonStyle}" />
-            <Button
-                Width="100"
-                Click="BtnCancel_Click"
-                x:Name="BtnCancel"
-                Margin="8,24,16,24"
-                Content="Cancel" />
+                Orientation="Horizontal">
+                <Button
+                    x:Name="BtnOk"
+                    Width="100"
+                    Margin="0,24,16,24"
+                    HorizontalAlignment="Right"
+                    Click="BtnOk_Click"
+                    Content="Ok"
+                    Style="{DynamicResource AccentButtonStyle}" />
+                <Button
+                    x:Name="BtnCancel"
+                    Width="100"
+                    Margin="8,24,16,24"
+                    Click="BtnCancel_Click"
+                    Content="Cancel" />
             </StackPanel>
         </Border>
     </Grid>
