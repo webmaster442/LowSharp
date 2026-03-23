@@ -43,7 +43,8 @@ internal static class Mapper
             OutputLanguage = request.OutputType switch
             {
                 OutputCodeType.Il => OutputLanguage.IL,
-                OutputCodeType.Jitasm => OutputLanguage.JitAsm,
+                OutputCodeType.JitasmIntel => OutputLanguage.JitAsmIntel,
+                OutputCodeType.JitasmAtnt => OutputLanguage.JitAsmAtnt,
                 OutputCodeType.Loweredcsharp => OutputLanguage.Csharp,
                 OutputCodeType.Syntaxtreejson => OutputLanguage.SyntaxTreeJson,
                 OutputCodeType.Nonmoml => OutputLanguage.NomnommlClassTree,

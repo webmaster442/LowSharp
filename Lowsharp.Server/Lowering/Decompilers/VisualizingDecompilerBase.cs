@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.Loader;
 
 using Microsoft.IO;
 
@@ -7,6 +6,8 @@ namespace Lowsharp.Server.Lowering.Decompilers;
 
 internal abstract class VisualizingDecompilerBase : IDecompiler
 {
+    private readonly ReferenceProvider _referenceProvider;
+
     internal sealed class Item : IEquatable<Item?>
     {
         public required string Name { get; init; }
@@ -40,33 +41,36 @@ internal abstract class VisualizingDecompilerBase : IDecompiler
 
     protected abstract RendererBase CreateRenderer();
 
+    public VisualizingDecompilerBase(ReferenceProvider referenceProvider)
+    {
+        _referenceProvider = referenceProvider;
+    }
+
     public bool TryDecompile(RecyclableMemoryStream assemblyStream,
                              RecyclableMemoryStream pdbStream,
                              out string result)
     {
         try
         {
-            using (var customLoadContext = new DisposableAssemblyLoadContext())
+            using var loadContext = new ReflectionLoadContext(_referenceProvider);
+
+            var assembly = loadContext.ConvertToAssembly(assemblyStream);
+
+            var renderer = CreateRenderer();
+            foreach (var type in assembly.GetTypes())
             {
-                Assembly assembly = customLoadContext.LoadFromStream(assemblyStream);
+                renderer.AddType(type);
 
-                var renderer = CreateRenderer();
-
-                var types = assembly.GetTypes();
-                foreach (var type in types)
+                Type[] implementations = type.GetInterfaces();
+                Type? baseClass = type.BaseType;
+                WalkBaseClass(type, baseClass, renderer);
+                foreach (var implementation in implementations)
                 {
-                    renderer.AddType(type);
-
-                    Type[] implementations = type.GetInterfaces();
-                    Type? baseClass = type.BaseType;
-                    WalkBaseClass(type, baseClass, renderer);
-                    foreach (var implementation in implementations)
-                    {
-                        renderer.AddRelation(implementation, type);
-                    }
+                    renderer.AddRelation(implementation, type);
                 }
-                result = renderer.Render();
             }
+            result = renderer.Render();
+
             return true;
         }
         catch (Exception ex)

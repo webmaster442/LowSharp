@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.Loader;
 using System.Text;
 
 using Iced.Intel;
@@ -11,22 +10,35 @@ namespace Lowsharp.Server.Lowering.Decompilers;
 internal sealed class JitDecompiler : IDecompiler
 {
     private readonly StringBuilder _buffer;
-    private readonly IntelFormatter _formatter;
+    private readonly Formatter _formatter;
 
-    public JitDecompiler()
+    public JitDecompiler(bool useAtntSyntax)
     {
         _buffer = new StringBuilder(32 * 1024);
-        _formatter = new IntelFormatter
-        {
-            Options =
+
+        _formatter = useAtntSyntax
+            ? new Iced.Intel.GasFormatter
             {
-                UppercaseHex = true,
-                HexPrefix = "0x",
-                FirstOperandCharIndex = 10,
-                DecimalDigitGroupSize = 3,
-                DigitSeparator = "_",
+                Options =
+                {
+                    UppercaseHex = true,
+                    HexPrefix = "0x",
+                    FirstOperandCharIndex = 10,
+                    DecimalDigitGroupSize = 3,
+                    DigitSeparator = "_"
+                }
             }
-        };
+            : new IntelFormatter
+            {
+                Options =
+                {
+                    UppercaseHex = true,
+                    HexPrefix = "0x",
+                    FirstOperandCharIndex = 10,
+                    DecimalDigitGroupSize = 3,
+                    DigitSeparator = "_",
+                }
+            };
     }
 
     public bool TryDecompile(RecyclableMemoryStream assemblyStream, RecyclableMemoryStream pdbStream, out string result)

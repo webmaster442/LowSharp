@@ -26,15 +26,16 @@ public sealed class LoweringEngine
         _fsCompiler = new FsharpCompiler();
     }
 
-    private static IDecompiler CreateDecompiler(OutputLanguage outputType)
+    private IDecompiler CreateDecompiler(OutputLanguage outputType)
     {
         return outputType switch
         {
             OutputLanguage.Csharp => new CsharpDecompiler(),
             OutputLanguage.IL => new ILDecompiler(),
-            OutputLanguage.JitAsm => new JitDecompiler(),
-            OutputLanguage.NomnommlClassTree => new NomnomClassTreeDecompiler(),
-            OutputLanguage.MermaidClassTree => new MermaidClassTreeDecompiler(),
+            OutputLanguage.JitAsmIntel => new JitDecompiler(useAtntSyntax: false),
+            OutputLanguage.JitAsmAtnt => new JitDecompiler(useAtntSyntax: true),
+            OutputLanguage.NomnommlClassTree => new NomnomClassTreeDecompiler(_referenceProvider),
+            OutputLanguage.MermaidClassTree => new MermaidClassTreeDecompiler(_referenceProvider),
             _ => throw new NotSupportedException("Unsupported output type."),
         };
     }

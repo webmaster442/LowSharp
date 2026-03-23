@@ -4,8 +4,9 @@ public enum OutputLanguage
 {
     IL = 0,
     Csharp = 1,
-    JitAsm = 2,
-    SyntaxTreeJson = 3,
-    NomnommlClassTree = 4,
-    MermaidClassTree = 5,
+    JitAsmIntel = 2,
+    JitAsmAtnt = 3,
+    SyntaxTreeJson = 4,
+    NomnommlClassTree = 5,
+    MermaidClassTree = 6,
 }

@@ -19,7 +19,8 @@
 - [x] Docker container for server
 - [ ] Integrate auto updater
 - [ ] Regex code generator
-- [ ] JSONSchema code generator
+- [x] JSONSchema code generator
 - [x] Nomnoml visualizer
 - [x] Mermaid renderer
 - [x] Mermaid visualizer
+- [ ] https://github.com/tebjan/AssemblyInformation

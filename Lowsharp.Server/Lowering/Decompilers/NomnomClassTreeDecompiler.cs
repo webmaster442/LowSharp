@@ -4,6 +4,11 @@ namespace Lowsharp.Server.Lowering.Decompilers;
 
 internal sealed class NomnomClassTreeDecompiler : VisualizingDecompilerBase
 {
+    public NomnomClassTreeDecompiler(ReferenceProvider referenceProvider)
+        : base(referenceProvider)
+    {
+    }
+
     protected override RendererBase CreateRenderer()
         => new NomnomRenderer();
 
