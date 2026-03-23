@@ -201,8 +201,11 @@ internal sealed partial class LoweringViewModel :
                 OutputCode = GetDiagnostics(success.Diagnostics);
                 IsValidLowering = false;
             }
-            OutputCode = success.ResultCode;
-            IsValidLowering = true;
+            else
+            {
+                OutputCode = success.ResultCode;
+                IsValidLowering = true;
+            }
         },
         failure =>
         {
