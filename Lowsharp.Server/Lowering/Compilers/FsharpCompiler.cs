@@ -108,7 +108,6 @@ internal sealed class FsharpCompiler : ICompiler
                 diagnosticOptions: FSharpParsingOptions.Default.DiagnosticOptions,
                 langVersionText: FSharpParsingOptions.Default.LangVersionText,
                 isInteractive: FSharpParsingOptions.Default.IsInteractive,
-                indentationAwareSyntax: FSharpParsingOptions.Default.IndentationAwareSyntax,
                 strictIndentation: FSharpParsingOptions.Default.StrictIndentation,
                 compilingFSharpCore: FSharpParsingOptions.Default.CompilingFSharpCore,
                 isExe: FSharpParsingOptions.Default.IsExe);
